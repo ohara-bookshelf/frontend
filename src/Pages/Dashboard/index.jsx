@@ -55,7 +55,7 @@ const Home = () => {
                 
                     <Link to="/" className="flex flex-row items-center">
                         <img src={logo} alt="logo" className="h-12 w-12 ml-2"/>
-                        <span className="text-gray-700 dark:text-gray-50 text-xl font-extrabold">PINTEREST</span>
+                        <span className="text-gray-700 dark:text-gray-50 text-xl font-extrabold">BOOKSHELF</span>
                     </Link>
                     <Link  to ={`user-profile/${user?._id}`}>
                         <img src={user?.image} alt="profile" className="h-10 w-10 ml-2 rounded-full" />

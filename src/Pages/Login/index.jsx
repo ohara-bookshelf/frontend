@@ -42,7 +42,7 @@ const Login = () => {
 
         console.log("Response: ", response);
         
-        const  access_token = response.accessToken;
+        const  access_token = response.tokenId;
 
         //Save the access token to the local storage            
         localStorage.setItem('access_token', access_token);
@@ -58,13 +58,13 @@ const Login = () => {
             //use the api to login
             const { data } = await api.login(access_token);
 
-            toast.success('Login successful');  
+            console.log("Data: ", data);
 
             setUser(data.user);
 
         } catch (error) {
 
-            console.log("An Error occured: ", error.response);
+            console.log("An Error occured: ", error);
             localStorage.removeItem('access_token');
 
             setUser({});
@@ -103,15 +103,15 @@ const Login = () => {
     
 
     return (
-        <div className='flex h-screen place-content-center dark:text-white dark:bg-gray-600'>
-            <div className='LOGIN-CONTAINER mt-14 flex flex-col items-center text-gray-600 bg-slate-100 rounded shadow-lg shadow-slate-500 w-[80%] h-[75%]  sm:w-[60%] xs:w-[55%] md:w-[50%] xm:w-[45%] lg:w-[40%] xl:w-[30%] '>
-                    <div className='flex w-full  items-center place-content-center'>
+        <div className='flex h-screen place-content-center dark:text-white dark:bg-gray-900'>
+            <div className='LOGIN-CONTAINER mt-14 flex flex-col items-center  bg-slate-100 dark:bg-slate-500 rounded shadow-sm shadow-slate-500 w-[80%] h-[75%]  sm:w-[60%] xs:w-[55%] md:w-[50%] xm:w-[45%] lg:w-[40%] xl:w-[30%] '>
+                    <div className='flex w-full  items-center place-content-center '>
                         <img src={bookshelf} alt="logo" className="w-20 h-20 mb-5"/> 
-                        <h1 className="text-3xl font-bold text-gray-900">Login</h1>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Login</h1>
                     </div>
                 <form className='LOGIN-INPUTS flex flex-col items-center mx-4 min-w-[75%]'>
-                    <input type='text' autoComplete='username' placeholder='Username' className='w-full m-2 p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:border-gray-500'/>
-                    <input type='password' autoComplete='new-password' placeholder='Password' className='w-full m-2 p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:border-gray-500'/>
+                    <input type='text' autoComplete='username' placeholder='Username' className='w-full m-2 p-2 dark:bg-gray-800 focus:border-2 rounded-md focus:outline-none focus:border-gray-400'/>
+                    <input type='password' autoComplete='new-password' placeholder='Password' className='w-full m-2 p-2  dark:bg-gray-800 focus:border-2 rounded-md focus:outline-none focus:border-gray-400'/>
                     <div className='LOGIN-BUTTON flex items-center min-w-[90%] mt-4'>
                         <button type='submit'  className='m-2 p-2 rounded-full border-2 w-full text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br font-medium text-xl'>Login</button>
                     </div>
@@ -119,9 +119,9 @@ const Login = () => {
                 
                 {/* Line separator */}
                 <div className="flex min-w-[70%]  items-center">
-                    <div className="flex-grow border-t border-gray-700"></div>
-                    <span className="flex-shrink mx-4 text-gray-900 text-md font-medium">OR</span>
-                    <div className="flex-grow border-t border-gray-700"></div>
+                    <div className="flex-grow border-t border-gray-700 dark:border-gray-200"></div>
+                    <span className="flex-shrink mx-4 text-gray-900 dark:text-gray-200 text-md font-medium">OR</span>
+                    <div className="flex-grow border-t border-gray-700 dark:border-gray-200"></div>
                 </div>
                 {/**Log in with gmail or facebook */}
                 <div className='LOGIN-OTHER flex flex-col items-center justify-center min-w-[70%] mt-5'>
@@ -141,7 +141,7 @@ const Login = () => {
                         onSuccess={onLoginSuccess}
                         onFailure={onLoginFailure}
                         cookiePolicy={'single_host_origin'}
-                        //isSignedIn={true}
+                        isSignedIn={true}
                     />
 
                     <button type="button" className="text-white justify-center w-full bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2">
