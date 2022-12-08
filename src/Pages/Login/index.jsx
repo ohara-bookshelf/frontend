@@ -1,70 +1,106 @@
-import React, {useEffect} from "react";
+import React, {useState,useEffect} from "react";
 import {Link, useNavigate} from 'react-router-dom';
-import {GoogleLogin} from 'react-google-login';
-import { gapi } from 'gapi-script';
+import { GoogleLogin } from 'react-google-login';
 
-//import {FcGoogle} from 'react-icons/fc';
+import { gapi } from 'gapi-script';
 
 import bookshelf from '../../Assets/Images/bookshelf.png';
 
 
+import * as api from '../../Middleware/';
+import { toast } from "react-toastify";
 
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_API_CLIENT_ID
 
+const CLIENT_ID = process.env.REACT_APP_GOOGLE_API_CLIENT_ID;
+const SCOPE = process.env.REACT_APP_GAP_SCOPE;
 
 const Login = () => {
 
 
     //let's use the react navigation to navigate to the home page after loging in successfully
-     const navigate = useNavigate();
+    const navigate = useNavigate();
 
-   /*const responseGoogle = (response) => {
-        console.log(response);
-   }*/
+    const [user, setUser] = useState({});
 
-//    useEffect(() => {
-//     const initClient = () => {
-//             gapi.client.init({
-//             clientId: CLIENT_ID,
-//             scope: ''
-//             });
-//         };
-//         gapi.load('client:auth2', initClient);
-//     });
+    /*useEffect(() => {
 
-   const onSuccess = (res) => {
-        //console.log('[Login Successfull] currentUser:', res.profileObj);
+        const initClient = () => {
+            gapi.client.init({
+            clientId: CLIENT_ID,
+            scope: SCOPE,
+            });
+        };
+        gapi.load('client:auth2', initClient);
 
-        localStorage.setItem('user', JSON.stringify(res.profileObj));
+    });*/
 
-        const {name, googleId, imageUrl} = res.profileObj;
-
-        console.log(name, googleId, imageUrl);
-        //doc to save to the sanitiy database
-        // const doc = {
-        //     _id: googleId,
-        //     _type: 'user',
-        //     username:name,
-        //     image: imageUrl
-        // };
+    const onLoginSuccess = async (response) => {
 
 
-        // //create the user if not already created
-        // client.createIfNotExists(doc).then((res) => {
-        //     console.log(res);
-        //     //navigate to the home page
-        //     navigate('/', {replace: true});
+        //Add the response to the local storage
+        localStorage.setItem('user', JSON.stringify(response.profileObj));
 
-        // }).catch((err) => {
-        //     console.log(err);
-        // });
+        console.log("Response: ", response);
+        
+        const  access_token = response.accessToken;
 
+        //Save the access token to the local storage            
+        localStorage.setItem('access_token', access_token);
+        
+        console.log("Access Token: ", access_token);
+
+        //Get the user id token
+        /*const id_token = response.tokenId;
+        console.log("Id Token: ", id_token);*/
+
+        try {
+
+            //use the api to login
+            const { data } = await api.login(access_token);
+
+            toast.success('Login successful');  
+
+            setUser(data.user);
+
+        } catch (error) {
+
+            console.log("An Error occured: ", error.response);
+            localStorage.removeItem('access_token');
+
+            setUser({});
+
+        }
+    };
+    
+    const onLoginFailure = () => {
+
+        toast.error('Login failed');
+        localStorage.removeItem('access_token');
+        setUser({});
 
     };
-    const onFailure = (res) => {
-        console.log('[Login failed] res:', res);
-    };
+    
+    const getUser = async () => {
 
+        try {
+
+            const { data } = await api.fetchUser();
+            console.log(data);
+            setUser(data);
+
+        } catch (error) {
+
+            console.log(error.response);
+            localStorage.removeItem('access_token');
+            setUser({});
+        }
+
+    };
+    
+    useEffect(() => {
+        getUser();
+    }, []);
+    
 
     return (
         <div className='flex h-screen place-content-center dark:text-white dark:bg-gray-600'>
@@ -97,16 +133,13 @@ const Login = () => {
                                 disabled = {renderProps.disabled}
                                 type="button" 
                                 className="cursor-pointer text-white w-full justify-center bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
-                                
                                 >
-                                
                                 <svg className="mr-2 -ml-1 w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>
                                 Sign in with Google
-                               
                             </button>
                         )}
-                        onSuccess={onSuccess}
-                        onFailure={onFailure}
+                        onSuccess={onLoginSuccess}
+                        onFailure={onLoginFailure}
                         cookiePolicy={'single_host_origin'}
                         //isSignedIn={true}
                     />

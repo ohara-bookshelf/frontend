@@ -1,17 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./Layouts/Header/index.jsx";
-import Login from "./Pages/Login/index.jsx";
-import Dashboard from "./Pages/Dashboard/index.jsx";
-
+import {Login, Register, Dashboard} from './Pages/index';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Login />} />
-          <Route path="blogs" element={<Dashboard />} />
-        </Route>
+          <Route index path = "//login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="/*" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );
