@@ -36,13 +36,23 @@ const Home = () => {
         scrollRef.current.scrollTo(0, 0);
     }, []);
 
-    //If there's logged in user, always navigate to the home page
+    //If there's logged in user navigate to the home page else go to the login page
+    useEffect(() => {   
+        
+        if(userInfo !== null){
+            setUser(userInfo);
+            console.log('User: ',user)
+
+        }else{
+            navigate("/");
+        }   
+    }, []);
  
 
     return (
-        <div ref={scrollRef} className="flex flex-col md:flex-row h-screen min-h-screen w-full transaction-height duration-75 ease-out bg-gray-50 dark:text-slate-100 dark:bg-gray-900">
+        <div className="flex flex-col md:flex-row h-screen min-h-screen w-full transaction-height duration-75 ease-out bg-gray-50 dark:text-slate-100 dark:bg-black">
             <div className="hidden md:flex h-screen w-2/5 md:w-[30%] xm:w-[28%] lg:w-[25%] xl:w-[20%] flex-initial">
-                <Sidebar user={user?user:null} closeToggle ={setToggleSidebar} />
+                <Sidebar user={user? user:null} closeToggle ={setToggleSidebar} />
             </div>
 
             <div className="flex flex-col md:hidden">
@@ -57,8 +67,14 @@ const Home = () => {
                         <img src={logo} alt="logo" className="h-12 w-12 ml-2"/>
                         <span className="text-gray-700 dark:text-gray-50 text-xl font-extrabold">BOOKSHELF</span>
                     </Link>
-                    <Link  to ={`user-profile/${user?._id}`}>
-                        <img src={user?.image} alt="profile" className="h-10 w-10 ml-2 rounded-full" />
+                    
+                    <Link to ={`profile/${user?.googleId}`}>
+                        <input 
+                            type="image" 
+                            className="w-10 h-10 rounded-full ml-2 dark:border-blue-400 border-2"  
+                            img="true" src = {user?.imageUrl} 
+                            alt="profile picture"
+                        />
                     </Link>
                 </div>
             </div>

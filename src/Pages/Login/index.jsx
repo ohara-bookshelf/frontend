@@ -62,6 +62,9 @@ const Login = () => {
 
             setUser(data.user);
 
+            //navigate to the home page
+            navigate('/');
+
         } catch (error) {
 
             console.log("An Error occured: ", error);
@@ -103,8 +106,8 @@ const Login = () => {
     
 
     return (
-        <div className='flex h-screen place-content-center dark:text-white dark:bg-gray-900'>
-            <div className='LOGIN-CONTAINER mt-14 flex flex-col items-center  bg-slate-100 dark:bg-slate-500 rounded shadow-sm shadow-slate-500 w-[80%] h-[75%]  sm:w-[60%] xs:w-[55%] md:w-[50%] xm:w-[45%] lg:w-[40%] xl:w-[30%] '>
+        <div className='flex h-screen place-content-center dark:text-white dark:bg-black'>
+            <div className='LOGIN-CONTAINER mt-14 flex flex-col items-center  bg-slate-100 dark:bg-gray-900 rounded shadow-sm shadow-slate-500 w-[80%] h-[75%]  sm:w-[60%] xs:w-[55%] md:w-[50%] xm:w-[45%] lg:w-[40%] xl:w-[30%] '>
                     <div className='flex w-full  items-center place-content-center '>
                         <img src={bookshelf} alt="logo" className="w-20 h-20 mb-5"/> 
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Login</h1>
