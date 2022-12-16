@@ -2,21 +2,21 @@ import React, {useState, useEffect, useRef} from "react";
 import {HiMenu} from "react-icons/hi";
 import {AiFillCloseCircle} from "react-icons/ai";
 
-import {Link, Routes, Route} from "react-router-dom";
+import {Link, Routes, Route, resolvePath} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 
 //import { Sidebar, UserProfile } from "../components";
 
 //import {client} from "../client";
 import logo from "../../Assets/Images/bookshelf.png";
-import {Sidebar, Popular, Recommendation} from "../../Components";
+import {Navbar, Sidebar } from "../../Components";
+import {Feed, Popular, Search} from "../../Components/index";
 import { Profile } from "..";
-
-
+import {Home} from "../../Components/Bookshelves/index"
 
 //import { userQuery} from "../Utils/data";
 
-const Home = () => {
+const Dashboard = () => {
 
     const navigate = useNavigate();
     
@@ -28,7 +28,7 @@ const Home = () => {
     const userInfo = localStorage.getItem("user") !== 'undefined' ? JSON.parse(localStorage.getItem("user")) : localStorage.clear();
 
     //user useSate hook to set the state of the user
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState('null');
 
     //useRef hook to handle the click outside the sidebar
     const scrollRef = useRef(null);
@@ -41,6 +41,7 @@ const Home = () => {
         
         if(userInfo !== null){
             setUser(userInfo);
+            //Reload the page
             console.log('User: ',user)
 
         }else{
@@ -54,7 +55,7 @@ const Home = () => {
             <div className="hidden md:flex h-screen w-2/5 md:w-[30%] xm:w-[28%] lg:w-[25%] xl:w-[20%] flex-initial">
                 <Sidebar user={user? user:null} closeToggle ={setToggleSidebar} />
             </div>
-
+            
             <div className="flex flex-col md:hidden">
                 <div className="flex flex-row justify-between bg-gray-800 shadow-xl w-full p-2">
                     <HiMenu 
@@ -62,7 +63,7 @@ const Home = () => {
                         fontSize={40}
                         onClick={() => {setToggleSidebar(true)}}
                     />
-                
+
                     <Link to="/" className="flex flex-row items-center">
                         <img src={logo} alt="logo" className="h-12 w-12 ml-2"/>
                         <span className="text-gray-700 dark:text-gray-50 text-xl font-extrabold">BOOKSHELF</span>
@@ -78,7 +79,7 @@ const Home = () => {
                     </Link>
                 </div>
             </div>
-
+            
             {
                 toggleSidebar && (
                     <div className="fixed w-[80%] max-w-[320px] md:max-w-500 bg-white h-screen overflow-y-auto shadow-md z-10 animate-slide-in">
@@ -89,12 +90,11 @@ const Home = () => {
                     </div>
                 )
             }
-
+            
             <div className="flex flex-col flex-1 overflow-y-auto pb-2" ref={scrollRef}>
                 <Routes>
                     <Route path="profile/:userId" element={<Profile />} />
-                    <Route path="recommendation" element={<Recommendation />} />
-                    <Route path="/*" element={<Popular user={user? user: null} />} />
+                    <Route path="/*" element={<Home user={user ? user: null}/>} />
                 </Routes>
             </div>
 
@@ -102,4 +102,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Dashboard;
