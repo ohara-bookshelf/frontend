@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
-
-import {Spinner, MasonryLayout} from '../../index';
+import { Spinner, MasonryLayout } from '../../index';
 
 const Detail = () => {
   const { bookshelfId } = useParams();
@@ -15,8 +13,6 @@ const Detail = () => {
   /*const fetchDetails = () => {
     const query = DetailQuery(bookshelfId);
   };*/
-
-
 
   /*const addComment = () => {
     if (comment) {
@@ -36,9 +32,7 @@ const Detail = () => {
   };*/
 
   if (!bookshelfDetail) {
-    return (
-      <Spinner message="Showing bookshelf" />
-    );
+    return <Spinner message='Showing bookshelf' />;
   }
 
   return (
@@ -46,7 +40,7 @@ const Detail = () => {
       {bookshelves ? (
         <MasonryLayout bookshelves={bookshelves} />
       ) : (
-        <Spinner message="Loading more bookshelves" />
+        <Spinner message='Loading more bookshelves' />
       )}
     </>
   );
