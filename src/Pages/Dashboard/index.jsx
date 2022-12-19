@@ -2,33 +2,26 @@ import React, { useState, useEffect, useRef } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { AiFillCloseCircle } from 'react-icons/ai';
 
-import { Link, Routes, Route, useNavigate } from 'react-router-dom';
+import { Link, Routes, Route } from 'react-router-dom';
 
 //import { Sidebar, UserProfile } from "../components";
 
 //import {client} from "../client";
 import logo from '../../Assets/Images/bookshelf.png';
-import { Navbar, Sidebar } from '../../Components';
-import { Feed, Popular, Search } from '../../Components/index';
+import { Sidebar } from '../../Components';
 import { Profile } from '..';
 import { Home } from '../../Components/Bookshelves/index';
 
 //import { userQuery} from "../Utils/data";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-
   //useState hook to set the state of the sidebar
   const [toggleSidebar, setToggleSidebar] = useState(false);
 
   //Get the logged in user
-  const userInfo =
-    localStorage.getItem('user') !== 'undefined'
-      ? JSON.parse(localStorage.getItem('user'))
-      : localStorage.clear();
 
   //user useSate hook to set the state of the user
-  const [user, setUser] = useState('null');
+  const [user, _] = useState('null');
 
   //useRef hook to handle the click outside the sidebar
   const scrollRef = useRef(null);
@@ -37,15 +30,6 @@ const Dashboard = () => {
   }, []);
 
   //If there's logged in user navigate to the home page else go to the login page
-  useEffect(() => {
-    if (userInfo !== null) {
-      setUser(userInfo);
-      //Reload the page
-      console.log('User: ', user);
-    } else {
-      navigate('/');
-    }
-  }, []);
 
   return (
     <div className="flex flex-col md:flex-row h-screen min-h-screen w-full transaction-height duration-75 ease-out bg-gray-50 dark:text-slate-100 dark:bg-black">

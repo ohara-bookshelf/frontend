@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 
 import { Spinner, MasonryLayout } from '../../index';
 
 const Detail = () => {
-  const { bookshelfId } = useParams();
   const [bookshelves, setBookshelves] = useState();
   const [bookshelfDetail, setBookshelfDetail] = useState();
   //const [comment, setComment] = useState('');
@@ -30,6 +28,11 @@ const Detail = () => {
         });
     }
   };*/
+
+  useEffect(() => {
+    setBookshelves([]);
+    setBookshelfDetail([]);
+  }, []);
 
   if (!bookshelfDetail) {
     return <Spinner message="Showing bookshelf" />;

@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
 import { MdDelete } from 'react-icons/md';
 
 import { bookshelfNames } from '../../../Utils/data';
 import { Spinner } from '../../index';
 
-const Create = ({ user }) => {
-  const [title, setTitle] = useState('');
+const Create = () => {
   const [about, setAbout] = useState('');
   const [loading, setLoading] = useState(false);
-  const [destination, setDestination] = useState();
   const [fields, setFields] = useState();
-  const [category, setCategory] = useState();
+  const [_, setCategory] = useState();
   const [imageAsset, setImageAsset] = useState();
   const [wrongImageType, setWrongImageType] = useState(false);
 
-  const navigate = useNavigate();
+  const uuid = useId();
+
+  useEffect(() => {
+    setLoading(false);
+    setFields();
+    setImageAsset();
+    setWrongImageType(false);
+  }, []);
 
   //const uploadImage = (e) => {
 
@@ -92,7 +96,6 @@ const Create = ({ user }) => {
             {loading && <Spinner />}
             {wrongImageType && <p>It&apos;s wrong file type.</p>}
             {!imageAsset ? (
-              // eslint-disable-next-line jsx-a11y/label-has-associated-control
               <label>
                 <div className="flex flex-col items-center justify-center h-full">
                   <div className="flex flex-col justify-center items-center">
@@ -149,6 +152,7 @@ const Create = ({ user }) => {
               </option>
               {bookshelfNames.map((bookshelf) => (
                 <option
+                  key={uuid}
                   className="text-base border-0 outline-none capitalize bg-white  dark:bg-gray-900 text-black dark:text-white "
                   value={bookshelf}
                 >

@@ -34,7 +34,7 @@ const Navbar = ({ searchTerm, setSearchTerm, user }) => {
           <input
             type="image"
             className="w-14 h-14 rounded-full dark:border-red-400 border-2 shadow-lg"
-            img="true"
+            // img="true"
             src={user?.imageUrl}
             alt="profile picture"
           />

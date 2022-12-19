@@ -29,5 +29,10 @@
     "react/display-name": "off",
     "no-duplicate-imports": "error",
     "react/no-unescaped-entities": ["error", { "forbid": [">", "}"] }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

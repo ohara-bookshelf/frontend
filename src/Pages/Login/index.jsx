@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import bookshelf from '../../Assets/Images/bookshelf.png';
 
 import * as api from '../../Middleware/';
-import { toast } from 'react-toastify';
 
 const Login = () => {
   //let's use the react navigation to navigate to the home page after loging in successfully
-  const navigate = useNavigate();
 
-  const [user, setUser] = useState({});
+  const [_, setUser] = useState({});
 
   /*useEffect(() => {
 
@@ -24,54 +22,52 @@ const Login = () => {
 
     });*/
 
-  const onLoginSuccess = async (response) => {
-    //Add the response to the local storage
-    localStorage.setItem('user', JSON.stringify(response.profileObj));
+  // const onLoginSuccess = async (response) => {
+  //   //Add the response to the local storage
+  //   localStorage.setItem('user', JSON.stringify(response.profileObj));
 
-    console.log('Response: ', response);
+  //   console.log('Response: ', response);
 
-    const access_token = response.tokenId;
+  //   const access_token = response.tokenId;
 
-    //Save the access token to the local storage
-    localStorage.setItem('access_token', access_token);
+  //   //Save the access token to the local storage
+  //   localStorage.setItem('access_token', access_token);
 
-    console.log('Access Token: ', access_token);
+  //   console.log('Access Token: ', access_token);
 
-    //Get the user id token
-    /*const id_token = response.tokenId;
-        console.log("Id Token: ", id_token);*/
+  //   //Get the user id token
+  //   /*const id_token = response.tokenId;
+  //       console.log("Id Token: ", id_token);*/
 
-    try {
-      //use the api to login
-      const { data } = await api.login(access_token);
+  //   try {
+  //     //use the api to login
+  //     const { data } = await api.login(access_token);
 
-      console.log('Data: ', data);
+  //     console.log('Data: ', data);
 
-      setUser(data.user);
+  //     setUser(data.user);
 
-      //navigate to the home page
-      navigate('/');
-    } catch (error) {
-      console.log('An Error occured: ', error);
-      localStorage.removeItem('access_token');
+  //     //navigate to the home page
+  //     navigate('/');
+  //   } catch (error) {
+  //     console.log('An Error occured: ', error);
+  //     localStorage.removeItem('access_token');
 
-      setUser({});
-    }
-  };
+  //     setUser({});
+  //   }
+  // };
 
-  const onLoginFailure = () => {
-    toast.error('Login failed');
-    localStorage.removeItem('access_token');
-    setUser({});
-  };
+  // const onLoginFailure = () => {
+  //   toast.error('Login failed');
+  //   localStorage.removeItem('access_token');
+  //   setUser({});
+  // };
 
   const getUser = async () => {
     try {
       const { data } = await api.fetchUser();
-      console.log(data);
       setUser(data);
     } catch (error) {
-      console.log(error.response);
       localStorage.removeItem('access_token');
       setUser({});
     }

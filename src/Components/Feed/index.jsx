@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom';
 
-import { Create, View, Detail } from '../Bookshelf/index';
-
-import { Spinner, MasonryLayout, Search, Navbar } from '../index';
+import { Spinner, MasonryLayout } from '../index';
 
 const Feed = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [bookshelves, setBookshelves] = useState();
   const [loading, setLoading] = useState(false);
   const { typeId } = useParams();
 
@@ -21,6 +16,10 @@ const Feed = () => {
     }
     
   ];*/
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const bookCategory = typeId || 'new';
   if (loading) {

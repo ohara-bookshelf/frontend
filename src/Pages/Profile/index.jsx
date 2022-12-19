@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { AiOutlineLogout } from 'react-icons/ai';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+// import { AiOutlineLogout } from 'react-icons/ai';
+// import { useParams, useNavigate } from 'react-router-dom';
 // import { GoogleLogout } from 'react-google-login';
 
 import cover from '../../Assets/Images/cover.png';
@@ -26,11 +26,11 @@ const isForkedNotActiveStyles =
 
 const Profile = () => {
   //const [user, setUser] = useState();
-  const [bookshelves, setBookshelves] = useState();
-  const [type, setType] = useState('Private');
+  // const [bookshelves, setBookshelves] = useState();
+  const [, setType] = useState('Private');
   const [activeBtn, setActiveBtn] = useState('private');
-  const navigate = useNavigate();
-  const { userId } = useParams();
+  // const navigate = useNavigate();
+  // const { userId } = useParams();
 
   const user =
     localStorage.getItem('user') !== 'undefined'
@@ -64,11 +64,11 @@ const Profile = () => {
   //   }
   // }, [text, userId]);
 
-  const logout = () => {
-    localStorage.removeItem('user');
-    localStorage.clear();
-    navigate('/login');
-  };
+  // const logout = () => {
+  //   localStorage.removeItem('user');
+  //   localStorage.clear();
+  //   navigate('/login');
+  // };
 
   //if (!user) return <Spinner message="Loading profile" />;
 

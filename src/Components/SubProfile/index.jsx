@@ -9,7 +9,7 @@ const SubProfile = ({ user }) => {
           <input
             type="image"
             className="w-24 h-24 mb-3 mt-3 rounded-full dark:border-blue-400 border-2 shadow-lg"
-            img="true"
+            // img="true"
             src={user?.imageUrl}
             alt="profile picture"
           />

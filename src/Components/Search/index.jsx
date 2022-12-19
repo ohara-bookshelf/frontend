@@ -8,6 +8,10 @@ const Search = ({ searchTerm }) => {
   const [bookshelves, setBookshelves] = useState('');
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    setBookshelves([]);
+    setLoading(true);
+  }, []);
   return (
     <div>
       {loading && <Spinner message="Searching books" />}

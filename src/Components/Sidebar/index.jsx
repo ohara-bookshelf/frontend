@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { RiHomeFill } from 'react-icons/ri';
 
-import { BiLogOut } from 'react-icons/bi';
+// import { BiLogOut } from 'react-icons/bi';
 
 import { GiBookshelf } from 'react-icons/gi';
 
@@ -11,7 +11,6 @@ import { bookshelves } from '../../Utils/data';
 import bookshelf from '../../Assets/Images/bookshelf.png';
 import SubProfile from '../SubProfile/index';
 
-import { useParams, useNavigate } from 'react-router-dom';
 // import { GoogleLogout } from 'react-google-login';
 
 const isNotActiveStyle =
@@ -20,9 +19,6 @@ const isActiveStyle =
   'flex items-center px-5 gap-3 font-extrabold border-r-4 border-gray-50  transition-all duration-200 ease-in-out capitalize';
 
 const Sidebar = ({ user, closeToggle }) => {
-  const { userId } = useParams();
-  const navigate = useNavigate();
-
   const handleCloseSidebar = () => {
     if (closeToggle) {
       closeToggle(false);
@@ -30,12 +26,12 @@ const Sidebar = ({ user, closeToggle }) => {
   };
 
   //Logout the current user
-  const handleLogout = () => {
-    localStorage.clear();
-    //Remove the access token from the local storage
-    localStorage.removeItem('accessToken');
-    navigate('/login');
-  };
+  // const handleLogout = () => {
+  //   localStorage.clear();
+  //   //Remove the access token from the local storage
+  //   localStorage.removeItem('accessToken');
+  //   navigate('/login');
+  // };
 
   return (
     <div className="flex bg-gray-100 dark:bg-gray-900 w-full flex-col justify-between h-full overflow-y-scroll min-w-210 hide-scrollbar">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import { Create, View, Detail } from '../../Bookshelf/index';
+import { Create, Detail } from '../../Bookshelf/index';
 
 import { Search, Navbar, Feed } from '../../index';
 
