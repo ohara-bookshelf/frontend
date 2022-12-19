@@ -18,7 +18,7 @@ const View = () => {
       : localStorage.clear();
 
   return (
-    <div className='flex'>
+    <div className="flex">
       <h1>View Bookshelf</h1>
     </div>
   );

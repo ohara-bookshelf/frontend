@@ -32,7 +32,7 @@ const Detail = () => {
   };*/
 
   if (!bookshelfDetail) {
-    return <Spinner message='Showing bookshelf' />;
+    return <Spinner message="Showing bookshelf" />;
   }
 
   return (
@@ -40,7 +40,7 @@ const Detail = () => {
       {bookshelves ? (
         <MasonryLayout bookshelves={bookshelves} />
       ) : (
-        <Spinner message='Loading more bookshelves' />
+        <Spinner message="Loading more bookshelves" />
       )}
     </>
   );

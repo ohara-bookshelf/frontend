@@ -24,8 +24,6 @@ const isForkedActiveStyles =
 const isForkedNotActiveStyles =
   'bg-primary mr-4 text-green-800 font-bold p-2 rounded-full w-20 outline-none';
 
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_API_CLIENT_ID;
-
 const Profile = () => {
   //const [user, setUser] = useState();
   const [bookshelves, setBookshelves] = useState();
@@ -75,25 +73,25 @@ const Profile = () => {
   //if (!user) return <Spinner message="Loading profile" />;
 
   return (
-    <div className='relative pb-2 h-full justify-center items-center'>
-      <div className='flex flex-col pb-5'>
-        <div className='relative flex flex-col mb-7'>
-          <div className='flex flex-col justify-center items-center'>
+    <div className="relative pb-2 h-full justify-center items-center">
+      <div className="flex flex-col pb-5">
+        <div className="relative flex flex-col mb-7">
+          <div className="flex flex-col justify-center items-center">
             <img
-              className=' w-full h-370 2xl:h-510 shadow-lg object-cover'
+              className=" w-full h-370 2xl:h-510 shadow-lg object-cover"
               src={cover}
-              alt='user-pic'
+              alt="user-pic"
             />
             <input
-              type='image'
-              className='w-32 h-32 rounded-full -mt-14 dark:border-blue-400 border-2 shadow-xl object-cover'
-              img='true'
+              type="image"
+              className="w-32 h-32 rounded-full -mt-14 dark:border-blue-400 border-2 shadow-xl object-cover"
+              // img="true"
               src={user?.imageUrl}
-              alt='profile picture'
+              alt="profile picture"
             />
           </div>
-          <h1 className='font-bold text-3xl text-center mt-3'>{user?.name}</h1>
-          <div className='absolute top-0 z-1 right-0 p-2'>
+          <h1 className="font-bold text-3xl text-center mt-3">{user?.name}</h1>
+          <div className="absolute top-0 z-1 right-0 p-2">
             {/* {userId === user?.sub && (
               <GoogleLogout
                 clientId={CLIENT_ID}
@@ -113,9 +111,9 @@ const Profile = () => {
             )} */}
           </div>
         </div>
-        <div className='text-center mb-7'>
+        <div className="text-center mb-7">
           <button
-            type='button'
+            type="button"
             onClick={(e) => {
               setType(e.target.textContent);
               setActiveBtn('private');
@@ -129,7 +127,7 @@ const Profile = () => {
             Private
           </button>
           <button
-            type='button'
+            type="button"
             onClick={(e) => {
               setType(e.target.textContent);
               setActiveBtn('public');
@@ -143,7 +141,7 @@ const Profile = () => {
             Public
           </button>
           <button
-            type='button'
+            type="button"
             onClick={(e) => {
               setType(e.target.textContent);
               setActiveBtn('forked');

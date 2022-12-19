@@ -38,28 +38,28 @@ const Sidebar = ({ user, closeToggle }) => {
   };
 
   return (
-    <div className='flex bg-gray-100 dark:bg-gray-900 w-full flex-col justify-between h-full overflow-y-scroll min-w-210 hide-scrollbar'>
-      <div className='flex flex-col'>
-        <div className='cursor-pointer w-fit'>
+    <div className="flex bg-gray-100 dark:bg-gray-900 w-full flex-col justify-between h-full overflow-y-scroll min-w-210 hide-scrollbar">
+      <div className="flex flex-col">
+        <div className="cursor-pointer w-fit">
           <Link
-            to='/'
+            to="/"
             onClick={handleCloseSidebar}
-            className='flex flex-row items-center justify-start'
+            className="flex flex-row items-center justify-start"
           >
-            <img src={bookshelf} alt='logo' className=' h-12 w-12' />
-            <p className='text-gray-700 dark:text-gray-50 text-xl font-extrabold'>
+            <img src={bookshelf} alt="logo" className=" h-12 w-12" />
+            <p className="text-gray-700 dark:text-gray-50 text-xl font-extrabold">
               BOOKSHELF
             </p>
           </Link>
         </div>
 
-        <div className='flex flex-col gap-2 mt-2'>
+        <div className="flex flex-col gap-2 mt-2">
           <SubProfile user={user} />
         </div>
 
-        <div className='flex flex-col gap-2 mt-2'>
+        <div className="flex flex-col gap-2 mt-2">
           <NavLink
-            to='/'
+            to="/"
             className={({ isActive }) =>
               isActive ? isActiveStyle : isNotActiveStyle
             }
@@ -69,11 +69,11 @@ const Sidebar = ({ user, closeToggle }) => {
             Dashboard
           </NavLink>
 
-          <h3 className='mt-5 mb-2 px-5 text-base dark:text-gray-500 2xl:text-xl'>
-            <GiBookshelf className='inline-block mr-2' />
+          <h3 className="mt-5 mb-2 px-5 text-base dark:text-gray-500 2xl:text-xl">
+            <GiBookshelf className="inline-block mr-2" />
             BOOKSHELVES
           </h3>
-          <div className='flex flex-col gap-4'>
+          <div className="flex flex-col gap-4">
             {bookshelves
               .slice(0, bookshelves.length)
               .map((bookshelf, index) => (
