@@ -4,7 +4,7 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { RouterProvider } from 'react-router-dom';
 
-import router from './routes/Router';
+import router from './routes/router';
 
 const queryClient = new QueryClient();
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
