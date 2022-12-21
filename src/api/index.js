@@ -1,12 +1,8 @@
 import axios from 'axios';
 
 export const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
-  // timeout: 1000,
-  // headers: {
-  //   'Content-Type': 'application/json',
-  //   'Accept': 'application/json',
-  // },
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 1000 * 60,
 });
 
 API.interceptors.request.use((req) => {
@@ -18,3 +14,5 @@ API.interceptors.request.use((req) => {
 
   return req;
 });
+
+export { login, fetchUser } from './auth-api';

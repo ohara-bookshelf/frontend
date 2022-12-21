@@ -4,14 +4,10 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 
 import { Link, Routes, Route } from 'react-router-dom';
 
-//import { Sidebar, UserProfile } from "../components";
-
-//import {client} from "../client";
 import logo from '../../Assets/Images/bookshelf.png';
-import { Sidebar } from '../../Components';
 import { Profile } from '..';
 import { Home } from '../../Components/Bookshelves/index';
-
+import Sidebar from '../../components/Sidebar/Sidebar';
 //import { userQuery} from "../Utils/data";
 
 const Dashboard = () => {

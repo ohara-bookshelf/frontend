@@ -1,5 +1,3 @@
-export { default as Sidebar } from './Sidebar/index';
-
 export { default as Popular } from './Bookshelves/Popular/index';
 
 export { default as Recommendation } from './Bookshelves/Recommendation/index';

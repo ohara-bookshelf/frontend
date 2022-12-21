@@ -1,16 +1,21 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Login, Register, Dashboard } from './Pages/index';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { RouterProvider } from 'react-router-dom';
 
+import router from './routes/Router';
+
+const queryClient = new QueryClient();
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index path="/login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="/*" element={<Dashboard />} />
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <GoogleOAuthProvider clientId={clientId}>
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 
