@@ -5,15 +5,15 @@ import MasonryLayout from '../MasonryLayout/index';
 import Spinner from '../Spinner/index';
 
 const Search = ({ searchTerm }) => {
-  
   const [bookshelves, setBookshelves] = useState('');
   const [loading, setLoading] = useState(true);
 
- 
-
+  useEffect(() => {
+    setBookshelves([]);
+    setLoading(true);
+  }, []);
   return (
     <div>
-      
       {loading && <Spinner message="Searching books" />}
       {bookshelves?.length !== 0 && <MasonryLayout bookshelves={bookshelves} />}
       {bookshelves?.bookshelves === 0 && searchTerm !== '' && !loading && (

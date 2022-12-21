@@ -1,32 +1,28 @@
-import {GoRepoForked} from 'react-icons/go'
-import {RiGitRepositoryPrivateFill} from "react-icons/ri";
-import {MdOutlinePublic} from "react-icons/md";
-
-
+import React from 'react';
+import { GoRepoForked } from 'react-icons/go';
+import { RiGitRepositoryPrivateFill } from 'react-icons/ri';
+import { MdOutlinePublic } from 'react-icons/md';
 
 export const bookshelves = [
-    {
-      name: 'Private',
-      icon: <RiGitRepositoryPrivateFill  />,
-    },
-    {
-      name: 'Public',
-        icon: <MdOutlinePublic />,
-    },
-    {
-      name: 'Forked',
-        icon: <GoRepoForked />,
-    },
+  {
+    name: 'Private',
+    icon: <RiGitRepositoryPrivateFill />,
+  },
+  {
+    name: 'Public',
+    icon: <MdOutlinePublic />,
+  },
+  {
+    name: 'Forked',
+    icon: <GoRepoForked />,
+  },
 ];
 
-
-
-export const visibility  = bookshelves.map((bookshelve) => bookshelve.name);
-
+export const visibility = bookshelves.map((bookshelve) => bookshelve.name);
 
 // Path: frontend\src\Utils\data.js
 
-export const  bookshelfNames = [
+export const bookshelfNames = [
   'Fantasy',
   'Science Fiction',
   'Humor',
@@ -61,5 +57,4 @@ export const  bookshelfNames = [
   'Law & Criminology',
   'Politics & Social Sciences',
   'Education & Teaching',
-]
-  
+];
