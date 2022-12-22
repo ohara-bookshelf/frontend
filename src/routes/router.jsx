@@ -13,6 +13,11 @@ const router = createBrowserRouter([
         path: 'profile',
         element: <pages.Profile />,
       },
+      {
+        path: 'bookshelves',
+        element: <pages.Bookshelves />,
+        children: [{ path: ':bookshelfId', element: <pages.Bookshelf /> }],
+      },
     ],
   },
 ]);
