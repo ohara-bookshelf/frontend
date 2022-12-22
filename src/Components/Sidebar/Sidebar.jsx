@@ -1,55 +1,48 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
-import * as api from '../../api';
-import bookshelf from '../../Assets/Images/bookshelf.png';
 import SubProfile from '../SubProfile/SubProfile';
-
-// const isNotActiveStyle =
-//   'flex items-center px-5 gap-3 text-gray-200 hover:text-gray-50 hover:font-bold transition-all duration-200 ease-in-out capitalize';
-// const isActiveStyle =
-//   'flex items-center px-5 gap-3 font-extrabold border-r-4 border-gray-50  transition-all duration-200 ease-in-out capitalize';
+import logo from '../../Assets/Images/bookshelf.png';
+import * as api from '../../api';
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
-
-  const { mutate: onLoginSuccess } = useMutation(api.login, {
-    onSuccess: ({ data }) => {
-      localStorage.setItem('access_token', data.access_token);
-      queryClient.invalidateQueries('user');
-      queryClient.setQueryData('user', () => data.user);
-    },
-    onError: () => {
-      localStorage.removeItem('access_token');
-    },
-  });
+  const keyId = useId();
 
   const {
     data: user,
-    refetch,
+    refetch: refetchUser,
     isLoading: fetchingUser,
   } = useQuery('user', api.getUserDetail, {
     onError: () => {
       localStorage.removeItem('access_token');
     },
-    enabled: false,
   });
 
-  const gauthLoginHandler = async ({ credential }) => {
+  const onLoginSuccess = async ({ credential }) => {
     localStorage.setItem('access_token', credential);
-    onLoginSuccess(credential);
+
+    try {
+      const { data } = await api.login();
+
+      localStorage.setItem('access_token', data.access_token);
+      refetchUser();
+    } catch (error) {
+      localStorage.removeItem('access_token');
+      queryClient.setQueryData('user', () => null);
+    }
   };
 
-  const logoutHandler = () => {
+  const onLoginFailed = () => {
     localStorage.removeItem('access_token');
     queryClient.setQueryData('user', () => null);
   };
 
   // check if user is logged in previously
   useState(() => {
-    refetch();
+    refetchUser();
   }, []);
 
   return (
@@ -57,7 +50,7 @@ const Sidebar = () => {
       <div className="flex flex-col">
         <div className="cursor-pointer w-fit">
           <Link to="/" className="flex flex-row items-center justify-start">
-            <img src={bookshelf} alt="logo" className=" h-12 w-12" />
+            <img src={logo} alt="logo" className=" h-12 w-12" />
             <p className="text-gray-700 dark:text-gray-50 text-xl font-extrabold">
               BOOKSHELF
             </p>
@@ -74,22 +67,40 @@ const Sidebar = () => {
             {/* Accordions */}
             <div>
               {/* Bookshelves Accordion */}
-              <div>
-                bookshelf accordion
-                <div>public</div>
-                <div>private</div>
-              </div>
+              {/* Extracting bookshelf visibility */}
+              {user.bookshelves ? (
+                Object.keys(user.bookshelves).map((visibility) => (
+                  <div key={keyId}>
+                    <h3 className="text-rose-600">{visibility} Bookshelves</h3>
+                    {user.bookshelves[visibility].map((bookshelf) => (
+                      <ul key={bookshelf.id}>
+                        <li>{bookshelf.name}</li>
+                      </ul>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <p>No bookshelves</p>
+              )}
               {/* Forkedshelves Accordion */}
-              <div>forkedshelves accordion</div>
+              <div>
+                <h3 className="text-rose-600">Forked Bookshelves</h3>
+                {user.forkedshelves.length ? (
+                  user.forkedShelves.map((forkedShelf) => (
+                    <ul key={forkedShelf.id}>
+                      <li>{forkedShelf.name}</li>
+                    </ul>
+                  ))
+                ) : (
+                  <p>No forked shelves</p>
+                )}
+              </div>
             </div>
-            <button onClick={logoutHandler}>logout</button>
+            <button onClick={onLoginFailed}>logout</button>
           </div>
         ) : (
           <div className="flex flex-col gap-2 mt-2">
-            <GoogleLogin
-              onSuccess={gauthLoginHandler}
-              onError={logoutHandler}
-            />
+            <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
           </div>
         )}
 

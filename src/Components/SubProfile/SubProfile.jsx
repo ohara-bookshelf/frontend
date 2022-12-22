@@ -10,6 +10,7 @@ const SubProfile = ({ user }) => {
             className="w-24 h-24 mb-3 mt-3 rounded-full dark:border-blue-400 border-2 shadow-lg"
             src={user.profileImgUrl}
             alt="profile picture"
+            referrerPolicy="no-referrer"
           />
         </Link>
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
