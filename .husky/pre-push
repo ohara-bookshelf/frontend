@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
-PROTECTED_BRANCHES="^(master|develop|dev/husky-pre-push)"
+PROTECTED_BRANCHES="^(master|develop)"
 
 if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]
 then
