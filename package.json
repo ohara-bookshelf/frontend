@@ -43,7 +43,6 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "./.husky/pre-commit",
       "pre-push": "./.husky/pre-push $HUSKY_GIT_STDIN"
     }
   }
