@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import * as api from '../../api';
 import bookshelf from '../../Assets/Images/bookshelf.png';
+import SubProfile from '../SubProfile/SubProfile';
 
 // const isNotActiveStyle =
 //   'flex items-center px-5 gap-3 text-gray-200 hover:text-gray-50 hover:font-bold transition-all duration-200 ease-in-out capitalize';
@@ -28,15 +29,15 @@ const Sidebar = () => {
   const {
     data: user,
     refetch,
-    isLoading,
-  } = useQuery('user', api.fetchUser, {
+    isLoading: fetchingUser,
+  } = useQuery('user', api.getUserDetail, {
     onError: () => {
       localStorage.removeItem('access_token');
     },
     enabled: false,
   });
 
-  const loginHandler = async ({ credential }) => {
+  const gauthLoginHandler = async ({ credential }) => {
     localStorage.setItem('access_token', credential);
     onLoginSuccess(credential);
   };
@@ -63,13 +64,32 @@ const Sidebar = () => {
           </Link>
         </div>
 
-        {isLoading ? (
+        {/* user detail */}
+
+        {fetchingUser ? (
           <div>Loading...</div>
         ) : user ? (
-          <button onClick={logoutHandler}>logout</button>
+          <div>
+            <SubProfile user={user} />
+            {/* Accordions */}
+            <div>
+              {/* Bookshelves Accordion */}
+              <div>
+                bookshelf accordion
+                <div>public</div>
+                <div>private</div>
+              </div>
+              {/* Forkedshelves Accordion */}
+              <div>forkedshelves accordion</div>
+            </div>
+            <button onClick={logoutHandler}>logout</button>
+          </div>
         ) : (
           <div className="flex flex-col gap-2 mt-2">
-            <GoogleLogin onSuccess={loginHandler} onError={logoutHandler} />
+            <GoogleLogin
+              onSuccess={gauthLoginHandler}
+              onError={logoutHandler}
+            />
           </div>
         )}
 
