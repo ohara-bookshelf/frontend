@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import SidebarLayout from '../layouts/SidebarLayout';
 import * as pages from '../Pages/';
-console.log('a');
+
 const router = createBrowserRouter([
   {
     path: '/',

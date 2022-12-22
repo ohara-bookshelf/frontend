@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+PROTECTED_BRANCHES="^(master|develop|dev/husky-pre-push)"
+
+if [[ $1 != *"$BRANCH"* ]]
+then
+  echo -e "\n🚫 You must use (git push origin $BRANCH)" && exit 1
+fi
+
+if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]
+then
+  echo -e "\n🚫 Cannot push to remote $BRANCH branch, please create your own branch and use PR." && exit 1
+fi
+
+exit 0
