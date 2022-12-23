@@ -6,12 +6,9 @@ export const getUserDetail = async () => {
   // Group bookshelves by visibility
   const bookshelves = data.bookshelves.reduce((group, bookshelf) => {
     const { visible } = bookshelf;
-    // Convert to PascalCase
-    const parsedVisible = visible.replace(/(\w)(\w*)/g, function (_, g1, g2) {
-      return g1.toUpperCase() + g2.toLowerCase();
-    });
-    group[parsedVisible] = group[parsedVisible] ?? [];
-    group[parsedVisible].push(bookshelf);
+
+    group[visible.toLowerCase()] = group[visible.toLowerCase()] ?? [];
+    group[visible.toLowerCase()].push(bookshelf);
     return group;
   }, {});
 

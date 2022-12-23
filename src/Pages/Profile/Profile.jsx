@@ -3,25 +3,8 @@ import { useQueryClient } from 'react-query';
 
 import cover from '../../shared/assets/images/cover.png';
 
-// const isPublicActiveStyles =
-//   'bg-red-500 dark:bg-blue-500 dark:text-gray-900 text-slate-200 font-bold p-2 rounded-full w-20 outline-none';
-// const isPublicNotActiveStyles =
-//   'bg-primary  mr-4 text-blue-800 font-bold p-2 rounded-full w-20 outline-none';
-
-// const isPrivateActiveStyles =
-//   'bg-red-500 dark:bg-red-500 dark:text-gray-900 text-slate-200 font-bold p-2 rounded-full w-20 outline-none';
-// const isPrivateNotActiveStyles =
-//   'bg-primary mr-4 text-red-800 font-bold p-2 rounded-full w-20 outline-none';
-
-// const isForkedActiveStyles =
-//   'bg-red-500 dark:bg-green-500 dark:text-gray-900 text-slate-200 font-bold p-2 rounded-full w-20 outline-none';
-// const isForkedNotActiveStyles =
-//   'bg-primary mr-4 text-green-800 font-bold p-2 rounded-full w-20 outline-none';
-
 const Profile = () => {
-  const queryClient = useQueryClient();
-
-  const user = queryClient.getQueryData('user');
+  const user = useQueryClient().getQueryData('user');
   return (
     <div className="relative pb-2 h-full justify-center items-center">
       <img

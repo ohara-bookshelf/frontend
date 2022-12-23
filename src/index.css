@@ -1,18 +1,17 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-@tailwind utilities;
-
+@tailwind utilities; */
 
 /* Language: css */
 /* App general style:  */
 
-body{
+/* body{
     font-family: Lato, sans-serif;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
     display: none;  
-}
+} */
