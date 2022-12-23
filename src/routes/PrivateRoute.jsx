@@ -1,11 +1,11 @@
-import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import * as api from '../api';
+import useAuth from '../shared/hooks/useAuth';
+
 const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
 
-  const { data: isAuthenticated } = useQuery('authenticated', api.fetchUser);
+  const isAuthenticated = useAuth();
   return isAuthenticated ? children : navigate('/');
 };
 

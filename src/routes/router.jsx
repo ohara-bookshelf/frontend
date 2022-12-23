@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 import SidebarLayout from '../layouts/SidebarLayout';
 import * as pages from '../Pages/';
 import PrivateRoute from './PrivateRoute';
@@ -20,8 +20,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'bookshelves',
-        element: <pages.Bookshelves />,
-        children: [{ path: ':bookshelfId', element: <pages.Bookshelf /> }],
+        element: <Outlet />,
+        children: [
+          { index: true, element: <pages.Bookshelves /> },
+          { path: ':bookshelfId', element: <pages.Bookshelf /> },
+        ],
       },
     ],
   },

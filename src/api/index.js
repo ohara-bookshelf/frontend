@@ -16,5 +16,5 @@ API.interceptors.request.use((req) => {
 });
 
 export { login, fetchUser } from './auth-api';
-export { getPopularBookshelf } from './bookshelves-api';
+export { getPopularBookshelf, getAllBookshelf } from './bookshelves-api';
 export { getUserDetail } from './users-api';

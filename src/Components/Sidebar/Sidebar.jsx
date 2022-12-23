@@ -4,7 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useQuery, useQueryClient } from 'react-query';
 
 import SubProfile from '../SubProfile/SubProfile';
-import logo from '../../Assets/Images/bookshelf.png';
+import logo from '../../shared/assets/images/bookshelf.png';
 import * as api from '../../api';
 
 const Sidebar = () => {
@@ -77,8 +77,12 @@ const Sidebar = () => {
                   <div key={keyId}>
                     <h3 className="text-rose-600">{visibility} Bookshelves</h3>
                     {user.bookshelves[visibility].map((bookshelf) => (
-                      <ul key={bookshelf.id}>
-                        <li>{bookshelf.name}</li>
+                      <ul key={bookshelf.id} className="pl-4">
+                        <li>
+                          <Link to={`/bookshelves/${bookshelf.id}`}>
+                            {bookshelf.name}
+                          </Link>
+                        </li>
                       </ul>
                     ))}
                   </div>

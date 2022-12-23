@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQueryClient } from 'react-query';
 
-import cover from '../../Assets/Images/cover.png';
+import cover from '../../shared/assets/images/cover.png';
 
 // const isPublicActiveStyles =
 //   'bg-red-500 dark:bg-blue-500 dark:text-gray-900 text-slate-200 font-bold p-2 rounded-full w-20 outline-none';

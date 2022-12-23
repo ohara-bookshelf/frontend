@@ -7,7 +7,7 @@ function Dashboard() {
     data: bookshelves,
     error,
     status: bookshelfStatus,
-  } = useQuery('bookshelves/popular', api.getPopularBookshelf);
+  } = useQuery('bookshelves', api.getPopularBookshelf);
   return (
     <div>
       <div></div>
