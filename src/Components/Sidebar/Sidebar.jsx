@@ -1,5 +1,5 @@
 import React, { useId, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { useQuery, useQueryClient } from 'react-query';
 
@@ -10,6 +10,7 @@ import * as api from '../../api';
 const Sidebar = () => {
   const queryClient = useQueryClient();
   const keyId = useId();
+  const navigate = useNavigate();
 
   const {
     data: user,
@@ -18,6 +19,7 @@ const Sidebar = () => {
   } = useQuery('user', api.getUserDetail, {
     onError: () => {
       localStorage.removeItem('access_token');
+      navigate('/', { replace: true });
     },
   });
 
@@ -32,12 +34,14 @@ const Sidebar = () => {
     } catch (error) {
       localStorage.removeItem('access_token');
       queryClient.setQueryData('user', () => null);
+      navigate('/', { replace: true });
     }
   };
 
   const onLoginFailed = () => {
     localStorage.removeItem('access_token');
     queryClient.setQueryData('user', () => null);
+    navigate('/', { replace: true });
   };
 
   // check if user is logged in previously
@@ -86,7 +90,7 @@ const Sidebar = () => {
               <div>
                 <h3 className="text-rose-600">Forked Bookshelves</h3>
                 {user.forkedshelves.length ? (
-                  user.forkedShelves.map((forkedShelf) => (
+                  user.forkedshelves.map((forkedShelf) => (
                     <ul key={forkedShelf.id}>
                       <li>{forkedShelf.name}</li>
                     </ul>
