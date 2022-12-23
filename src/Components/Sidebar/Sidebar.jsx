@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { Link as ReachLink, useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
-import { useQuery, useQueryClient } from 'react-query';
 import {
   Accordion,
   AccordionButton,
@@ -18,9 +15,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-
+import { useQuery, useQueryClient } from 'react-query';
+import { useNavigate, Link as ReachLink } from 'react-router-dom';
 import logo from '../../shared/assets/images/bookshelf.png';
 import * as api from '../../api';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
@@ -77,13 +76,8 @@ const Sidebar = () => {
           borderRadius: 'md',
         }}
       >
-        <Image
-          borderRadius="full"
-          boxSize="50px"
-          src={logo}
-          alt="Dan Abramov"
-        />
-        <Text as="h1">Bookshelf</Text>
+        <Image borderRadius="full" boxSize="50px" src={logo} alt="Bookshelf" />
+        <Text as="h1">Bookshelfa</Text>
       </HStack>
       {user ? (
         <Card
@@ -112,7 +106,6 @@ const Sidebar = () => {
       ) : (
         <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
       )}
-
       {user && (
         <>
           <Accordion allowToggle width="100%">

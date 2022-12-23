@@ -4,9 +4,9 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 
 import { Link, Routes, Route } from 'react-router-dom';
 
-import logo from '../../Assets/Images/bookshelf.png';
+import logo from '../../shared/assets/images/bookshelf.png';
 import { Profile } from '..';
-import { Home } from '../../Components/Bookshelves/index';
+import { Home } from '../../components/Bookshelves/index';
 import Sidebar from '../../components/Sidebar/Sidebar';
 //import { userQuery} from "../Utils/data";
 

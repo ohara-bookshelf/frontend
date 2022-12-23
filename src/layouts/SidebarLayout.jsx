@@ -1,7 +1,7 @@
 import { Container, Grid, GridItem } from '@chakra-ui/react';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../Components/Sidebar/Sidebar';
+import Sidebar from '../components/Sidebar/Sidebar';
 
 const SidebarLayout = () => {
   return (
@@ -13,7 +13,7 @@ const SidebarLayout = () => {
       <GridItem colSpan={2} bg="blackAlpha.500">
         <Sidebar />
       </GridItem>
-      <GridItem colSpan={10}>
+      <GridItem colSpan={10} pl={10}>
         <Container maxW="100%">
           <Outlet />
         </Container>
