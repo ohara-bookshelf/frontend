@@ -1,18 +1,25 @@
+import { Container, Grid, GridItem } from '@chakra-ui/react';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../Components/Sidebar/Sidebar';
+
+import Sidebar from '../components/Sidebar/Sidebar';
 
 const SidebarLayout = () => {
   return (
-    <div className="flex flex-col md:flex-row h-screen min-h-screen w-full transaction-height duration-75 ease-out bg-gray-50 dark:text-slate-100 dark:bg-black">
-      <div className="hidden md:flex h-screen w-2/5 md:w-[30%] xm:w-[28%] lg:w-[25%] xl:w-[20%] flex-initial">
-        <Sidebar />
-      </div>
-
-      <div className="flex flex-col flex-1 overflow-y-auto pb-2">
+    <Grid
+      minH={'100vh'}
+      templateRows="repeat(1, 1fr)"
+      templateColumns="repeat(12, 1fr)"
+    >
+      <GridItem h="100%" colSpan={2} bg="blackAlpha.500">
+        <Container h="100%">
+          <Sidebar />
+        </Container>
+      </GridItem>
+      <GridItem colSpan={10}>
         <Outlet />
-      </div>
-    </div>
+      </GridItem>
+    </Grid>
   );
 };
 

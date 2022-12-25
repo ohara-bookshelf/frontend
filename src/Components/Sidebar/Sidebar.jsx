@@ -1,27 +1,41 @@
-import React, { useId, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import React, { useState } from 'react';
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Avatar,
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  Card,
+  Link,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { useQuery, useQueryClient } from 'react-query';
-
-import SubProfile from '../SubProfile/SubProfile';
-import logo from '../../shared/assets/images/bookshelf.png';
+import { useNavigate, Link as ReachLink } from 'react-router-dom';
 import * as api from '../../api';
+import { GoogleLogin } from '@react-oauth/google';
+import { ChevronRightIcon } from '@chakra-ui/icons';
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
-  const keyId = useId();
   const navigate = useNavigate();
 
-  const {
-    data: user,
-    refetch: refetchUser,
-    isLoading: fetchingUser,
-  } = useQuery('user', api.getUserDetail, {
-    onError: () => {
-      localStorage.removeItem('access_token');
-      navigate('/', { replace: true });
-    },
-  });
+  const { data: user, refetch: refetchUser } = useQuery(
+    'user',
+    api.getUserDetail,
+    {
+      onError: () => {
+        localStorage.removeItem('access_token');
+        navigate('/', { replace: true });
+        queryClient.setQueryData('user', () => null);
+      },
+    }
+  );
 
   const onLoginSuccess = async ({ credential }) => {
     localStorage.setItem('access_token', credential);
@@ -50,106 +64,148 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="flex bg-gray-100 dark:bg-gray-900 w-full flex-col justify-between h-full overflow-y-scroll min-w-210 hide-scrollbar">
-      <div className="flex flex-col">
-        <div className="cursor-pointer w-fit">
-          <Link to="/" className="flex flex-row items-center justify-start">
-            <img src={logo} alt="logo" className=" h-12 w-12" />
-            <p className="text-gray-700 dark:text-gray-50 text-xl font-extrabold">
-              BOOKSHELF
-            </p>
+    <VStack h="100%" py={8} gap={8}>
+      <Breadcrumb
+        spacing="8px"
+        separator={<ChevronRightIcon color="gray.500" />}
+      >
+        <BreadcrumbItem>
+          <Link as={ReachLink} to="/">
+            Home
           </Link>
-        </div>
+        </BreadcrumbItem>
 
-        {/* user detail */}
+        <BreadcrumbItem>
+          <Link as={ReachLink} to="/">
+            Home
+          </Link>
+        </BreadcrumbItem>
 
-        {fetchingUser ? (
-          <div>Loading...</div>
-        ) : user ? (
-          <div>
-            <SubProfile user={user} />
-            {/* Accordions */}
-            <div>
-              {/* Bookshelves Accordion */}
-              {/* Extracting bookshelf visibility */}
-              {user.bookshelves ? (
-                Object.keys(user.bookshelves).map((visibility) => (
-                  <div key={keyId}>
-                    <h3 className="text-rose-600">{visibility} Bookshelves</h3>
-                    {user.bookshelves[visibility].map((bookshelf) => (
-                      <ul key={bookshelf.id} className="pl-4">
-                        <li>
-                          <Link to={`/bookshelves/${bookshelf.id}`}>
-                            {bookshelf.name}
-                          </Link>
-                        </li>
-                      </ul>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <p>No bookshelves</p>
-              )}
-              {/* Forkedshelves Accordion */}
-              <div>
-                <h3 className="text-rose-600">Forked Bookshelves</h3>
-                {user.forkedshelves.length ? (
-                  user.forkedshelves.map((forkedShelf) => (
-                    <ul key={forkedShelf.id}>
-                      <li>{forkedShelf.name}</li>
-                    </ul>
+        <BreadcrumbItem isCurrentPage>
+          <Link as={ReachLink} to="/">
+            Home
+          </Link>
+        </BreadcrumbItem>
+      </Breadcrumb>
+      {user ? (
+        <Link as={ReachLink} to="/profile">
+          <Card
+            p="6"
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+            bg="transparent"
+            transition="all 0.2s ease-in-out"
+            _hover={{
+              bg: 'blackAlpha.300',
+            }}
+          >
+            <Avatar
+              size="lg"
+              name={`${user.firstName} ${user.lastName}`}
+              src={user.profileImgUrl}
+              mb="4"
+            />
+            <Text
+              as="h3"
+              fontSize="lg"
+              fontWeight="bold"
+            >{`${user.firstName} ${user.lastName}`}</Text>
+            <Text
+              fontSize="sm"
+              fontWeight="semibold"
+            >{`${user.totalFork} Fork`}</Text>
+          </Card>
+        </Link>
+      ) : (
+        <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
+      )}
+      {user && (
+        <>
+          <Accordion allowToggle width="100%">
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    Public Bookshelf
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                {user?.bookshelves?.public ? (
+                  user?.bookshelves?.public?.map((bookshelf) => (
+                    <Text key={bookshelf.id}>
+                      <Link as={ReachLink} to={`/bookshelf/${bookshelf.id}`}>
+                        {bookshelf.name}
+                      </Link>
+                    </Text>
                   ))
                 ) : (
-                  <p>No forked shelves</p>
+                  <Text>Empty</Text>
                 )}
-              </div>
-            </div>
-            <button onClick={onLoginFailed}>logout</button>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2 mt-2">
-            <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
-          </div>
-        )}
-
-        {/* <div className="flex flex-col gap-2 mt-2">
-          <SubProfile />
-        </div>
-
-        <div className="flex flex-col gap-2 mt-2">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive ? isActiveStyle : isNotActiveStyle
-            }
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    Private Bookshelf
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                {user?.bookshelves?.private ? (
+                  user?.bookshelves?.private?.map((bookshelf) => (
+                    <Text key={bookshelf.id}>
+                      <Link as={ReachLink} to={`/bookshelf/${bookshelf.id}`}>
+                        {bookshelf.name}
+                      </Link>
+                    </Text>
+                  ))
+                ) : (
+                  <Text>Empty</Text>
+                )}
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    Forked Bookshelf
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                {user?.forkedshelves.length ? (
+                  user.forkedshelves.map((forkedShelf) => (
+                    <Text key={forkedShelf.id}>
+                      <Link
+                        as={ReachLink}
+                        to={`/bookshelf/${forkedShelf.bookshelf.id}`}
+                      >
+                        {forkedShelf.bookshelf.name}
+                      </Link>
+                    </Text>
+                  ))
+                ) : (
+                  <Text>Empty</Text>
+                )}
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+          <Button
+            onClick={onLoginFailed}
+            mt="auto !important"
+            colorScheme="red"
           >
-            <RiHomeFill />
-            Dashboard
-          </NavLink>
-
-          <h3 className="mt-5 mb-2 px-5 text-base dark:text-gray-500 2xl:text-xl">
-            <GiBookshelf className="inline-block mr-2" />
-            BOOKSHELVES
-          </h3>
-          <div className="flex flex-col gap-4">
-            {bookshelves
-              .slice(0, bookshelves.length)
-              .map((bookshelf, index) => (
-                <NavLink
-                  key={index}
-                  to={`bookshelves/${bookshelf.name.toLowerCase()}`}
-                  className={({ isActive }) =>
-                    isActive ? isActiveStyle : isNotActiveStyle
-                  }
-                >
-                  {bookshelf.icon}
-                  {bookshelf.name}
-                </NavLink>
-              ))}
-          </div>
-        </div> */}
-      </div>
-    </div>
+            logout
+          </Button>
+        </>
+      )}
+    </VStack>
   );
 };
 
