@@ -65,44 +65,53 @@ const Sidebar = () => {
 
   return (
     <VStack p="6" gap={6} height="100%">
-      <HStack
-        width="100%"
-        mb={4}
-        gap={2}
-        transition="all 0.2s ease-in-out"
-        _hover={{
-          cursor: 'pointer',
-          bg: 'blackAlpha.300',
-          borderRadius: 'md',
-        }}
-      >
-        <Image borderRadius="full" boxSize="50px" src={logo} alt="Bookshelf" />
-        <Text as="h1">Bookshelfa</Text>
-      </HStack>
-      {user ? (
-        <Card
-          p="6"
-          bg="blackAlpha.300"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
+      mb={4}
+      <Link as={ReachLink} to="/" width="100%" mb={4}>
+        <HStack
+          gap={2}
+          p={2}
+          transition="all 0.2s ease-in-out"
+          _hover={{
+            cursor: 'pointer',
+            bg: 'blackAlpha.300',
+            borderRadius: 'md',
+          }}
         >
-          <Avatar
-            size="lg"
-            name={`${user.firstName} ${user.lastName}`}
-            src={user.profileImgUrl}
-            mb="4"
+          <Image
+            borderRadius="full"
+            boxSize="50px"
+            src={logo}
+            alt="Bookshelf"
           />
-          <Text
-            as="h3"
-            fontSize="lg"
-            fontWeight="bold"
-          >{`${user.firstName} ${user.lastName}`}</Text>
-          <Text
-            fontSize="sm"
-            fontWeight="semibold"
-          >{`${user.totalFork} Fork`}</Text>
-        </Card>
+          <Text as="h1">Bookshelf</Text>
+        </HStack>
+      </Link>
+      {user ? (
+        <ReachLink to="/profile">
+          <Card
+            p="6"
+            bg="blackAlpha.300"
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Avatar
+              size="lg"
+              name={`${user.firstName} ${user.lastName}`}
+              src={user.profileImgUrl}
+              mb="4"
+            />
+            <Text
+              as="h3"
+              fontSize="lg"
+              fontWeight="bold"
+            >{`${user.firstName} ${user.lastName}`}</Text>
+            <Text
+              fontSize="sm"
+              fontWeight="semibold"
+            >{`${user.totalFork} Fork`}</Text>
+          </Card>
+        </ReachLink>
       ) : (
         <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
       )}

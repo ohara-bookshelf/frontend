@@ -6,6 +6,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Container,
   Divider,
   Heading,
   HStack,
@@ -57,7 +58,7 @@ function Dashboard() {
   };
 
   return (
-    <div>
+    <Container maxW="100%" pl={10}>
       <Text as="h2" mt={10}>
         Popular Bookshelves
       </Text>
@@ -115,7 +116,7 @@ function Dashboard() {
       <div>
         <h2>Recomended Books</h2>
       </div>
-    </div>
+    </Container>
   );
 }
 

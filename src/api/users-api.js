@@ -17,7 +17,9 @@ export const getUserDetail = async () => {
     bookshelves,
   };
 };
+
 export const createBookshelf = () => API.post('users/bookshelf');
+
 export const getAllUserBookshelves = () => API.get('users/bookshelves');
 
 export const forkBookshelf = async (bookshelfId) => {

@@ -1,28 +1,88 @@
 import React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
+import {
+  Avatar,
+  Box,
+  Container,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from '@chakra-ui/react';
 
-import cover from '../../shared/assets/images/cover.png';
+import * as api from '../../api';
+import BookshelfTable from './components/Table/BookshelfTable';
+import ForkedshelfTable from './components/Table/ForkedshelfTable';
 
 const Profile = () => {
-  const user = useQueryClient().getQueryData('user');
-  return (
-    <div className="relative pb-2 h-full justify-center items-center">
-      <img
-        className=" w-full h-370 2xl:h-510 shadow-lg object-cover"
-        src={cover}
-        alt="user-pic"
-      />
-      <div className="relative">
-        <img
-          className="w-32 h-32 rounded-full dark:border-blue-400 border-2 shadow-xl object-cover absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          src={user?.profileImgUrl}
-          alt="profile picture"
-          referrerPolicy="no-referrer"
-        />
-      </div>
+  const { data: user, isLoading } = useQuery('user', api.getUserDetail);
 
-      <h1 className="font-bold text-3xl text-center mt-24">{`${user.firstName} ${user.lastName}`}</h1>
-    </div>
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Box>
+      <Box bg="teal.500" h="260px" w="100%" />
+      <Box position="relative" mb={16}>
+        <Box
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+        >
+          <Avatar
+            size="xl"
+            name={`${user?.firstName} ${user?.lastName}`}
+            src={user?.profileImgUrl}
+          />
+        </Box>
+      </Box>
+      <Container maxW="100%" pl={10}>
+        <Text
+          as={'h1'}
+          fontSize="2xl"
+          fontWeight="bold"
+          mt="4"
+          textAlign="center"
+          mb={6}
+        >
+          {`${user?.firstName} ${user?.lastName}`}
+        </Text>
+        <Tabs isFitted variant="enclosed">
+          <TabList mb="1em">
+            <Tab>Public</Tab>
+            <Tab>Private</Tab>
+            <Tab>Forked</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <BookshelfTable
+                data={user?.bookshelves?.public}
+                onDetailClick={() => {}}
+                onDeleteClick={() => {}}
+              />
+            </TabPanel>
+            <TabPanel>
+              <BookshelfTable
+                data={user?.bookshelves?.private}
+                onDetailClick={() => {}}
+                onDeleteClick={() => {}}
+              />
+            </TabPanel>
+            <TabPanel>
+              <ForkedshelfTable
+                data={user?.forkedshelves}
+                onDetailClick={() => {}}
+                onDeleteClick={() => {}}
+              />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Container>
+    </Box>
   );
 };
 
