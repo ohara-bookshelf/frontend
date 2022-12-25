@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react';
+import { typography } from './typography';
 
 const config = {
   initialColorMode: 'dark',
@@ -15,6 +16,12 @@ const styles = {
     body: {
       boxSizing: 'border-box',
     },
+    a: {
+      _hover: {
+        textDecoration: 'none !important',
+      },
+    },
+    ...typography,
   }),
 };
 

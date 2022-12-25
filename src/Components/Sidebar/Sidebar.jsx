@@ -7,19 +7,19 @@ import {
   AccordionPanel,
   Avatar,
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
   Button,
   Card,
-  HStack,
-  Image,
   Link,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate, Link as ReachLink } from 'react-router-dom';
-import logo from '../../shared/assets/images/bookshelf.png';
 import * as api from '../../api';
 import { GoogleLogin } from '@react-oauth/google';
+import { ChevronRightIcon } from '@chakra-ui/icons';
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
@@ -64,36 +64,41 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <VStack p="6" gap={6} height="100%">
-      mb={4}
-      <Link as={ReachLink} to="/" width="100%" mb={4}>
-        <HStack
-          gap={2}
-          p={2}
-          transition="all 0.2s ease-in-out"
-          _hover={{
-            cursor: 'pointer',
-            bg: 'blackAlpha.300',
-            borderRadius: 'md',
-          }}
-        >
-          <Image
-            borderRadius="full"
-            boxSize="50px"
-            src={logo}
-            alt="Bookshelf"
-          />
-          <Text as="h1">Bookshelf</Text>
-        </HStack>
-      </Link>
+    <VStack h="100%" py={8} gap={8}>
+      <Breadcrumb
+        spacing="8px"
+        separator={<ChevronRightIcon color="gray.500" />}
+      >
+        <BreadcrumbItem>
+          <Link as={ReachLink} to="/">
+            Home
+          </Link>
+        </BreadcrumbItem>
+
+        <BreadcrumbItem>
+          <Link as={ReachLink} to="/">
+            Home
+          </Link>
+        </BreadcrumbItem>
+
+        <BreadcrumbItem isCurrentPage>
+          <Link as={ReachLink} to="/">
+            Home
+          </Link>
+        </BreadcrumbItem>
+      </Breadcrumb>
       {user ? (
-        <ReachLink to="/profile">
+        <Link as={ReachLink} to="/profile">
           <Card
             p="6"
-            bg="blackAlpha.300"
             width="100%"
             alignItems="center"
             justifyContent="center"
+            bg="transparent"
+            transition="all 0.2s ease-in-out"
+            _hover={{
+              bg: 'blackAlpha.300',
+            }}
           >
             <Avatar
               size="lg"
@@ -111,7 +116,7 @@ const Sidebar = () => {
               fontWeight="semibold"
             >{`${user.totalFork} Fork`}</Text>
           </Card>
-        </ReachLink>
+        </Link>
       ) : (
         <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
       )}

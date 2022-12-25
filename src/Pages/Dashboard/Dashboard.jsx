@@ -59,9 +59,7 @@ function Dashboard() {
 
   return (
     <Container maxW="100%" pl={10}>
-      <Text as="h2" mt={10}>
-        Popular Bookshelves
-      </Text>
+      <Text as="h2">Popular Bookshelves</Text>
       <Box width="100%" my="6">
         {bookshelfStatus === 'loading' && <div>Loading...</div>}
         {bookshelfStatus === 'error' && <div>Error: {error.message}</div>}

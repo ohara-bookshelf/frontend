@@ -1,12 +1,15 @@
-import { Button, HStack } from '@chakra-ui/react';
+import { Button, HStack, Link } from '@chakra-ui/react';
 import React from 'react';
+import { Link as ReachLink } from 'react-router-dom';
 
-const ActionButton = ({ onDetailClick, onDeleteClick }) => {
+const ActionButton = ({ path, onDeleteClick }) => {
   return (
     <HStack gap={6}>
-      <Button variant="solid" colorScheme="teal" onClick={onDetailClick}>
-        Detail
-      </Button>
+      <Link as={ReachLink} to={`/profile/${path}`}>
+        <Button variant="solid" colorScheme="teal">
+          Detail
+        </Button>
+      </Link>
       <Button variant="solid" colorScheme="red" onClick={onDeleteClick}>
         Delete
       </Button>

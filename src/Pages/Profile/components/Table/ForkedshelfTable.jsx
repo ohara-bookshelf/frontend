@@ -11,7 +11,7 @@ import {
 import ActionButton from '../Button/ActionButton';
 import dateParser from '../../../../shared/utils/dateParser';
 
-const ForkedshelfTable = ({ data, onDetailClick, onDeleteClick }) => {
+const ForkedshelfTable = ({ data, onDeleteClick }) => {
   return (
     <TableContainer>
       <Table size="sm">
@@ -37,7 +37,7 @@ const ForkedshelfTable = ({ data, onDetailClick, onDeleteClick }) => {
               </Td>
               <Td>
                 <ActionButton
-                  onDetailClick={onDetailClick}
+                  path={item.bookshelf.id}
                   onDeleteClick={onDeleteClick}
                 />
               </Td>

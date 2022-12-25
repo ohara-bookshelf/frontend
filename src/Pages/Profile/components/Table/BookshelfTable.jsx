@@ -11,7 +11,7 @@ import React from 'react';
 import dateParser from '../../../../shared/utils/dateParser';
 import ActionButton from '../Button/ActionButton';
 
-const BookshelfTable = ({ data, onDetailClick, onDeleteClick }) => {
+const BookshelfTable = ({ data, onDeleteClick }) => {
   return (
     <TableContainer>
       <Table size="sm">
@@ -32,10 +32,7 @@ const BookshelfTable = ({ data, onDetailClick, onDeleteClick }) => {
               <Td>{item._count?.books || 0}</Td>
               <Td>{dateParser(item.createdAt)}</Td>
               <Td>
-                <ActionButton
-                  onDetailClick={onDetailClick}
-                  onDeleteClick={onDeleteClick}
-                />
+                <ActionButton path={item.id} onDeleteClick={onDeleteClick} />
               </Td>
             </Tr>
           ))}

@@ -12,9 +12,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import * as api from '../../api';
 import BookshelfTable from './components/Table/BookshelfTable';
 import ForkedshelfTable from './components/Table/ForkedshelfTable';
+
+import * as api from '../../api';
 
 const Profile = () => {
   const { data: user, isLoading } = useQuery('user', api.getUserDetail);
@@ -61,21 +62,18 @@ const Profile = () => {
             <TabPanel>
               <BookshelfTable
                 data={user?.bookshelves?.public}
-                onDetailClick={() => {}}
                 onDeleteClick={() => {}}
               />
             </TabPanel>
             <TabPanel>
               <BookshelfTable
                 data={user?.bookshelves?.private}
-                onDetailClick={() => {}}
                 onDeleteClick={() => {}}
               />
             </TabPanel>
             <TabPanel>
               <ForkedshelfTable
                 data={user?.forkedshelves}
-                onDetailClick={() => {}}
                 onDeleteClick={() => {}}
               />
             </TabPanel>

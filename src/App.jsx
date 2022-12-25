@@ -10,6 +10,7 @@ import theme from './shared/themes';
 
 const queryClient = new QueryClient();
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

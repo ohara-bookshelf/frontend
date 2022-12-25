@@ -14,9 +14,16 @@ const router = createBrowserRouter([
         path: 'profile',
         element: (
           <PrivateRoute>
-            <pages.Profile />
+            <Outlet />
           </PrivateRoute>
         ),
+        children: [
+          {
+            index: true,
+            element: <pages.Profile />,
+          },
+          { path: ':bookshelfId', element: <pages.UserBookshelf /> },
+        ],
       },
       {
         path: 'bookshelves',
