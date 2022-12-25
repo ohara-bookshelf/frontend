@@ -60,20 +60,34 @@ const Profile = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <BookshelfTable
-                data={user?.bookshelves?.public}
-                onDeleteClick={() => {}}
-              />
+              {user?.bookshelves?.public?.length === 0 ? (
+                <Text textAlign="center" mt={6}>
+                  No bookshelf found
+                </Text>
+              ) : (
+                <BookshelfTable
+                  data={
+                    user?.bookshelves?.public?.length
+                      ? user?.bookshelves?.public
+                      : []
+                  }
+                  onDeleteClick={() => {}}
+                />
+              )}
             </TabPanel>
             <TabPanel>
               <BookshelfTable
-                data={user?.bookshelves?.private}
+                data={
+                  user?.bookshelves?.private?.length
+                    ? user?.bookshelves?.private
+                    : []
+                }
                 onDeleteClick={() => {}}
               />
             </TabPanel>
             <TabPanel>
               <ForkedshelfTable
-                data={user?.forkedshelves}
+                data={user?.forkedshelves || []}
                 onDeleteClick={() => {}}
               />
             </TabPanel>
