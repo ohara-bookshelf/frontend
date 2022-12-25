@@ -27,10 +27,14 @@ function Dashboard() {
   const { data: user } = useQuery('user', api.getUserDetail);
 
   const renderForkButton = (bookshelf) => {
-    if (user?.id !== bookshelf?.owner?.id) {
+    if (!user) {
+      return null;
+    }
+
+    if (user.forkedshelves?.some((item) => item.bookshelfId === bookshelf.id)) {
       return (
         <Button variant="solid" colorScheme="teal">
-          Forko
+          Unfork
         </Button>
       );
     }
@@ -43,21 +47,28 @@ function Dashboard() {
       );
     }
 
-    return <Button>asdf</Button>;
+    if (user?.id !== bookshelf?.owner?.id) {
+      return (
+        <Button variant="solid" colorScheme="teal">
+          Fork
+        </Button>
+      );
+    }
   };
+
   return (
     <div>
-      {/* popular booshelves section */}
       <Text as="h2" mt={10}>
         Popular Bookshelves
       </Text>
-      <Box maxWidth="100%" overflow="auto" py="6">
+      <Box width="100%" my="6">
         {bookshelfStatus === 'loading' && <div>Loading...</div>}
         {bookshelfStatus === 'error' && <div>Error: {error.message}</div>}
         {bookshelfStatus === 'success' && (
-          <HStack gap={6}>
+          <HStack maxH="100%" overflow="auto">
+            {' '}
             {bookshelves.map((bookshelf) => (
-              <Card maxW="sm" key={bookshelf.id}>
+              <Card minW="sm" key={bookshelf.id}>
                 <CardBody
                   _hover={{
                     cursor: 'pointer',
@@ -71,7 +82,12 @@ function Dashboard() {
                   />
                   <Stack mt="6" spacing="3">
                     <Heading size="md">{bookshelf.name}</Heading>
-                    <Text>{bookshelf.description}</Text>
+                    <Text h="100px">
+                      {bookshelf.description.substring(0, 150)}{' '}
+                      <Text as="span" color="blue.600">
+                        ...Read more
+                      </Text>
+                    </Text>
                     <Text>
                       total forks:{' '}
                       <Text as="span" color="blue.600">

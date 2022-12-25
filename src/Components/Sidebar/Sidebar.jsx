@@ -167,9 +167,14 @@ const Sidebar = () => {
               <AccordionPanel pb={4}>
                 {user?.forkedshelves.length ? (
                   user.forkedshelves.map((forkedShelf) => (
-                    <ul key={forkedShelf.id}>
-                      <li>{forkedShelf.name}</li>
-                    </ul>
+                    <Text key={forkedShelf.id}>
+                      <Link
+                        as={ReachLink}
+                        to={`/bookshelf/${forkedShelf.bookshelf.id}`}
+                      >
+                        {forkedShelf.bookshelf.name}
+                      </Link>
+                    </Text>
                   ))
                 ) : (
                   <Text>Empty</Text>
