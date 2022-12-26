@@ -136,7 +136,7 @@ const Sidebar = () => {
                 {user?.bookshelves?.public ? (
                   user?.bookshelves?.public?.map((bookshelf) => (
                     <Text key={bookshelf.id}>
-                      <Link as={ReachLink} to={`/bookshelf/${bookshelf.id}`}>
+                      <Link as={ReachLink} to={`/profile/${bookshelf.id}`}>
                         {bookshelf.name}
                       </Link>
                     </Text>
@@ -159,7 +159,7 @@ const Sidebar = () => {
                 {user?.bookshelves?.private ? (
                   user?.bookshelves?.private?.map((bookshelf) => (
                     <Text key={bookshelf.id}>
-                      <Link as={ReachLink} to={`/bookshelf/${bookshelf.id}`}>
+                      <Link as={ReachLink} to={`/profile/${bookshelf.id}`}>
                         {bookshelf.name}
                       </Link>
                     </Text>
@@ -184,7 +184,7 @@ const Sidebar = () => {
                     <Text key={forkedShelf.id}>
                       <Link
                         as={ReachLink}
-                        to={`/bookshelf/${forkedShelf.bookshelf.id}`}
+                        to={`/bookshelves/${forkedShelf.bookshelf.id}`}
                       >
                         {forkedShelf.bookshelf.name}
                       </Link>

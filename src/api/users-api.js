@@ -25,6 +25,21 @@ export const getUserBookshelfDetail = async (bookshelfId) => {
   return response.data;
 };
 
+export const createBookshelf = async (bookshelf) => {
+  const response = await API.post('users/bookshelves', bookshelf);
+  return response.data;
+};
+
+export const updateBookshelf = async ({ param, body }) => {
+  const response = await API.patch(`users/bookshelves/${param}`, body);
+  return response.data;
+};
+
+export const deleteBookshelf = async (bookshelfId) => {
+  const response = await API.delete(`users/bookshelves/${bookshelfId}`);
+  return response.data;
+};
+
 export const forkBookshelf = async (bookshelfId) => {
   const response = await API.post(`users/bookshelf/${bookshelfId}/fork`);
   return response.data;
