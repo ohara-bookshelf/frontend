@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import SidebarLayout from '../layouts/SidebarLayout';
-import * as pages from '../Pages/';
+import * as pages from '../pages/';
 import PrivateRoute from './PrivateRoute';
 
 const router = createBrowserRouter([
@@ -14,9 +14,16 @@ const router = createBrowserRouter([
         path: 'profile',
         element: (
           <PrivateRoute>
-            <pages.Profile />
+            <Outlet />
           </PrivateRoute>
         ),
+        children: [
+          {
+            index: true,
+            element: <pages.Profile />,
+          },
+          { path: ':bookshelfId', element: <pages.UserBookshelf /> },
+        ],
       },
       {
         path: 'bookshelves',

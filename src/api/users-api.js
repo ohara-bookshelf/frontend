@@ -6,12 +6,9 @@ export const getUserDetail = async () => {
   // Group bookshelves by visibility
   const bookshelves = data.bookshelves.reduce((group, bookshelf) => {
     const { visible } = bookshelf;
-    // Convert to PascalCase
-    const parsedVisible = visible.replace(/(\w)(\w*)/g, function (_, g1, g2) {
-      return g1.toUpperCase() + g2.toLowerCase();
-    });
-    group[parsedVisible] = group[parsedVisible] ?? [];
-    group[parsedVisible].push(bookshelf);
+
+    group[visible.toLowerCase()] = group[visible.toLowerCase()] ?? [];
+    group[visible.toLowerCase()].push(bookshelf);
     return group;
   }, {});
 
@@ -20,5 +17,30 @@ export const getUserDetail = async () => {
     bookshelves,
   };
 };
-export const createBookshelf = () => API.post('users/bookshelf');
+
 export const getAllUserBookshelves = () => API.get('users/bookshelves');
+
+export const getUserBookshelfDetail = async (bookshelfId) => {
+  const response = await API.get(`users/bookshelves/${bookshelfId}`);
+  return response.data;
+};
+
+export const createBookshelf = async (bookshelf) => {
+  const response = await API.post('users/bookshelves', bookshelf);
+  return response.data;
+};
+
+export const updateBookshelf = async ({ param, body }) => {
+  const response = await API.patch(`users/bookshelves/${param}`, body);
+  return response.data;
+};
+
+export const deleteBookshelf = async (bookshelfId) => {
+  const response = await API.delete(`users/bookshelves/${bookshelfId}`);
+  return response.data;
+};
+
+export const forkBookshelf = async (bookshelfId) => {
+  const response = await API.post(`users/bookshelf/${bookshelfId}/fork`);
+  return response.data;
+};
