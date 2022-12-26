@@ -8,6 +8,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <SidebarLayout />,
+    errorElement: <pages.Error />,
     children: [
       { index: true, element: <pages.Dashboard /> },
       {
@@ -17,10 +18,12 @@ const router = createBrowserRouter([
             <Outlet />
           </PrivateRoute>
         ),
+        errorElement: <pages.Error />,
         children: [
           {
             index: true,
             element: <pages.Profile />,
+            errorElement: <pages.Error />,
           },
           { path: ':bookshelfId', element: <pages.UserBookshelf /> },
         ],
@@ -28,6 +31,7 @@ const router = createBrowserRouter([
       {
         path: 'bookshelves',
         element: <Outlet />,
+        errorElement: <pages.Error />,
         children: [
           { index: true, element: <pages.Bookshelves /> },
           { path: ':bookshelfId', element: <pages.Bookshelf /> },
