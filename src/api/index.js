@@ -21,4 +21,6 @@ export {
   getUserDetail,
   getUserBookshelfDetail,
   createBookshelf,
+  updateBookshelf,
+  deleteBookshelf,
 } from './users-api';

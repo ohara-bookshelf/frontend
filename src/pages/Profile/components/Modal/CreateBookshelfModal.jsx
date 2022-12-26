@@ -1,3 +1,12 @@
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/react';
 import React from 'react';
 import * as Yup from 'yup';
 
@@ -18,23 +27,38 @@ const CreateBookshelfSchema = Yup.object().shape({
   visible: Yup.mixed().oneOf(['PRIVATE', 'PUBLIC']).required('Required'),
 });
 
-const CreateBookshelfModal = ({ initialFormValues, submitHandler }) => {
+const CreateBookshelfModal = ({
+  initialFormValues,
+  isOpen,
+  onClose,
+  submitHandler,
+}) => {
   return (
-    <FormikContainer
-      initialValues={initialFormValues}
-      validationSchema={CreateBookshelfSchema}
-      submitHandler={submitHandler}
-    >
-      <FormikInput label="Bookshelf Name" name="name" />
-      <FormikTextArea label="Description" name="description" type="te" />
-      <FormikRadio
-        name="visible"
-        label="Visibility"
-        values={['PUBLIC', 'PRIVATE']}
-        options={['Public', 'Private']}
-        defaultValue="PUBLIC"
-      />
-    </FormikContainer>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Create Bookshelf</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <FormikContainer
+            initialValues={initialFormValues}
+            validationSchema={CreateBookshelfSchema}
+            submitHandler={submitHandler}
+          >
+            <FormikInput label="Bookshelf Name" name="name" />
+            <FormikTextArea label="Description" name="description" type="te" />
+            <FormikRadio
+              name="visible"
+              label="Visibility"
+              values={['PUBLIC', 'PRIVATE']}
+              options={['Public', 'Private']}
+              defaultValue="PUBLIC"
+            />
+          </FormikContainer>
+        </ModalBody>
+        <ModalFooter />
+      </ModalContent>
+    </Modal>
   );
 };
 

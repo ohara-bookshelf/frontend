@@ -7,13 +7,6 @@ import {
   Container,
   Flex,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Tab,
   TabList,
@@ -31,24 +24,18 @@ import * as api from '../../api';
 import { AddIcon } from '@chakra-ui/icons';
 import CreateBookshelfModal from './components/Modal/CreateBookshelfModal';
 import Loading from '../../components/PreLoader/Loading';
+import { initialFormValues } from '../../shared/constants/initialValues';
 
 const Profile = () => {
+  const queryClient = useQueryClient();
   const { data: user, isLoading } = useQuery('user', api.getUserDetail);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const queryClient = useQueryClient('user');
 
   const createBookshelf = useMutation(api.createBookshelf, {
     onSuccess: () => {
       queryClient.invalidateQueries('user');
     },
   });
-
-  const initialFormValues = {
-    name: '',
-    description: '',
-    visible: 'PUBLIC',
-    books: [],
-  };
 
   const submitHandler = (formValues) => {
     createBookshelf.mutate(formValues);
@@ -129,7 +116,6 @@ const Profile = () => {
                           ? user?.bookshelves?.public
                           : []
                       }
-                      onDeleteClick={() => {}}
                     />
                   )}
                 </TabPanel>
@@ -140,14 +126,10 @@ const Profile = () => {
                         ? user?.bookshelves?.private
                         : []
                     }
-                    onDeleteClick={() => {}}
                   />
                 </TabPanel>
                 <TabPanel>
-                  <ForkedshelfTable
-                    data={user?.forkedshelves || []}
-                    onDeleteClick={() => {}}
-                  />
+                  <ForkedshelfTable data={user?.forkedshelves || []} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -155,20 +137,12 @@ const Profile = () => {
         </Container>
       </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create Bookshelf</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <CreateBookshelfModal
-              initialFormValues={initialFormValues}
-              submitHandler={submitHandler}
-            />
-          </ModalBody>
-          <ModalFooter />
-        </ModalContent>
-      </Modal>
+      <CreateBookshelfModal
+        initialFormValues={initialFormValues}
+        isOpen={isOpen}
+        onClose={onClose}
+        submitHandler={submitHandler}
+      />
     </>
   );
 };
