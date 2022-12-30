@@ -33,8 +33,8 @@ function Loading({ message }) {
           src={popcorn}
           alt="loading"
         />
-        <Text mt={6} textAlign="center">
-          <Text as="h5">{message || 'Loading...'}</Text>
+        <Text mt={6} textAlign="center" as="h5">
+          {message || 'Loading...'}
         </Text>
       </Flex>
     </Box>
