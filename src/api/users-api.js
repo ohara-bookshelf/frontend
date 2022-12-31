@@ -53,7 +53,7 @@ export const getUserForkedBookshelf = async (forkshelfId) => {
 };
 
 export const forkBookshelf = async (bookshelfId) => {
-  const response = await API.post(`users/bookshelf/${bookshelfId}/fork`);
+  const response = await API.post(`users/bookshelves/${bookshelfId}/fork`);
   return response.data;
 };
 
