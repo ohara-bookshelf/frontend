@@ -56,3 +56,8 @@ export const forkBookshelf = async (bookshelfId) => {
   const response = await API.post(`users/bookshelf/${bookshelfId}/fork`);
   return response.data;
 };
+
+export const deleteForkedBookshelf = async (forkshelfId) => {
+  const response = await API.delete(`users/forks/${forkshelfId}`);
+  return response.data;
+};

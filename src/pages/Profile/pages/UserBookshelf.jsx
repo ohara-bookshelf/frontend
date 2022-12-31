@@ -26,7 +26,7 @@ import ChangeVisibleModal from '../components/Modal/ChangeVisibleModal';
 import AddBookModal from '../components/Modal/AddBookModal';
 
 const UserBookshelf = () => {
-  const queryClient = useQueryClient('user');
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { bookshelfId } = useParams();
 

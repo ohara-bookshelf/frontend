@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardBody,
   Container,
@@ -19,13 +20,15 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import React, { useId } from 'react';
-import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-query';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as api from '../../../api';
 
 const UserForkshelf = () => {
   const { forkshelfId } = useParams();
   const uuid = useId();
+  const navigate = useNavigate();
+
   const {
     data: forkedshelf,
     isLoading: fetchForkshelf,
@@ -33,6 +36,12 @@ const UserForkshelf = () => {
   } = useQuery('user/forkedshelf', () =>
     api.getUserForkedBookshelf(forkshelfId)
   );
+
+  const deleteForkedBookshelf = useMutation(api.deleteForkedBookshelf, {
+    onSuccess: () => {
+      navigate('/profile');
+    },
+  });
 
   if (fetchForkshelf) return <div>Loading...</div>;
   if (forkhelfError) return <div>Error...</div>;
@@ -47,6 +56,15 @@ const UserForkshelf = () => {
             Total Fork: {forkedshelf.bookshelf._count?.userForks || 0}
           </Text>
         </HStack>
+        <Flex justifyContent="center">
+          <Button
+            colorScheme="red"
+            variant="outline"
+            onClick={() => deleteForkedBookshelf.mutate(forkshelfId)}
+          >
+            Delete
+          </Button>
+        </Flex>
         <Flex flexDir="row" gap={20}>
           <Flex w="100%" flexDir="column" alignItems="center" gap={6}>
             <Text as="h4">Original Bookshelf Owner</Text>
@@ -129,7 +147,7 @@ const UserForkshelf = () => {
                         <Td>{book.publisher}</Td>
                         <Td>{book.year_of_publication}</Td>
                         <Td>
-                          <HStack spacing="4">
+                          <HStack spacing="2">
                             {book.genres.map((genre) => (
                               <Tag
                                 key={uuid}

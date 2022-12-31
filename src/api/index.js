@@ -26,4 +26,5 @@ export {
   deleteBookshelf,
   deleteBookshelfBooks,
   getUserForkedBookshelf,
+  deleteForkedBookshelf,
 } from './users-api';

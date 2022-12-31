@@ -10,8 +10,18 @@ import {
 } from '@chakra-ui/react';
 import ActionButton from '../Button/ActionButton';
 import dateParser from '../../../../shared/utils/dateParser';
+import { useMutation, useQueryClient } from 'react-query';
+import * as api from '../../../../api';
 
 const ForkedshelfTable = ({ data }) => {
+  const queryClient = useQueryClient();
+
+  const deleteForkedBookshelf = useMutation(api.deleteForkedBookshelf, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('user/bookshelf');
+      queryClient.invalidateQueries('user');
+    },
+  });
   return (
     <>
       <TableContainer>
@@ -40,7 +50,9 @@ const ForkedshelfTable = ({ data }) => {
                 <Td>
                   <ActionButton
                     path={`forks/${item.id}`}
-                    onDeleteClick={() => {}}
+                    onDeleteClick={() => {
+                      deleteForkedBookshelf.mutate(item.id);
+                    }}
                   />
                 </Td>
               </Tr>
