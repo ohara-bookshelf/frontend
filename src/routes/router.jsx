@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import SidebarLayout from '../layouts/SidebarLayout';
 import * as pages from '../pages/';
 import PrivateRoute from './PrivateRoute';
@@ -24,6 +24,16 @@ const router = createBrowserRouter([
             errorElement: <pages.Error />,
           },
           { path: ':bookshelfId', element: <pages.UserBookshelf /> },
+          {
+            path: 'forks',
+            element: <Navigate to="/profile" />,
+            caseSensitive: true,
+          },
+          {
+            path: 'forks/:forkshelfId',
+            element: <pages.UserForkshelf />,
+            caseSensitive: true,
+          },
         ],
       },
       {

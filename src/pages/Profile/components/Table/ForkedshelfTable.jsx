@@ -39,7 +39,7 @@ const ForkedshelfTable = ({ data }) => {
                 </Td>
                 <Td>
                   <ActionButton
-                    path={item.bookshelf.id}
+                    path={`forks/${item.id}`}
                     onDeleteClick={() => {}}
                   />
                 </Td>
