@@ -82,6 +82,13 @@ const UserBookshelf = () => {
     },
   });
 
+  const deleteBookshelfBooks = useMutation(api.deleteBookshelfBooks, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('user/bookshelf');
+      queryClient.invalidateQueries('user');
+    },
+  });
+
   const onChangeBookshelfStatus = () => {
     const visible = bookshelf.visible === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
     updateBookshelf.mutate({ param: bookshelfId, body: { visible } });
@@ -97,6 +104,10 @@ const UserBookshelf = () => {
     const bookIds = books.map((book) => book.value);
     updateBookshelf.mutate({ param: bookshelfId, body: { books: bookIds } });
     onAddBookClose();
+  };
+
+  const removeBookHandler = (bookIds) => {
+    deleteBookshelfBooks.mutate({ param: bookshelfId, body: { bookIds } });
   };
 
   useEffect(() => {
@@ -194,6 +205,7 @@ const UserBookshelf = () => {
                     color: 'red.500',
                     bg: 'red.100',
                   }}
+                  onClick={() => removeBookHandler(book.id)}
                 >
                   <DeleteIcon fontSize={24} />
                 </Box>

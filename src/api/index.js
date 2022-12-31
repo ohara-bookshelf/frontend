@@ -24,4 +24,5 @@ export {
   createBookshelf,
   updateBookshelf,
   deleteBookshelf,
+  deleteBookshelfBooks,
 } from './users-api';

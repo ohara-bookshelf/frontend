@@ -40,6 +40,13 @@ export const deleteBookshelf = async (bookshelfId) => {
   return response.data;
 };
 
+export const deleteBookshelfBooks = async ({ param, body }) => {
+  const response = await API.delete(`users/bookshelves/${param}/books`, {
+    data: body,
+  });
+  return response.data;
+};
+
 export const forkBookshelf = async (bookshelfId) => {
   const response = await API.post(`users/bookshelf/${bookshelfId}/fork`);
   return response.data;
