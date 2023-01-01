@@ -11,12 +11,12 @@ const SidebarLayout = () => {
       templateRows="repeat(1, 1fr)"
       templateColumns="repeat(12, 1fr)"
     >
-      <GridItem h="100%" colSpan={2} bg="blackAlpha.500">
+      <GridItem h="100vh" colSpan={2} bg="blackAlpha.500">
         <Container h="100%">
           <Sidebar />
         </Container>
       </GridItem>
-      <GridItem colSpan={10}>
+      <GridItem colSpan={10} h="100vh" overflow="auto">
         <Outlet />
       </GridItem>
     </Grid>

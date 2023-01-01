@@ -4,7 +4,7 @@ export const getUserDetail = async () => {
   const { data } = await API.get('users/me');
 
   // Group bookshelves by visibility
-  const bookshelves = data.bookshelves.reduce((group, bookshelf) => {
+  let bookshelves = data.bookshelves.reduce((group, bookshelf) => {
     const { visible } = bookshelf;
 
     group[visible.toLowerCase()] = group[visible.toLowerCase()] ?? [];
@@ -40,7 +40,24 @@ export const deleteBookshelf = async (bookshelfId) => {
   return response.data;
 };
 
+export const deleteBookshelfBooks = async ({ param, body }) => {
+  const response = await API.delete(`users/bookshelves/${param}/books`, {
+    data: body,
+  });
+  return response.data;
+};
+
+export const getUserForkedBookshelf = async (forkshelfId) => {
+  const response = await API.get(`users/forks/${forkshelfId}`);
+  return response.data;
+};
+
 export const forkBookshelf = async (bookshelfId) => {
-  const response = await API.post(`users/bookshelf/${bookshelfId}/fork`);
+  const response = await API.post(`users/bookshelves/${bookshelfId}/fork`);
+  return response.data;
+};
+
+export const deleteForkedBookshelf = async (forkshelfId) => {
+  const response = await API.delete(`users/forks/${forkshelfId}`);
   return response.data;
 };

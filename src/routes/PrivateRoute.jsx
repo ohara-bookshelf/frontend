@@ -1,12 +1,13 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+
+import Loading from '../components/PreLoader/Loading';
 
 import useAuth from '../shared/hooks/useAuth';
 
 const PrivateRoute = ({ children }) => {
-  const isAuthenticated = useAuth();
+  const isLoading = useAuth();
 
-  return isAuthenticated ? children : <Navigate to="/" />;
+  return isLoading ? <Loading /> : children;
 };
 
 export default PrivateRoute;

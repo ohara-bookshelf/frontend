@@ -15,13 +15,6 @@ import {
   HStack,
   Image,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Text,
   useDisclosure,
@@ -29,9 +22,11 @@ import {
 import { DeleteIcon } from '@chakra-ui/icons';
 import Loading from '../../../components/PreLoader/Loading';
 import DeleteBookshelfModal from '../components/Modal/DeleteBookshelfModal';
+import ChangeVisibleModal from '../components/Modal/ChangeVisibleModal';
+import AddBookModal from '../components/Modal/AddBookModal';
 
 const UserBookshelf = () => {
-  const queryClient = useQueryClient('user');
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { bookshelfId } = useParams();
 
@@ -47,6 +42,12 @@ const UserBookshelf = () => {
     isOpen: isDeleteOpen,
     onOpen: onOpenDelete,
     onClose: onCloseDelete,
+  } = useDisclosure();
+
+  const {
+    isOpen: isAddBookOpen,
+    onOpen: onAddBookOpen,
+    onClose: onAddBookClose,
   } = useDisclosure();
 
   const {
@@ -81,6 +82,13 @@ const UserBookshelf = () => {
     },
   });
 
+  const deleteBookshelfBooks = useMutation(api.deleteBookshelfBooks, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('user/bookshelf');
+      queryClient.invalidateQueries('user');
+    },
+  });
+
   const onChangeBookshelfStatus = () => {
     const visible = bookshelf.visible === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
     updateBookshelf.mutate({ param: bookshelfId, body: { visible } });
@@ -90,6 +98,16 @@ const UserBookshelf = () => {
   const onDeleteBookshelf = () => {
     deleteBookshelf.mutate(bookshelfId);
     onCloseDelete();
+  };
+
+  const addBooksHandler = (books) => {
+    const bookIds = books.map((book) => book.value);
+    updateBookshelf.mutate({ param: bookshelfId, body: { books: bookIds } });
+    onAddBookClose();
+  };
+
+  const removeBookHandler = (bookIds) => {
+    deleteBookshelfBooks.mutate({ param: bookshelfId, body: { bookIds } });
   };
 
   useEffect(() => {
@@ -152,7 +170,11 @@ const UserBookshelf = () => {
           </Flex>
 
           <Flex w="100%" justifyContent="center">
-            <Button variant="outline" colorScheme="teal">
+            <Button
+              variant="outline"
+              colorScheme="teal"
+              onClick={onAddBookOpen}
+            >
               Add Book
             </Button>
           </Flex>
@@ -183,6 +205,7 @@ const UserBookshelf = () => {
                     color: 'red.500',
                     bg: 'red.100',
                   }}
+                  onClick={() => removeBookHandler(book.id)}
                 >
                   <DeleteIcon fontSize={24} />
                 </Box>
@@ -206,22 +229,25 @@ const UserBookshelf = () => {
         </Stack>
       </Container>
 
-      <Modal isOpen={isStatusOpen} onClose={onCloseStatus}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Confirmation</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Are you sure to change bookshelf status?</Text>
-          </ModalBody>
+      <ChangeVisibleModal
+        isOpen={isStatusOpen}
+        onClose={onCloseStatus}
+        footer={
+          <Button colorScheme="blue" mr={3} onClick={onChangeBookshelfStatus}>
+            Change To {bookshelf.visible === 'PRIVATE' ? 'Public' : 'Private'}
+          </Button>
+        }
+      />
 
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onChangeBookshelfStatus}>
-              Change To {bookshelf.visible === 'PRIVATE' ? 'Public' : 'Private'}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <AddBookModal
+        isOpen={isAddBookOpen}
+        onClose={onAddBookClose}
+        defaultState={bookshelf.books.map(({ book }) => ({
+          value: book.id,
+          label: book.title,
+        }))}
+        addBooksHandler={addBooksHandler}
+      />
 
       <DeleteBookshelfModal
         isOpen={isDeleteOpen}

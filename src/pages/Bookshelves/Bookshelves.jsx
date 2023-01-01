@@ -1,16 +1,75 @@
+import { Container, Grid, GridItem, Heading, Stack } from '@chakra-ui/react';
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import * as api from '../../api';
+import BookshelfCard from '../../components/Card/BookshelfCard';
+import Loading from '../../components/PreLoader/Loading';
 
 const Bookshelves = () => {
-  const { isLoading, error } = useQuery('bookshelves', api.getAllBookshelf);
+  const queryClient = useQueryClient();
 
-  if (isLoading) return <div>Loading...</div>;
+  const { data: bookshelves, isLoading } = useQuery(
+    'bookshelves',
+    api.getAllBookshelf
+  );
 
-  if (error) return <div>Error: {error.message}</div>;
+  const { data: user } = useQuery('user');
 
-  return <div>Bookshelves Explore</div>;
+  const { mutate: deleteForkedBookshelf, isLoading: isDeleting } = useMutation(
+    api.deleteForkedBookshelf,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('bookshelves');
+        queryClient.invalidateQueries('user');
+      },
+    }
+  );
+
+  const { mutate: forkBookshelf, isLoading: isForking } = useMutation(
+    api.forkBookshelf,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('bookshelves');
+        queryClient.invalidateQueries('user');
+      },
+    }
+  );
+
+  if (isLoading || isForking || isDeleting) return <Loading />;
+
+  return (
+    <Container maxW="100%" pl={10}>
+      <Stack spacing={10}>
+        <Heading textAlign="center" mt={6}>
+          What's New
+        </Heading>
+        <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+          {bookshelves.map((bookshelf) => {
+            const owner = bookshelf.owner.id === user.id;
+            const forked = user.forkedshelves.some(
+              (item) => item.bookshelfId === bookshelf.id
+            );
+            const forkId = user.forkedshelves.find(
+              (item) => item.bookshelfId === bookshelf.id
+            )?.id;
+
+            return (
+              <GridItem key={bookshelf.id} w="100%">
+                <BookshelfCard
+                  bookshelf={bookshelf}
+                  forked={forked}
+                  owner={owner}
+                  onDeleteFork={() => deleteForkedBookshelf(forkId)}
+                  onFork={() => forkBookshelf(bookshelf.id)}
+                />
+              </GridItem>
+            );
+          })}
+        </Grid>
+      </Stack>
+    </Container>
+  );
 };
 
 export default Bookshelves;
