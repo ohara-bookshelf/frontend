@@ -1,8 +1,9 @@
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
 import React from 'react';
-import popcorn from '../../shared/assets/gif/popcorn.gif';
+import { Link as ReachLink } from 'react-router-dom';
+import popcorn from '../../shared/assets/gif/working-chicken.gif';
 
-function Error({ message }) {
+function Error() {
   return (
     <Box
       position="absolute"
@@ -33,8 +34,13 @@ function Error({ message }) {
           src={popcorn}
           alt="loading"
         />
-        <Text mt={6} textAlign="center">
-          <Text as="h5">{message || 'Loading...'}</Text>
+        <Text mt={6} textAlign="center" as="h5">
+          Some Error Acquired~! We are trying to fix it. Please refresh the page
+          or return to{' '}
+          <Link color="teal" textDecor="underline" as={ReachLink}>
+            {' '}
+            home page
+          </Link>
         </Text>
       </Flex>
     </Box>

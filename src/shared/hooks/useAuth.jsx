@@ -1,11 +1,17 @@
+import React from 'react';
 import { useQuery } from 'react-query';
+import { Navigate } from 'react-router-dom';
 
 import * as api from '../../api';
 
 const useAuth = () => {
-  const { data: isAuthenticated } = useQuery('authenticated', api.fetchUser);
+  const { isLoading, error } = useQuery('authenticated', api.fetchUser);
 
-  return isAuthenticated;
+  if (error) {
+    return <Navigate to="/" />;
+  }
+
+  return isLoading;
 };
 
 export default useAuth;

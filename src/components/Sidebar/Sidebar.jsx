@@ -74,18 +74,6 @@ const Sidebar = () => {
             Home
           </Link>
         </BreadcrumbItem>
-
-        <BreadcrumbItem>
-          <Link as={ReachLink} to="/">
-            Home
-          </Link>
-        </BreadcrumbItem>
-
-        <BreadcrumbItem isCurrentPage>
-          <Link as={ReachLink} to="/">
-            Home
-          </Link>
-        </BreadcrumbItem>
       </Breadcrumb>
       {user ? (
         <Link as={ReachLink} to="/profile">
