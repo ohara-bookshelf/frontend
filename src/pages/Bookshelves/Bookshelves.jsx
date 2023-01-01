@@ -36,21 +36,19 @@ const Bookshelves = () => {
     }
   );
 
-  if (isLoading || isForking || isDeleting) return <Loading />;
+  if (isLoading) return <Loading />;
 
   return (
     <Container maxW="100%" pl={10}>
       <Stack spacing={10}>
-        <Heading textAlign="center" mt={6}>
-          What's New
-        </Heading>
+        <Heading textAlign="center">What's New</Heading>
         <Grid templateColumns="repeat(4, 1fr)" gap={6}>
           {bookshelves.map((bookshelf) => {
-            const owner = bookshelf.owner.id === user.id;
-            const forked = user.forkedshelves.some(
+            const owner = bookshelf.owner.id === user?.id;
+            const forked = user?.forkedshelves.some(
               (item) => item.bookshelfId === bookshelf.id
             );
-            const forkId = user.forkedshelves.find(
+            const forkId = user?.forkedshelves.find(
               (item) => item.bookshelfId === bookshelf.id
             )?.id;
 
@@ -60,6 +58,9 @@ const Bookshelves = () => {
                   bookshelf={bookshelf}
                   forked={forked}
                   owner={owner}
+                  user={user}
+                  isForking={isForking}
+                  isDeleting={isDeleting}
                   onDeleteFork={() => deleteForkedBookshelf(forkId)}
                   onFork={() => forkBookshelf(bookshelf.id)}
                 />

@@ -7,7 +7,9 @@ const BookshelfCard = ({
   bookshelf,
   owner,
   forked,
+  user,
   isForking,
+  isUnforking,
   onDeleteFork,
   onFork,
 }) => {
@@ -30,7 +32,7 @@ const BookshelfCard = ({
         <Text as="h6">{dateParser(bookshelf.createdAt)}</Text>
       </CardBody>
       <CardFooter>
-        {owner ? (
+        {!user ? null : owner ? (
           <Button
             variant="solid"
             colorScheme="blue"
@@ -39,7 +41,12 @@ const BookshelfCard = ({
             Detail
           </Button>
         ) : forked ? (
-          <Button variant="outline" colorScheme="red" onClick={onDeleteFork}>
+          <Button
+            disabled={isUnforking}
+            variant="outline"
+            colorScheme="red"
+            onClick={onDeleteFork}
+          >
             Delete Fork
           </Button>
         ) : (

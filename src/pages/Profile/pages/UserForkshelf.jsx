@@ -44,7 +44,8 @@ const UserForkshelf = () => {
   });
 
   if (fetchForkshelf) return <div>Loading...</div>;
-  if (forkhelfError) return <div>Error...</div>;
+  if (forkhelfError)
+    return <div>Owner of this bookshelf changed the visible to private</div>;
 
   return (
     <Container minW="100%" pl={10} py={8}>
