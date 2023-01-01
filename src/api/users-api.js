@@ -4,7 +4,7 @@ export const getUserDetail = async () => {
   const { data } = await API.get('users/me');
 
   // Group bookshelves by visibility
-  const bookshelves = data.bookshelves.reduce((group, bookshelf) => {
+  let bookshelves = data.bookshelves.reduce((group, bookshelf) => {
     const { visible } = bookshelf;
 
     group[visible.toLowerCase()] = group[visible.toLowerCase()] ?? [];

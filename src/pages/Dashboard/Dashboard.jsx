@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -8,6 +8,8 @@ import {
   CardFooter,
   Container,
   Divider,
+  Grid,
+  GridItem,
   Heading,
   HStack,
   Image,
@@ -17,15 +19,47 @@ import {
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import * as api from '../../api';
+import randomIndex from '../../shared/utils/randomIndex';
 
 function Dashboard() {
+  const [bookTitles, setBookTitles] = useState([
+    'Maniac Magee',
+    'The Outsiders',
+    'Lassie Come-Home',
+    'The Sign of Four',
+  ]);
+
   const {
     data: bookshelves,
     error,
     status: bookshelfStatus,
   } = useQuery('bookshelves', api.getPopularBookshelf);
 
-  const { data: user } = useQuery('user', api.getUserDetail);
+  const { data: user } = useQuery('user', api.getUserDetail, {
+    onSuccess: ({ bookshelves, forkedshelves }) => {
+      let books = [];
+
+      forkedshelves.forEach(({ bookshelf }) => {
+        bookshelf.books.forEach(({ book }) => {
+          books.push(book.title);
+        });
+      });
+
+      Object.keys(bookshelves).forEach((key) => {
+        bookshelves[key].forEach(({ books }) => {
+          books.forEach(({ book }) => {
+            books.push(book.title);
+          });
+        });
+      });
+
+      setBookTitles(books);
+    },
+  });
+
+  const { data: books, isLoading: isBookLoading } = useQuery('books', () =>
+    api.getRecommededBooks(bookTitles[randomIndex(bookTitles.length)], 20)
+  );
 
   const renderForkButton = (bookshelf) => {
     if (!user) {
@@ -114,6 +148,28 @@ function Dashboard() {
         {/* Recomended Books */}
         <Box>
           <h2>Recomended Books</h2>
+          {isBookLoading ? (
+            <div>Loading...</div>
+          ) : (
+            <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+              {books.map((book) => (
+                <GridItem key={book.id} w="100%" h="100%">
+                  <Card w="100%" h="100%">
+                    <CardBody>
+                      <Image
+                        w="100%"
+                        src={book.image_url_l}
+                        alt={book.title}
+                        bgColor="teal.300"
+                        borderRadius={4}
+                      />
+                      <Text mt={4}>{book.title}</Text>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              ))}
+            </Grid>
+          )}
         </Box>
 
         {/* Recomended Authors */}
