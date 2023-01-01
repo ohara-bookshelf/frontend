@@ -1,30 +1,18 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  Container,
-  Grid,
-  GridItem,
-  Heading,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Container, Grid, GridItem, Heading, Stack } from '@chakra-ui/react';
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useNavigate } from 'react-router-dom';
 
 import * as api from '../../api';
-import dateParser from '../../shared/utils/dateParser';
+import BookshelfCard from '../../components/Card/BookshelfCard';
+import Loading from '../../components/PreLoader/Loading';
 
 const Bookshelves = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
-  const {
-    data: bookshelves,
-    isLoading,
-    error,
-  } = useQuery('bookshelves', api.getAllBookshelf);
+  const { data: bookshelves, isLoading } = useQuery(
+    'bookshelves',
+    api.getAllBookshelf
+  );
 
   const { data: user } = useQuery('user');
 
@@ -48,9 +36,7 @@ const Bookshelves = () => {
     }
   );
 
-  if (isLoading) return <div>Loading...</div>;
-
-  if (error) return <div>Error: {error.message}</div>;
+  if (isLoading || isForking || isDeleting) return <Loading />;
 
   return (
     <Container maxW="100%" pl={10}>
@@ -70,59 +56,13 @@ const Bookshelves = () => {
 
             return (
               <GridItem key={bookshelf.id} w="100%">
-                <Card h="100%">
-                  <CardBody>
-                    <Text textAlign="center" as="h5" mb={6}>
-                      {bookshelf.name}
-                    </Text>
-
-                    <Text>
-                      Owner: {bookshelf.owner.firstName}{' '}
-                      {bookshelf.owner.lastName}
-                    </Text>
-
-                    <Text as="h6">Books: {bookshelf._count.books}</Text>
-
-                    <Text as="h6">
-                      Total Fork: {bookshelf._count.userForks}
-                    </Text>
-
-                    <Text as="h6">{dateParser(bookshelf.createdAt)}</Text>
-
-                    {owner ? (
-                      <Button
-                        mt={6}
-                        variant="solid"
-                        colorScheme="blue"
-                        onClick={() => navigate(`/profile/${bookshelf.id}`)}
-                      >
-                        Detail
-                      </Button>
-                    ) : forked ? (
-                      <Button
-                        mt={6}
-                        disabled={isDeleting}
-                        variant="outline"
-                        colorScheme="red"
-                        onClick={() => {
-                          deleteForkedBookshelf(forkId);
-                        }}
-                      >
-                        Unfork
-                      </Button>
-                    ) : (
-                      <Button
-                        mt={6}
-                        disabled={isForking}
-                        variant="solid"
-                        colorScheme="teal"
-                        onClick={() => forkBookshelf(bookshelf.id)}
-                      >
-                        Fork
-                      </Button>
-                    )}
-                  </CardBody>
-                </Card>
+                <BookshelfCard
+                  bookshelf={bookshelf}
+                  forked={forked}
+                  owner={owner}
+                  onDeleteFork={() => deleteForkedBookshelf(forkId)}
+                  onFork={() => forkBookshelf(bookshelf.id)}
+                />
               </GridItem>
             );
           })}
