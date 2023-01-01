@@ -17,7 +17,6 @@ import { Link as ReachLink } from 'react-router-dom';
 import * as api from '../../api';
 import randomIndex from '../../shared/utils/randomIndex';
 import BookshelfCard from '../../components/Card/BookshelfCard';
-import Loading from '../../components/PreLoader/Loading';
 
 function Dashboard() {
   const queryClient = useQueryClient();
@@ -57,15 +56,33 @@ function Dashboard() {
     },
   });
 
-  const { data: books, isLoading: isBookLoading } = useQuery('books', () =>
-    api.getRecommededBooks(bookTitles[randomIndex(bookTitles.length)], 20)
+  const {
+    data: books,
+    isLoading: isBookLoading,
+    error: recommendBookError,
+  } = useQuery(
+    'books',
+    () =>
+      api.getRecommededBooks(bookTitles[randomIndex(bookTitles.length)], 20),
+    {
+      initialData: [],
+    }
   );
+
   const {
     data: recommendBookshelves,
     isLoading: isBookshelvesLoading,
     error: recommendBookshelfError,
-  } = useQuery('bookshelves/recommend', () =>
-    api.getRecommededBookshelves(bookTitles[randomIndex(bookTitles.length)], 20)
+  } = useQuery(
+    'bookshelves/recommend',
+    () =>
+      api.getRecommededBookshelves(
+        bookTitles[randomIndex(bookTitles.length)],
+        20
+      ),
+    {
+      initialData: [],
+    }
   );
 
   const { mutate: deleteForkedBookshelf, isLoading: isDeleting } = useMutation(
@@ -86,12 +103,8 @@ function Dashboard() {
     }
   );
 
-  if (isDeleting || isForking) {
-    return <Loading />;
-  }
-
   return (
-    <Container maxW="100%" pl={10}>
+    <Container maxW="100%" pl={10} py={6}>
       <Stack spacing={10}>
         <Text as="h2">Popular Bookshelves</Text>
         <Box width="100%" my="6">
@@ -100,11 +113,11 @@ function Dashboard() {
           {bookshelfStatus === 'success' && (
             <Grid templateColumns="repeat(4, 1fr)" gap={4}>
               {bookshelves.slice(0, 12).map((bookshelf) => {
-                const owner = bookshelf.owner.id === user.id;
-                const forked = user.forkedshelves.some(
+                const owner = bookshelf.owner.id === user?.id;
+                const forked = user?.forkedshelves.some(
                   (item) => item.bookshelfId === bookshelf.id
                 );
-                const forkId = user.forkedshelves.find(
+                const forkId = user?.forkedshelves.find(
                   (item) => item.bookshelfId === bookshelf.id
                 )?.id;
 
@@ -114,6 +127,9 @@ function Dashboard() {
                       bookshelf={bookshelf}
                       forked={forked}
                       owner={owner}
+                      user={user}
+                      isForking={isForking}
+                      isDeleting={isDeleting}
                       onDeleteFork={() => deleteForkedBookshelf(forkId)}
                       onFork={() => forkBookshelf(bookshelf.id)}
                     />
@@ -138,11 +154,15 @@ function Dashboard() {
           <Text as="h2" textAlign="center">
             Recomended Books
           </Text>
-          {isBookLoading ? (
-            <div>Loading...</div>
+          {recommendBookError ? (
+            <Text textAlign="center">
+              error acquired, will try to fetch data again
+            </Text>
+          ) : isBookLoading ? (
+            <Text textAlign="center">Loading...</Text>
           ) : (
             <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-              {books.map((book) => (
+              {books?.map((book) => (
                 <GridItem key={book.id} w="100%" h="100%">
                   <Card w="100%" h="100%">
                     <CardBody>
@@ -167,17 +187,19 @@ function Dashboard() {
             Recomended Bookshelves
           </Text>
           {recommendBookshelfError ? (
-            <Text>error acquired, will try to fetch data again</Text>
+            <Text textAlign="center">
+              error acquired, will try to fetch data again
+            </Text>
           ) : isBookshelvesLoading ? (
-            <div>Loading...</div>
+            <Text textAlign="center">Loading...</Text>
           ) : (
             <Grid templateColumns="repeat(4, 1fr)" gap={4}>
-              {recommendBookshelves.map((bookshelf) => {
-                const owner = bookshelf.owner.id === user.id;
-                const forked = user.forkedshelves.some(
+              {recommendBookshelves?.map((bookshelf) => {
+                const owner = bookshelf.owner.id === user?.id;
+                const forked = user?.forkedshelves.some(
                   (item) => item.bookshelfId === bookshelf.id
                 );
-                const forkId = user.forkedshelves.find(
+                const forkId = user?.forkedshelves.find(
                   (item) => item.bookshelfId === bookshelf.id
                 )?.id;
 
@@ -187,6 +209,9 @@ function Dashboard() {
                       bookshelf={bookshelf}
                       forked={forked}
                       owner={owner}
+                      user={user}
+                      isForking={isForking}
+                      isDeleting={isDeleting}
                       onDeleteFork={() => deleteForkedBookshelf(forkId)}
                       onFork={() => forkBookshelf(bookshelf.id)}
                     />
