@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 import {
   Box,
   Card,
@@ -10,6 +10,7 @@ import {
   Image,
   Link,
   Stack,
+  Tag,
   Text,
 } from '@chakra-ui/react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -20,6 +21,7 @@ import BookshelfCard from '../../components/Card/BookshelfCard';
 
 function Dashboard() {
   const queryClient = useQueryClient();
+  const uuid = useId();
 
   const [bookTitles, setBookTitles] = useState([
     'Maniac Magee',
@@ -58,8 +60,9 @@ function Dashboard() {
 
   const {
     data: books,
-    isLoading: isBookLoading,
     error: recommendBookError,
+    isLoading: isRecomBookFetching,
+    refetch: refetchBooks,
   } = useQuery(
     'books',
     () =>
@@ -71,8 +74,9 @@ function Dashboard() {
 
   const {
     data: recommendBookshelves,
-    isLoading: isBookshelvesLoading,
     error: recommendBookshelfError,
+    isLoading: isRecomBookshelfFetching,
+    refetch: refetchBookshelves,
   } = useQuery(
     'bookshelves/recommend',
     () =>
@@ -156,9 +160,17 @@ function Dashboard() {
           </Text>
           {recommendBookError ? (
             <Text textAlign="center">
-              error acquired, will try to fetch data again
+              error acquired,{' '}
+              <Text
+                as="span"
+                color="teal"
+                _hover={{ cursor: 'pointer', textDecoration: 'underline' }}
+                onClick={refetchBooks}
+              >
+                try to fetch data again
+              </Text>
             </Text>
-          ) : isBookLoading ? (
+          ) : isRecomBookFetching ? (
             <Text textAlign="center">Loading...</Text>
           ) : (
             <Grid templateColumns="repeat(5, 1fr)" gap={4}>
@@ -174,6 +186,11 @@ function Dashboard() {
                         borderRadius={4}
                       />
                       <Text mt={4}>{book.title}</Text>
+                      {book.genres.map((genre) => (
+                        <Tag key={uuid} size="sm" mr={2} mt={2}>
+                          {genre}
+                        </Tag>
+                      ))}
                     </CardBody>
                   </Card>
                 </GridItem>
@@ -188,9 +205,17 @@ function Dashboard() {
           </Text>
           {recommendBookshelfError ? (
             <Text textAlign="center">
-              error acquired, will try to fetch data again
+              error acquired,{' '}
+              <Text
+                as="span"
+                color="teal"
+                _hover={{ cursor: 'pointer', textDecoration: 'underline' }}
+                onClick={refetchBookshelves}
+              >
+                try to fetch data again
+              </Text>
             </Text>
-          ) : isBookshelvesLoading ? (
+          ) : isRecomBookshelfFetching ? (
             <Text textAlign="center">Loading...</Text>
           ) : (
             <Grid templateColumns="repeat(4, 1fr)" gap={4}>
