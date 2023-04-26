@@ -1,8 +1,14 @@
-import { Container, Grid, GridItem, Heading, Stack } from '@chakra-ui/react';
+import {
+  Container,
+  Grid,
+  GridItem,
+  Heading,
+  Stack,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 import BookshelfCard from 'src/components/Card/BookshelfCard';
-import useDisclosure from 'src/shared/hooks/useDisclosure';
-import Loading from 'src/components/PreLoader/Loading';
+import Loading from 'src/components/Preloader/Loading';
 
 const bookshelves = [
   {
@@ -88,7 +94,11 @@ const user = {
 };
 
 const Bookshelves = () => {
-  const [isLoading, onLoading, onLoaded] = useDisclosure();
+  const {
+    isOpen: isLoading,
+    onOpen: onLoading,
+    onClose: onLoaded,
+  } = useDisclosure();
 
   if (isLoading) return <Loading />;
 
