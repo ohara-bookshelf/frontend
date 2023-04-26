@@ -1,39 +1,46 @@
-import { Button } from '@chakra-ui/react';
+import { Button, VStack } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
-import React from 'react';
+import * as Yup from 'yup';
 
-const FormikContainer = ({
-  children,
-  initialValues,
-  validationSchema,
-  submitHandler,
-}) => {
+interface IProps<T, U extends Yup.Schema<any>> {
+  children: JSX.Element[];
+  initialValues: T;
+  validationSchema: U;
+  submitHandler: (payload: T) => void;
+}
+
+export default function FormikContainer<
+  T extends object,
+  U extends Yup.Schema<any>
+>(props: IProps<T, U>) {
+  const { children, initialValues, validationSchema, submitHandler } = props;
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values, actions) => {
+      onSubmit={(values: T, actions) => {
+        console.log('values');
         submitHandler(values);
         actions.setSubmitting(false);
         actions.resetForm();
       }}
     >
-      {(props) => (
+      {(formikProps) => (
         <Form>
-          {children}
-
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={props.isSubmitting}
-            type="submit"
-          >
-            Submit
-          </Button>
+          <VStack gap={6}>
+            {children}
+            <Button
+              mt={4}
+              colorScheme="teal"
+              isLoading={formikProps.isSubmitting}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </VStack>
         </Form>
       )}
     </Formik>
   );
-};
-
-export default FormikContainer;
+}

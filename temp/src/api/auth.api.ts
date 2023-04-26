@@ -2,7 +2,7 @@ import { API } from '.';
 
 const PATH = '/auth';
 
-export const authApi = {
+export const authAPI = {
   login: async () => {
     return await API.post(`${PATH}/login`);
   },

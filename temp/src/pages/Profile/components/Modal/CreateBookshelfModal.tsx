@@ -15,8 +15,8 @@ import * as Yup from 'yup';
 
 interface IProps {
   isOpen: boolean;
-  onClose: () => void;
   initialFormValues: any;
+  onClose: () => void;
   submitHandler: (values: any) => void;
 }
 
@@ -27,7 +27,7 @@ const CreateBookshelfSchema = Yup.object().shape({
     .required('Required'),
   description: Yup.string()
     .min(2, 'Too Short!')
-    .max(200, 'Too Long!')
+    .max(100, 'Too Long!')
     .required('Required'),
   visible: Yup.mixed().oneOf(['PRIVATE', 'PUBLIC']).required('Required'),
 });
@@ -38,8 +38,8 @@ const CreateBookshelfModal = (props: IProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create Bookshelf</ModalHeader>
+      <ModalContent pt="8">
+        <ModalHeader textAlign="center">Create Bookshelf</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormikContainer

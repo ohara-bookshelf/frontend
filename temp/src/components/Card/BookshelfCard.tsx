@@ -1,7 +1,14 @@
-import { Button, Card, CardBody, CardFooter, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Text,
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { dateParser } from 'src/shared/utils/parser';
-
+import logo from 'src/shared/assets/images/bookshelf.png';
 interface IProps {
   bookshelf: any;
   owner: any;
@@ -18,11 +25,21 @@ const BookshelfCard = (props: IProps) => {
 
   const navigate = useNavigate();
   return (
-    <Card w="100%" h="100%">
+    <Card minW="20rem" maxW={['100%', '20rem']} h="100%">
       <CardBody>
         <Text textAlign="center" as="h5" mb={6}>
           {bookshelf.name}
         </Text>
+
+        <Image
+          w="100%"
+          h={['12rem']}
+          mb="4"
+          src={bookshelf.banner ? bookshelf.banner : logo}
+          alt="bookshelf banner"
+          objectFit={'cover'}
+          borderRadius={4}
+        />
 
         <Text>
           Owner: {bookshelf.owner.firstName} {bookshelf.owner.lastName}

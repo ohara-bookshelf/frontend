@@ -2,15 +2,16 @@ import { useQuery } from 'react-query';
 import { Navigate } from 'react-router-dom';
 
 import * as api from 'src/api';
+import { useAuthStore } from 'src/flux/store';
 
 const useAuth = () => {
-  const { isLoading, error } = useQuery('authenticated', () => {});
+  const { isAuthenticated } = useAuthStore();
 
-  if (error) {
+  if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
 
-  return isLoading;
+  return true;
 };
 
 export default useAuth;

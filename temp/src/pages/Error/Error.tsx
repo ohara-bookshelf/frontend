@@ -2,7 +2,7 @@ import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
 import popcorn from 'src/shared/assets/gif/working-chicken.gif';
 
-function Error() {
+export default function ErrorPage() {
   return (
     <Box
       position="absolute"
@@ -12,7 +12,7 @@ function Error() {
       right={0}
       width="100vw"
       height="100vh"
-      background="rgba(0,0,0,0.5)"
+      background="rgba(0,0,0,0.75)"
       zIndex="modal"
     >
       <Flex
@@ -36,7 +36,7 @@ function Error() {
         <Text mt={6} textAlign="center" as="h5">
           Some Error Acquired~! We are trying to fix it. Please refresh the page
           or return to{' '}
-          <Link color="teal" textDecor="underline" as={ReachLink}>
+          <Link color="teal" textDecor="underline" as={ReachLink} to="/">
             {' '}
             home page
           </Link>
@@ -45,5 +45,3 @@ function Error() {
     </Box>
   );
 }
-
-export default Error;

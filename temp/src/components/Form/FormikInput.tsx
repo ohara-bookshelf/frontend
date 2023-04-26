@@ -5,11 +5,19 @@ import {
   Input,
 } from '@chakra-ui/react';
 import { Field } from 'formik';
-import React from 'react';
+import { HTMLInputTypeAttribute } from 'react';
 
-function FormikInput({ name, label, type = 'text' }) {
+interface IProps {
+  name: string;
+  label: string;
+  type?: HTMLInputTypeAttribute;
+}
+
+function FormikInput(props: IProps) {
+  const { name, label, type = 'text' } = props;
   return (
     <Field name={name}>
+      {/* @ts-ignore */}
       {({ field, form }) => (
         <FormControl isInvalid={form.errors[name] && form.touched[name]}>
           <FormLabel htmlFor={name}>{label}</FormLabel>

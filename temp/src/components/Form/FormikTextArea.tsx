@@ -14,12 +14,12 @@ interface FormikTextAreaProps {
 const FormikTextArea = ({ name, label }: FormikTextAreaProps) => {
   return (
     <Field name={name}>
-      {({ field, form }: FieldProps) => (
-        // @ts-ignore
+      {/* @ts-ignore */}
+      {({ field, form }) => (
         <FormControl isInvalid={form.errors[name] && form.touched[name]}>
           <FormLabel htmlFor={name}>{label}</FormLabel>
           <Textarea {...field} id={name} placeholder={name} />
-          <FormErrorMessage>form.errors[name]</FormErrorMessage>
+          <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
         </FormControl>
       )}
     </Field>

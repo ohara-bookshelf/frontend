@@ -12,14 +12,25 @@ import {
   Link,
   Text,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { Link as ReachLink } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import { Navigate, Link as ReachLink } from 'react-router-dom';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import logo from 'src/shared/assets/images/bookshelf.png';
-
-const user: any = {};
+import { useUserStore } from 'src/flux/store/user.store';
+import { useAuthStore } from 'src/flux/store';
+import * as API from 'src/api';
+import Loading from '../Preloader/Loading';
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
+  const { user, setUser, setInitialUser } = useUserStore();
+  const { isAuthenticated, setIsAuthenticated } = useAuthStore();
+  const {
+    isOpen: isLoading,
+    onOpen: onLoading,
+    onClose: onLoaded,
+  } = useDisclosure();
+
   // const queryClient = useQueryClient();
   // const navigate = useNavigate();
 
@@ -35,23 +46,35 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   //   }
   // );
 
-  const onLoginSuccess = async () => {
-    // localStorage.setItem('access_token', credential);
-    // try {
-    //   const { data } = await api.login();
-    //   localStorage.setItem('access_token', data.access_token);
-    //   refetchUser();
-    // } catch (error) {
-    //   localStorage.removeItem('access_token');
-    //   queryClient.setQueryData('user', () => null);
-    //   navigate('/', { replace: true });
-    // }
+  const onLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    onLoading();
+    const { credential } = credentialResponse;
+    try {
+      if (!credential) throw new Error('error');
+
+      localStorage.setItem('access_token', credential);
+
+      const { data } = await API.authAPI.login();
+      localStorage.setItem('access_token', data.access_token);
+
+      const { data: user } = await API.userAPI.getMe();
+
+      setUser(user);
+      setIsAuthenticated(true);
+    } catch (error: any) {
+      localStorage.removeItem('access_token');
+      setInitialUser();
+      setIsAuthenticated(false);
+    } finally {
+      onLoaded();
+    }
   };
 
   const onLoginFailed = () => {
-    // localStorage.removeItem('access_token');
-    // queryClient.setQueryData('user', () => null);
-    // navigate('/', { replace: true });
+    localStorage.removeItem('access_token');
+    setInitialUser();
+    setIsAuthenticated(false);
+    <Navigate to="/" />;
   };
 
   // // check if user is logged in previously
@@ -59,10 +82,12 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   //   refetchUser();
   // }, []);
 
+  if (isLoading) return <Loading message="loading user..." />;
+
   return (
     <VStack
       h="100vh"
-      py={8}
+      p={8}
       gap={8}
       display={isOpen ? 'flex' : 'none'}
       transition={'all ease 0.3s'}
@@ -71,7 +96,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
         <Image w="16" src={logo} />
       </Link>
 
-      {user ? (
+      {isAuthenticated ? (
         <>
           <Link as={ReachLink} to="/profile">
             <Card
@@ -99,7 +124,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
               <Text
                 fontSize="sm"
                 fontWeight="semibold"
-              >{`${user.totalFork} Fork`}</Text>
+              >{`${user.totalForks} Fork`}</Text>
             </Card>
           </Link>
 
@@ -166,12 +191,17 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                   {user?.forkedshelves?.length ? (
                     // @ts-ignore
                     user.forkedshelves.map((forkedShelf) => (
-                      <Text key={forkedShelf.id}>
+                      <Text
+                        key={forkedShelf.id}
+                        _hover={{
+                          background: 'gray.900',
+                        }}
+                      >
                         <Link
                           as={ReachLink}
-                          to={`/bookshelves/${forkedShelf.bookshelf.id}`}
+                          to={`/bookshelves/${forkedShelf?.bookshelf?.id}`}
                         >
-                          {forkedShelf.bookshelf.name}
+                          {forkedShelf?.bookshelf?.name}
                         </Link>
                       </Text>
                     ))
@@ -189,16 +219,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
       ) : (
         <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
       )}
-      {/* {user ? (
-        
-      ) : (
-        <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginFailed} />
-      )}
-      {user && (
-        <>
-          
-        </>
-      )} */}
     </VStack>
   );
 };

@@ -18,107 +18,48 @@ import {
 import BookshelfTable from './components/Table/BookshelfTable';
 import ForkedshelfTable from './components/Table/ForkedshelfTable';
 
-import * as api from 'src/api';
+import * as API from 'src/api';
 import { AddIcon } from '@chakra-ui/icons';
 import CreateBookshelfModal from './components/Modal/CreateBookshelfModal';
-import { IUser, Visibility } from 'src/shared/interfaces';
-
-const user: IUser = {
-  id: '1',
-  firstName: 'John',
-  lastName: 'Doe',
-  profileImgUrl: 'https://picsum.photos/200',
-  bookshelves: {
-    public: [
-      {
-        id: '1',
-        name: 'Bookshelf 1',
-        description: 'This is a bookshelf.',
-        visible: Visibility.PUBLIC,
-        createdAt: '2021-08-01T00:00:00.000Z',
-        updatedAt: '2021-08-01T00:00:00.000Z',
-        userId: '1',
-        owner: {
-          id: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          profileImgUrl: 'https://picsum.photos/200',
-        },
-        _count: {
-          books: 1,
-          userForks: 1,
-        },
-        books: [
-          {
-            id: '1',
-            title: 'Book 1',
-            image_url_l: 'https://picsum.photos/200',
-            author: 'Author 1',
-            description: 'This is a book.',
-            genres: ['genre 1', 'genre 2'],
-            isbn: '1234567890',
-            image_url_m: 'https://picsum.photos/200',
-            image_url_s: 'https://picsum.photos/200',
-            publisher: 'Publisher 1',
-            year_of_publication: 2021,
-          },
-        ],
-      },
-    ],
-    private: [
-      {
-        id: '1',
-        name: 'Bookshelf 1',
-        description: 'This is a bookshelf.',
-        visible: Visibility.PUBLIC,
-        createdAt: '2021-08-01T00:00:00.000Z',
-        updatedAt: '2021-08-01T00:00:00.000Z',
-        userId: '1',
-        owner: {
-          id: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          profileImgUrl: 'https://picsum.photos/200',
-        },
-        _count: {
-          books: 1,
-          userForks: 1,
-        },
-        books: [
-          {
-            id: '1',
-            title: 'Book 1',
-            image_url_l: 'https://picsum.photos/200',
-            author: 'Author 1',
-            description: 'This is a book.',
-            genres: ['genre 1', 'genre 2'],
-            isbn: '1234567890',
-            image_url_m: 'https://picsum.photos/200',
-            image_url_s: 'https://picsum.photos/200',
-            publisher: 'Publisher 1',
-            year_of_publication: 2021,
-          },
-        ],
-      },
-    ],
-  },
-  forkedshelves: [
-    {
-      id: '1',
-      readerId: '1',
-      bookshelfId: '1',
-    },
-  ],
-  totalForks: 1,
-};
+import { useUserStore } from 'src/flux/store/user.store';
+import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import Loading from 'src/components/Preloader/Loading';
 
 const Profile = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: loading,
+    onOpen: onLoading,
+    onClose: onLoaded,
+  } = useDisclosure();
+
+  const { user, setInitialUser, setUser } = useUserStore();
 
   const submitHandler = (formValues: any) => {
-    console.log(formValues);
+    console.log('asdf', formValues);
     onClose();
   };
+
+  const fetchUser = async () => {
+    onLoading();
+    try {
+      const { data } = await API.userAPI.getMe();
+
+      setUser(data);
+    } catch (error) {
+      setInitialUser();
+      <Navigate to="/" />;
+    } finally {
+      onLoaded();
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  if (loading) return <Loading message="loading user" />;
 
   return (
     <>
@@ -145,7 +86,7 @@ const Profile = () => {
             />
           </Box>
         </Box>
-        <Container maxW="100%" pl={10}>
+        <Container maxW="100%">
           <Stack gap="10">
             <Text
               as={'h1'}
@@ -209,7 +150,9 @@ const Profile = () => {
       </Box>
 
       <CreateBookshelfModal
-        initialFormValues={{}}
+        initialFormValues={{
+          visible: 'PRIVATE',
+        }}
         isOpen={isOpen}
         onClose={onClose}
         submitHandler={submitHandler}

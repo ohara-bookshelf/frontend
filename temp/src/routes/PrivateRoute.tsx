@@ -1,10 +1,14 @@
-import Loading from 'src/components/Preloader/Loading';
-import useAuth from 'src/shared/hooks/useAuth';
+import { Navigate } from 'react-router-dom';
+import { useAuthStore } from 'src/flux/store';
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
-  const isLoading = useAuth();
+  const { isAuthenticated } = useAuthStore();
 
-  return isLoading ? <Loading /> : children;
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
 };
 
 export default PrivateRoute;

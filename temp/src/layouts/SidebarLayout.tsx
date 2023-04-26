@@ -1,9 +1,45 @@
 import { Box, Container, Flex, useDisclosure } from '@chakra-ui/react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import Sidebar from 'src/components/Sidebar/Sidebar';
+import * as API from 'src/api';
+import { useEffect } from 'react';
+import { useUserStore } from 'src/flux/store/user.store';
+import Loading from 'src/components/Preloader/Loading';
+import { useAuthStore } from 'src/flux/store';
 
 export default function SidebarLayout() {
   const { isOpen, onToggle } = useDisclosure();
+  const {
+    isOpen: loading,
+    onOpen: onLoading,
+    onClose: onLoaded,
+  } = useDisclosure();
+
+  // const { setUser, setInitialUser } = useUserStore();
+  const { setIsAuthenticated } = useAuthStore();
+
+  // const fetchUser = async () => {
+  //   onLoading();
+  //   try {
+  //     const { data } = await API.userAPI.getMe();
+
+  //     setUser(data);
+  //     setIsAuthenticated(true);
+  //   } catch (error) {
+  //     setInitialUser();
+  //     setIsAuthenticated(false);
+  //     <Navigate to="/" />;
+  //   } finally {
+  //     onLoaded();
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchUser();
+  // }, []);
+
+  if (loading) return <Loading />;
+
   return (
     <Flex w="100%" minH={'100vh'} position={'relative'}>
       <Box
@@ -22,6 +58,7 @@ export default function SidebarLayout() {
           top="16"
           right={'-4'}
           transform={'rotate(45deg)'}
+          boxShadow={'dark-lg'}
           onClick={onToggle}
         />
         <Container w="100%" h="100%">
