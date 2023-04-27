@@ -2,12 +2,13 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import SidebarLayout from '../layouts/SidebarLayout';
 import * as pages from '../pages';
 import PrivateRoute from './PrivateRoute';
+import Error from 'src/components/Error/Error';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <SidebarLayout />,
-    errorElement: <pages.Error />,
+    errorElement: <Error />,
     children: [
       { index: true, element: <pages.Dashboard /> },
       {

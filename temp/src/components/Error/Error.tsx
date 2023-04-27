@@ -2,7 +2,7 @@ import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
 import popcorn from 'src/shared/assets/gif/working-chicken.gif';
 
-export default function ErrorPage() {
+export default function Error() {
   return (
     <Box
       position="absolute"
@@ -18,6 +18,7 @@ export default function ErrorPage() {
       <Flex
         width="100%"
         height="100%"
+        px={10}
         alignItems="center"
         justifyContent="center"
         flexDirection="column"

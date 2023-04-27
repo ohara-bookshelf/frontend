@@ -25,6 +25,14 @@ import { useUserStore } from 'src/flux/store/user.store';
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loading from 'src/components/Preloader/Loading';
+import { Visibility } from 'src/shared/interfaces';
+
+type CreateBookshelf = {
+  name: String;
+  description: String;
+  visible: Visibility;
+  books: String[];
+};
 
 const Profile = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,11 +42,17 @@ const Profile = () => {
     onClose: onLoaded,
   } = useDisclosure();
 
-  const { user, setInitialUser, setUser } = useUserStore();
+  const { user, setInitialUser, setUser, addUserBookshelf } = useUserStore();
 
-  const submitHandler = (formValues: any) => {
-    console.log('asdf', formValues);
-    onClose();
+  const submitHandler = async (formValues: CreateBookshelf) => {
+    try {
+      const { data } = await API.userAPI.createBookshelf(formValues);
+      addUserBookshelf(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onClose();
+    }
   };
 
   const fetchUser = async () => {

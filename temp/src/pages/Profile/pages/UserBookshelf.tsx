@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link as ReachLink, useNavigate } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useParams,
+  Link as ReachLink,
+  useNavigate,
+  Navigate,
+} from 'react-router-dom';
 import logo from 'src/shared/assets/images/bookshelf.png';
 import {
   Box,
@@ -21,52 +24,112 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import DeleteBookshelfModal from '../components/Modal/DeleteBookshelfModal';
 import ChangeVisibleModal from '../components/Modal/ChangeVisibleModal';
 import AddBookModal from '../components/Modal/AddBookModal';
+import { useBookshelfStore, useUserStore } from 'src/flux/store';
+import Error from 'src/components/Error/Error';
+import { Visibility } from 'src/shared/interfaces';
+import * as API from 'src/api';
+import { useEffect } from 'react';
+import Loading from 'src/components/Preloader/Loading';
 
-const book = {
-  id: 1,
-  title: 'Book 1',
-  image_url_l: 'https://picsum.photos/200',
-};
-
-const bookshelf = {
-  id: 1,
-  name: 'Bookshelf',
-  description: 'This is a bookshelf.',
-  visible: 'PRIVATE',
-  owner: {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-  },
-  _count: {
-    books: 10,
-    userForks: 10,
-  },
-  createdAt: '2021-10-10T00:00:00.000Z',
-  books: [book],
-};
-
-const UserBookshelf = () => {
-  const navigate = useNavigate();
+export default function UserBookshelf() {
   const { bookshelfId } = useParams();
+
+  const { bookshelf, setBookshelf } = useBookshelfStore();
+  const { updateUserBookshelves } = useUserStore();
+  const book: any = {};
 
   const {
     isOpen: isStatusOpen,
     onOpen: onOpenStatus,
     onClose: onCloseStatus,
   } = useDisclosure();
-
   const {
     isOpen: isDeleteOpen,
     onOpen: onOpenDelete,
     onClose: onCloseDelete,
   } = useDisclosure();
-
   const {
     isOpen: isAddBookOpen,
     onOpen: onAddBookOpen,
     onClose: onAddBookClose,
   } = useDisclosure();
+  const {
+    isOpen: loading,
+    onOpen: setLoading,
+    onClose: setLoaded,
+  } = useDisclosure();
+
+  const fetchBookshelf = async () => {
+    if (!bookshelfId) return;
+
+    setLoading();
+    try {
+      const { data } = await API.userAPI.getUserBookshelf(bookshelfId);
+      setBookshelf(data);
+    } catch (error) {
+      <Navigate to="/profile" />;
+    } finally {
+      setLoaded();
+    }
+  };
+
+  const addBooksHandler = async (
+    selectedBooks: { value: string; label: string }[]
+  ) => {
+    if (!bookshelfId) return;
+    if (!bookshelf) return;
+    setLoading();
+    try {
+      const newBookshelf = {
+        ...bookshelf,
+        books: selectedBooks.map((x) => x.value),
+      };
+
+      const { data } = await API.userAPI.updateUserBookshelf(
+        bookshelfId,
+        newBookshelf
+      );
+
+      setBookshelf(data);
+      updateUserBookshelves(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoaded();
+      onAddBookClose();
+    }
+  };
+
+  const removeBookHandler = async (bookId: string) => {
+    if (!bookshelfId) return;
+    if (!bookshelf) return;
+    setLoading();
+    try {
+      const { data } = await API.userAPI.removeUserBookshelfBook(
+        bookshelfId,
+        bookId
+      );
+
+      const newBookshelf = {
+        ...bookshelf,
+        books: bookshelf.books.filter((x) => x.book.id !== data.bookId),
+      };
+
+      setBookshelf(newBookshelf);
+      updateUserBookshelves(newBookshelf);
+    } catch (error) {
+    } finally {
+      setLoaded();
+      onAddBookClose();
+    }
+  };
+
+  useEffect(() => {
+    fetchBookshelf();
+  }, []);
+
+  if (!bookshelf) return <Error />;
+  if (loading) return <Loading />;
 
   return (
     <>
@@ -82,8 +145,8 @@ const UserBookshelf = () => {
             <Flex w="100%" justifyContent="center">
               <Image
                 h={80}
-                src={book.image_url_l || logo}
-                alt={book.title || 'bookshelf'}
+                src={book?.image_url_l || logo}
+                alt={book?.title || 'bookshelf'}
                 objectFit="cover"
               />
             </Flex>
@@ -100,7 +163,9 @@ const UserBookshelf = () => {
                   onClick={onOpenStatus}
                 >
                   Set as{' '}
-                  {bookshelf.visible === 'PRIVATE' ? 'Public' : 'Private'}{' '}
+                  {bookshelf.visible === Visibility.PUBLIC
+                    ? 'Public'
+                    : 'Private'}{' '}
                   Bookshelf
                 </Button>
                 <Button
@@ -151,7 +216,7 @@ const UserBookshelf = () => {
                     color: 'red.500',
                     bg: 'red.100',
                   }}
-                  onClick={() => console.log(book.id)}
+                  onClick={() => removeBookHandler(book.id)}
                 >
                   <DeleteIcon fontSize={24} />
                 </Box>
@@ -180,7 +245,8 @@ const UserBookshelf = () => {
         onClose={onCloseStatus}
         footer={
           <Button colorScheme="blue" mr={3} onClick={() => {}}>
-            Change To {bookshelf.visible === 'PRIVATE' ? 'Public' : 'Private'}
+            Change To{' '}
+            {bookshelf.visible === Visibility.PUBLIC ? 'Public' : 'Private'}
           </Button>
         }
       />
@@ -188,12 +254,11 @@ const UserBookshelf = () => {
       <AddBookModal
         isOpen={isAddBookOpen}
         onClose={onAddBookClose}
-        //  @ts-ignore
         defaultState={bookshelf.books.map(({ book }) => ({
           value: book.id,
           label: book.title,
         }))}
-        addBooksHandler={() => {}}
+        addBooksHandler={addBooksHandler}
       />
 
       <DeleteBookshelfModal
@@ -204,6 +269,4 @@ const UserBookshelf = () => {
       />
     </>
   );
-};
-
-export default UserBookshelf;
+}

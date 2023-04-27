@@ -34,6 +34,13 @@ export enum Visibility {
   PRIVATE,
 }
 
+export interface IBookshelfBook {
+  bookshelfId: string;
+  bookId: string;
+  assignedAt: Date;
+  book: IBook;
+}
+
 export interface IBookshelf {
   id: string;
   name: string;
@@ -42,7 +49,7 @@ export interface IBookshelf {
   createdAt: string;
   updatedAt: string;
   userId: string;
-  books: IBook[];
+  books: IBookshelfBook[];
   _count: {
     books: number;
     userForks: number;
