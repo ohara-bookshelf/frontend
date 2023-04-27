@@ -1,4 +1,4 @@
-import { IBook, IBookshelf } from 'src/shared/interfaces';
+import { IBookshelf } from 'src/shared/interfaces';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 

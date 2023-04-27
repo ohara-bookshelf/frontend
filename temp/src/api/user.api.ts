@@ -11,6 +11,13 @@ type CreateBookshelf = {
   books: String[];
 };
 
+type UpdateBookshelf = {
+  name?: String;
+  description?: String;
+  visible?: Visibility;
+  books?: String[];
+};
+
 export const userAPI = {
   getMe: async () => {
     const res: AxiosResponse<IUser> = await API.get(`${PATH}/me`);
@@ -34,7 +41,7 @@ export const userAPI = {
 
   updateUserBookshelf: async (
     bookshelfId: string,
-    bookshelf: CreateBookshelf
+    bookshelf: UpdateBookshelf
   ) => {
     const res: AxiosResponse<IBookshelf> = await API.patch(
       `${PATH}/bookshelves/${bookshelfId}`,
@@ -42,10 +49,15 @@ export const userAPI = {
     );
     return res;
   },
-
   removeUserBookshelfBook: async (bookshelfId: string, bookId: string) => {
     const res: AxiosResponse<{ bookshelfId: string; bookId: string }> =
       await API.delete(`${PATH}/bookshelves/${bookshelfId}/books/${bookId}`);
+    return res;
+  },
+  deleteUserBookshelf: async (bookshelfId: string) => {
+    const res: AxiosResponse<{ bookshelfId: string }> = await API.delete(
+      `${PATH}/bookshelves/${bookshelfId}`
+    );
     return res;
   },
 };

@@ -8,7 +8,10 @@ type UserStore = {
   setInitialUser: () => void;
   addUserBookshelf(payload: IBookshelf): void;
   updateUserBookshelves(payload: IBookshelf): void;
+  deleteUserBookshelf(payload: string): void;
 };
+
+type GroupKey = 'public' | 'private';
 
 export const initialUser: IUser = {
   id: '',
@@ -59,31 +62,81 @@ export const useUserStore = create<UserStore>(
     },
     updateUserBookshelves: (payload: IBookshelf) => {
       const { bookshelves } = useUserStore.getState().user;
+
+      if (!bookshelves) return;
+
       const privateBookshelves = bookshelves?.private || [];
       const publicBookshelves = bookshelves?.public || [];
 
-      const updatedBookshelves = {
-        private: privateBookshelves.map((bookshelf) => {
-          if (bookshelf.id === payload.id) {
-            // add payload to the books array of the matching bookshelf
-            return payload;
-          } else {
-            // return the bookshelf unmodified
-            return bookshelf;
-          }
-        }),
-        public: publicBookshelves.map((bookshelf) => {
-          if (bookshelf.id === payload.id) {
-            // add payload to the books array of the matching bookshelf
-            return payload;
-          } else {
-            // return the bookshelf unmodified
-            return bookshelf;
-          }
-        }),
-      };
+      const mergedBookshelves = [...privateBookshelves, ...publicBookshelves];
 
-      console.log(updatedBookshelves);
+      // find the matching bookshelf
+      const matchingBookshelf = mergedBookshelves.find(
+        (bookshelf) => bookshelf.id === payload.id
+      );
+
+      if (!matchingBookshelf) return;
+
+      // update the matching bookshelf
+      // then group the bookshelves by visibility
+      const updatedBookshelves = mergedBookshelves
+        .map((bookshelf) => {
+          if (bookshelf.id === payload.id) {
+            return payload;
+          }
+          return bookshelf;
+        })
+        .reduce(
+          (group: Record<GroupKey, any[]>, bookshelf) => {
+            const { visible } = bookshelf;
+
+            group[visible.toLowerCase() as GroupKey] =
+              group[visible.toLowerCase() as GroupKey] ?? [];
+            group[visible.toLowerCase() as GroupKey].push(bookshelf);
+            return group;
+          },
+          {
+            public: [],
+            private: [],
+          }
+        );
+
+      const updatedUser = {
+        ...useUserStore.getState().user,
+        bookshelves: updatedBookshelves,
+      };
+      set({
+        user: updatedUser,
+      });
+    },
+    deleteUserBookshelf: (payload: string) => {
+      const { bookshelves } = useUserStore.getState().user;
+
+      if (!bookshelves) return;
+
+      const privateBookshelves = bookshelves?.private || [];
+      const publicBookshelves = bookshelves?.public || [];
+
+      const mergedBookshelves = [...privateBookshelves, ...publicBookshelves];
+
+      // update the matching bookshelf
+      // then group the bookshelves by visibility
+      const updatedBookshelves = mergedBookshelves
+        .filter((bookshelf) => bookshelf.id !== payload)
+        .reduce(
+          (group: Record<GroupKey, any[]>, bookshelf) => {
+            const { visible } = bookshelf;
+
+            group[visible.toLowerCase() as GroupKey] =
+              group[visible.toLowerCase() as GroupKey] ?? [];
+            group[visible.toLowerCase() as GroupKey].push(bookshelf);
+            return group;
+          },
+          {
+            public: [],
+            private: [],
+          }
+        );
 
       const updatedUser = {
         ...useUserStore.getState().user,

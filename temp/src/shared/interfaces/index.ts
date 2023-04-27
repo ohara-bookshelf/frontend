@@ -30,8 +30,8 @@ export interface IBook {
 }
 
 export enum Visibility {
-  PUBLIC,
-  PRIVATE,
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
 }
 
 export interface IBookshelfBook {

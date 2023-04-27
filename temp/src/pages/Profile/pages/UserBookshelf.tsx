@@ -4,7 +4,6 @@ import {
   useNavigate,
   Navigate,
 } from 'react-router-dom';
-import logo from 'src/shared/assets/images/bookshelf.png';
 import {
   Box,
   Button,
@@ -31,12 +30,19 @@ import * as API from 'src/api';
 import { useEffect } from 'react';
 import Loading from 'src/components/Preloader/Loading';
 
+type UpdateBookshelf = {
+  name?: String;
+  description?: String;
+  visible?: Visibility;
+  books?: String[];
+};
+
 export default function UserBookshelf() {
   const { bookshelfId } = useParams();
+  const navigate = useNavigate();
 
   const { bookshelf, setBookshelf } = useBookshelfStore();
-  const { updateUserBookshelves } = useUserStore();
-  const book: any = {};
+  const { updateUserBookshelves, deleteUserBookshelf } = useUserStore();
 
   const {
     isOpen: isStatusOpen,
@@ -100,6 +106,24 @@ export default function UserBookshelf() {
     }
   };
 
+  const updateUserBookshelfHandler = async (bookshelfData: UpdateBookshelf) => {
+    if (!bookshelfId) return;
+    if (!bookshelf) return;
+    setLoading();
+    try {
+      const { data } = await API.userAPI.updateUserBookshelf(
+        bookshelfId,
+        bookshelfData
+      );
+      setBookshelf(data);
+      updateUserBookshelves(data);
+    } catch (error) {
+    } finally {
+      setLoaded();
+      onCloseStatus();
+    }
+  };
+
   const removeBookHandler = async (bookId: string) => {
     if (!bookshelfId) return;
     if (!bookshelf) return;
@@ -124,6 +148,22 @@ export default function UserBookshelf() {
     }
   };
 
+  const deleteBookshelfHandler = async () => {
+    if (!bookshelf?.id) return;
+
+    setLoading();
+    try {
+      const { data } = await API.userAPI.deleteUserBookshelf(bookshelf?.id);
+      deleteUserBookshelf(data.bookshelfId);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      navigate('/profile');
+      onCloseDelete();
+      setLoaded();
+    }
+  };
+
   useEffect(() => {
     fetchBookshelf();
   }, []);
@@ -142,15 +182,7 @@ export default function UserBookshelf() {
           </HStack>
 
           <Flex flexDir="row" gap={6}>
-            <Flex w="100%" justifyContent="center">
-              <Image
-                h={80}
-                src={book?.image_url_l || logo}
-                alt={book?.title || 'bookshelf'}
-                objectFit="cover"
-              />
-            </Flex>
-            <Flex w="100%" h={80} flexDir="column" gap={6}>
+            <Flex w="100%" flexDir="column" gap={6}>
               <Box maxH={60} overflow="auto">
                 <Text as="p" textAlign="center">
                   {bookshelf.description}
@@ -164,8 +196,8 @@ export default function UserBookshelf() {
                 >
                   Set as{' '}
                   {bookshelf.visible === Visibility.PUBLIC
-                    ? 'Public'
-                    : 'Private'}{' '}
+                    ? 'Private'
+                    : 'Public'}{' '}
                   Bookshelf
                 </Button>
                 <Button
@@ -244,9 +276,20 @@ export default function UserBookshelf() {
         isOpen={isStatusOpen}
         onClose={onCloseStatus}
         footer={
-          <Button colorScheme="blue" mr={3} onClick={() => {}}>
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={() =>
+              updateUserBookshelfHandler({
+                visible:
+                  bookshelf.visible === Visibility.PUBLIC
+                    ? Visibility.PRIVATE
+                    : Visibility.PUBLIC,
+              })
+            }
+          >
             Change To{' '}
-            {bookshelf.visible === Visibility.PUBLIC ? 'Public' : 'Private'}
+            {bookshelf.visible === Visibility.PUBLIC ? 'Private' : 'Public'}
           </Button>
         }
       />
@@ -265,7 +308,7 @@ export default function UserBookshelf() {
         name={bookshelf.name}
         isOpen={isDeleteOpen}
         onClose={onCloseDelete}
-        onClick={() => {}}
+        onClick={deleteBookshelfHandler}
       />
     </>
   );

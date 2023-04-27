@@ -8,33 +8,40 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+
 import DeleteBookshelfModal from '../Modal/DeleteBookshelfModal';
 import { IBookshelf } from 'src/shared/interfaces';
 import ActionButton from '../Button/ActionButton';
 import { dateParser } from 'src/shared/utils/parser';
+import { useState } from 'react';
+import * as API from 'src/api';
+import { useUserStore } from 'src/flux/store';
 
 interface IProps {
   data: IBookshelf[];
 }
 
-const bookshelf = {
-  id: 1,
-  name: 'Bookshelf 1',
-  totalFork: 10,
-  totalBook: 10,
-  createdAt: '2021-08-01T00:00:00.000Z',
-};
-
 const BookshelfTable = (props: IProps) => {
   const { data } = props;
 
+  const [bookshelf, setBookshelf] = useState<IBookshelf>();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const onDeleteBookshelf = () => {
-    onClose();
+  const { deleteUserBookshelf } = useUserStore();
+
+  const deleteBookshelfHandler = async () => {
+    if (!bookshelf) return;
+    try {
+      const { data } = await API.userAPI.deleteUserBookshelf(bookshelf.id);
+      deleteUserBookshelf(data.bookshelfId);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onClose();
+    }
   };
+
   return (
     <>
       <TableContainer>
@@ -61,6 +68,7 @@ const BookshelfTable = (props: IProps) => {
                     <ActionButton
                       path={item.id}
                       onDeleteClick={() => {
+                        setBookshelf(item);
                         onOpen();
                       }}
                     />
@@ -71,10 +79,10 @@ const BookshelfTable = (props: IProps) => {
         </Table>
       </TableContainer>
       <DeleteBookshelfModal
-        name={bookshelf.name}
+        name={bookshelf?.name || ''}
         isOpen={isOpen}
         onClose={onClose}
-        onClick={onDeleteBookshelf}
+        onClick={deleteBookshelfHandler}
       />
     </>
   );
