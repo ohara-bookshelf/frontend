@@ -8,38 +8,49 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import React, { useId } from 'react';
+import { useId } from 'react';
 import { IBook } from 'src/shared/interfaces';
 
-export default function BookCard({ book }: { book: IBook }) {
+type Props = {
+  title: string;
+  image_url_l: string;
+  author: string;
+  genres: string[];
+};
+
+export default function BookCard(props: Props) {
+  const { title, image_url_l, genres, author } = props;
   const uuid = useId();
   return (
-    <Card minW={['16rem', '18rem']} maxW={['100%', '16rem', '18rem']} h="100%">
+    <Card w='100%' h='100%'>
       <CardBody>
-        <VStack gap="4">
-          <Text as="h3" textAlign="center">
-            {book.title}
+        <VStack gap='4'>
+          <Text as='h3' textAlign='center'>
+            {title}
           </Text>
           <Image
-            w="100%"
-            h="8rem"
-            src={book.image_url_l}
-            alt={book.title}
+            w='100%'
+            h='8rem'
+            src={image_url_l}
+            alt={title}
             borderRadius={4}
             objectFit={'contain'}
           />
+          <Text as='p' textAlign='center'>
+            {author}
+          </Text>
         </VStack>
       </CardBody>
       <CardFooter>
         <Box alignSelf={'start'}>
-          {book.genres.slice(0, 5).map((g) => (
-            <Tag key={uuid} size="sm" mr={2} mt={2}>
+          {genres.slice(0, 5).map((g) => (
+            <Tag key={uuid} size='sm' mr={2} mt={2}>
               {g}
             </Tag>
           ))}
-          {book.genres.length > 5 ? (
-            <Tag key={uuid} size="sm" mr={2} mt={2}>
-              + {book.genres.length - 5}
+          {genres.length > 5 ? (
+            <Tag key={uuid} size='sm' mr={2} mt={2}>
+              + {genres.length - 5}
             </Tag>
           ) : null}
         </Box>

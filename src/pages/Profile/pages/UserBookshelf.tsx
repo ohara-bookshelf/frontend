@@ -31,10 +31,10 @@ import { useEffect } from 'react';
 import Loading from 'src/components/Preloader/Loading';
 
 type UpdateBookshelf = {
-  name?: String;
-  description?: String;
+  name?: string;
+  description?: string;
   visible?: Visibility;
-  books?: String[];
+  books?: string[];
 };
 
 export default function UserBookshelf() {
@@ -73,7 +73,7 @@ export default function UserBookshelf() {
       const { data } = await API.userAPI.getUserBookshelf(bookshelfId);
       setBookshelf(data);
     } catch (error) {
-      <Navigate to="/profile" />;
+      <Navigate to='/profile' />;
     } finally {
       setLoaded();
     }
@@ -118,6 +118,7 @@ export default function UserBookshelf() {
       setBookshelf(data);
       updateUserBookshelves(data);
     } catch (error) {
+      console.error(error);
     } finally {
       setLoaded();
       onCloseStatus();
@@ -142,6 +143,7 @@ export default function UserBookshelf() {
       setBookshelf(newBookshelf);
       updateUserBookshelves(newBookshelf);
     } catch (error) {
+      console.error(error);
     } finally {
       setLoaded();
       onAddBookClose();
@@ -173,25 +175,25 @@ export default function UserBookshelf() {
 
   return (
     <>
-      <Container minW="100%" pl={10} py={8}>
+      <Container minW='100%' pl={10} py={8}>
         <Stack gap={6}>
-          <Heading textAlign="center">{bookshelf.name}</Heading>
-          <HStack justifyContent="center" gap={6}>
+          <Heading textAlign='center'>{bookshelf.name}</Heading>
+          <HStack justifyContent='center' gap={6}>
             <Text>Total Book: {bookshelf._count?.books || 0}</Text>
             <Text>Total Fork: {bookshelf._count?.userForks || 0}</Text>
           </HStack>
 
-          <Flex flexDir="row" gap={6}>
-            <Flex w="100%" flexDir="column" gap={6}>
-              <Box maxH={60} overflow="auto">
-                <Text as="p" textAlign="center">
+          <Flex flexDir='row' gap={6}>
+            <Flex w='100%' flexDir='column' gap={6}>
+              <Box maxH={60} overflow='auto'>
+                <Text as='p' textAlign='center'>
                   {bookshelf.description}
                 </Text>
               </Box>
-              <HStack gap={6} alignSelf="center" mt="auto">
+              <HStack gap={6} alignSelf='center' mt='auto'>
                 <Button
-                  variant="solid"
-                  colorScheme="teal"
+                  variant='solid'
+                  colorScheme='teal'
                   onClick={onOpenStatus}
                 >
                   Set as{' '}
@@ -201,8 +203,8 @@ export default function UserBookshelf() {
                   Bookshelf
                 </Button>
                 <Button
-                  variant="solid"
-                  colorScheme="red"
+                  variant='solid'
+                  colorScheme='red'
                   onClick={onOpenDelete}
                 >
                   Delete Bookshelf
@@ -211,36 +213,35 @@ export default function UserBookshelf() {
             </Flex>
           </Flex>
 
-          <Flex w="100%" justifyContent="center">
+          <Flex w='100%' justifyContent='center'>
             <Button
-              variant="outline"
-              colorScheme="teal"
+              variant='outline'
+              colorScheme='teal'
               onClick={onAddBookOpen}
             >
               Add Book
             </Button>
           </Flex>
 
-          <Grid w="100%" templateColumns="repeat(4, 1fr)" gap={6}>
-            {/*  @ts-ignore */}
+          <Grid w='100%' templateColumns='repeat(4, 1fr)' gap={6}>
             {bookshelf.books.map(({ book }) => (
               <GridItem
                 key={book.id}
-                borderRadius="sm"
-                transition="all 0.3s ease-in-out"
-                position="relative"
+                borderRadius='sm'
+                transition='all 0.3s ease-in-out'
+                position='relative'
                 _hover={{
                   cursor: 'pointer',
                   bg: 'blackAlpha.300',
                 }}
-                role="group"
+                role='group'
               >
                 <Box
-                  right="0"
-                  display="none"
-                  position="absolute"
+                  right='0'
+                  display='none'
+                  position='absolute'
                   p={1}
-                  borderRadius="sm"
+                  borderRadius='sm'
                   _groupHover={{
                     display: 'block',
                   }}
@@ -259,7 +260,7 @@ export default function UserBookshelf() {
                       h={32}
                       src={book.image_url_l}
                       alt={book.title}
-                      objectFit="contain"
+                      objectFit='contain'
                     />
                     <Box h={32}>
                       <Text>{book.title}</Text>
@@ -277,7 +278,7 @@ export default function UserBookshelf() {
         onClose={onCloseStatus}
         footer={
           <Button
-            colorScheme="blue"
+            colorScheme='blue'
             mr={3}
             onClick={() =>
               updateUserBookshelfHandler({

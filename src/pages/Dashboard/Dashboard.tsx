@@ -19,226 +19,22 @@ import BookshelfCard from 'src/components/Card/BookshelfCard';
 import DashboardSection from './components/DashboardSection/DashboardSection';
 import BookCard from 'src/components/Card/BookCard';
 import { IBook } from 'src/shared/interfaces';
-
-const user: any = {};
-const bookshelves = [
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-];
-const books = [
-  {
-    id: '1',
-    title: 'Book 1',
-    image_url_l: 'https://picsum.photos/200/300',
-    image_url_m: 'https://picsum.photos/200/300',
-    image_url_s: 'https://picsum.photos/200/300',
-    genres: ['Action', 'Action', 'Action', 'Action', 'Action', 'Action'],
-    isbn: '123',
-    author: '123',
-    year_of_publication: 2000,
-    publisher: '123',
-    description: '123',
-  },
-  {
-    id: '1',
-    title: 'Book 1',
-    image_url_l: 'https://picsum.photos/200/300',
-    image_url_m: 'https://picsum.photos/200/300',
-    image_url_s: 'https://picsum.photos/200/300',
-    genres: ['Action', 'Action', 'Action', 'Action', 'Action', 'Action'],
-    isbn: '123',
-    author: '123',
-    year_of_publication: 2000,
-    publisher: '123',
-    description: '123',
-  },
-  {
-    id: '1',
-    title: 'Book 1',
-    image_url_l: 'https://picsum.photos/200/300',
-    image_url_m: 'https://picsum.photos/200/300',
-    image_url_s: 'https://picsum.photos/200/300',
-    genres: ['Action', 'Action', 'Action', 'Action', 'Action', 'Action'],
-    isbn: '123',
-    author: '123',
-    year_of_publication: 2000,
-    publisher: '123',
-    description: '123',
-  },
-  {
-    id: '1',
-    title: 'Book 1',
-    image_url_l: 'https://picsum.photos/200/300',
-    image_url_m: 'https://picsum.photos/200/300',
-    image_url_s: 'https://picsum.photos/200/300',
-    genres: ['Action', 'Action', 'Action', 'Action', 'Action', 'Action'],
-    isbn: '123',
-    author: '123',
-    year_of_publication: 2000,
-    publisher: '123',
-    description: '123',
-  },
-  {
-    id: '1',
-    title: 'Book 1',
-    image_url_l: 'https://picsum.photos/200/300',
-    image_url_m: 'https://picsum.photos/200/300',
-    image_url_s: 'https://picsum.photos/200/300',
-    genres: ['Action', 'Action', 'Action', 'Action', 'Action', 'Action'],
-    isbn: '123',
-    author: '123',
-    year_of_publication: 2000,
-    publisher: '123',
-    description: '123',
-  },
-  {
-    id: '1',
-    title: 'Book 1',
-    image_url_l: 'https://picsum.photos/200/300',
-    image_url_m: 'https://picsum.photos/200/300',
-    image_url_s: 'https://picsum.photos/200/300',
-    genres: ['Action', 'Action', 'Action', 'Action', 'Action', 'Action'],
-    isbn: '123',
-    author: '123',
-    year_of_publication: 2000,
-    publisher: '123',
-    description: '123',
-  },
-];
-const recommendBookshelves = [...bookshelves];
+import { useUserStore } from 'src/flux/store';
 
 export default function Dashboard() {
-  const uuid = useId();
+  const { user } = useUserStore();
 
-  const [bookTitles, setBookTitles] = useState([
-    'Maniac Magee',
-    'The Outsiders',
-    'Lassie Come-Home',
-    'The Sign of Four',
-  ]);
   return (
-    <Container maxW="100%">
+    <Container maxW='100%'>
       <Stack spacing={10}>
-        <Text as="h2">Popular Bookshelves</Text>
+        <Text as='h2'>Popular Bookshelves</Text>
         <DashboardSection>
           {bookshelves.slice(0, 12).map((bookshelf) => {
             const owner = bookshelf.owner.id === user?.id;
             const forked = user?.forkedshelves?.some(
-              // @ts-ignore
               (item) => item.bookshelfId === bookshelf.id
             );
             const forkId = user?.forkedshelves?.find(
-              // @ts-ignore
               (item) => item.bookshelfId === bookshelf.id
             )?.id;
 
@@ -256,19 +52,19 @@ export default function Dashboard() {
             );
           })}
         </DashboardSection>
-        <Flex justifyContent="center">
+        <Flex justifyContent='center'>
           <Link
             as={ReachLink}
-            to="/bookshelves"
-            fontSize="xl"
-            color="teal"
-            textDecor="underline"
+            to='/bookshelves'
+            fontSize='xl'
+            color='teal'
+            textDecor='underline'
           >
             See all bookshelves
           </Link>
         </Flex>
         <Box>
-          <Text as="h2" textAlign="center">
+          <Text as='h2' textAlign='center'>
             Recomended Books
           </Text>
           <DashboardSection>
@@ -296,18 +92,16 @@ export default function Dashboard() {
         </Box>
 
         <Box>
-          <Text as="h2" textAlign="center">
+          <Text as='h2' textAlign='center'>
             Recomended Bookshelves
           </Text>
           <DashboardSection>
             {recommendBookshelves?.map((bookshelf) => {
               const owner = bookshelf.owner.id === user?.id;
               const forked = user?.forkedshelves?.some(
-                // @ts-ignore
                 (item) => item.bookshelfId === bookshelf.id
               );
               const forkId = user?.forkedshelves?.find(
-                // @ts-ignore
                 (item) => item.bookshelfId === bookshelf.id
               )?.id;
 

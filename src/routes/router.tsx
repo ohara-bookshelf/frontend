@@ -26,12 +26,17 @@ const router = createBrowserRouter([
           { path: ':bookshelfId', element: <pages.UserBookshelf /> },
           {
             path: 'forks',
-            element: <Navigate to="/profile" />,
+            element: <Navigate to='/profile' />,
             caseSensitive: true,
           },
           {
             path: 'forks/:forkshelfId',
             element: <pages.UserForkshelf />,
+            caseSensitive: true,
+          },
+          {
+            path: 'mood-assistant',
+            element: <pages.UserAssistant />,
             caseSensitive: true,
           },
         ],

@@ -65,62 +65,61 @@ const UserForkshelf = () => {
   const navigate = useNavigate();
 
   return (
-    <Container minW="100%" pl={10} py={8}>
+    <Container minW='100%' pl={10} py={8}>
       <Stack gap={6}>
-        <Heading textAlign="center">{forkedshelf.bookshelf.name}</Heading>
-        <HStack justifyContent="center" gap={6}>
+        <Heading textAlign='center'>{forkedshelf.bookshelf.name}</Heading>
+        <HStack justifyContent='center' gap={6}>
           <Text>Total Book: {forkedshelf.bookshelf._count?.books || 0}</Text>
           <Text>
             Total Fork: {forkedshelf.bookshelf._count?.userForks || 0}
           </Text>
         </HStack>
-        <Flex justifyContent="center">
+        <Flex justifyContent='center'>
           <Button
-            colorScheme="red"
-            variant="outline"
+            colorScheme='red'
+            variant='outline'
             onClick={() => console.log(forkshelfId)}
           >
             Delete
           </Button>
         </Flex>
-        <Flex flexDir="row" gap={20}>
-          <Flex w="100%" flexDir="column" alignItems="center" gap={6}>
-            <Text as="h4">Original Bookshelf Owner</Text>
+        <Flex flexDir='row' gap={20}>
+          <Flex w='100%' flexDir='column' alignItems='center' gap={6}>
+            <Text as='h4'>Original Bookshelf Owner</Text>
             <Avatar
-              size="2xl"
+              size='2xl'
               src={forkedshelf.bookshelf.owner.profileImgUrl}
               name={`${forkedshelf.bookshelf.owner.firstName} ${forkedshelf.bookshelf.owner.lastName}`}
             />
-            <Text as="h3" color="teal.300">
+            <Text as='h3' color='teal.300'>
               {forkedshelf.bookshelf.owner.firstName}{' '}
               {forkedshelf.bookshelf.owner.lastName}
             </Text>
-            <Text as="p" textAlign="center" fontStyle="italic">
+            <Text as='p' textAlign='center' fontStyle='italic'>
               {forkedshelf.bookshelf.description}
             </Text>
           </Flex>
-          <Flex w="100%" flexDir="column" gap={6}>
-            <Text as="h4">Forked By</Text>
-            <Box h={80} overflow="auto">
+          <Flex w='100%' flexDir='column' gap={6}>
+            <Text as='h4'>Forked By</Text>
+            <Box h={80} overflow='auto'>
               <Stack gap={6}>
-                {/* @ts-ignore */}
                 {forkedshelf?.bookshelf?.userForks?.map(({ reader }) => {
                   const name = `${reader.firstName} ${reader.lastName}`;
                   return (
                     <Box
                       key={reader.id}
-                      w="100%"
+                      w='100%'
                       p={6}
-                      borderRadius="6"
-                      background="blackAlpha.300"
+                      borderRadius='6'
+                      background='blackAlpha.300'
                     >
-                      <Flex flexDir="row" alignItems="center" gap={6}>
+                      <Flex flexDir='row' alignItems='center' gap={6}>
                         <Avatar
-                          size="md"
+                          size='md'
                           src={reader.profileImgUrl}
                           name={name}
                         />
-                        <Text as="h4" color="teal.300">
+                        <Text as='h4' color='teal.300'>
                           {name}
                         </Text>
                       </Flex>
@@ -132,14 +131,14 @@ const UserForkshelf = () => {
           </Flex>
         </Flex>
 
-        <Text as="h2" textAlign="center">
+        <Text as='h2' textAlign='center'>
           Books
         </Text>
 
         <Card>
           <CardBody>
             <TableContainer>
-              <Table variant="simple">
+              <Table variant='simple'>
                 <Thead>
                   <Tr>
                     <Th>Thumbnail</Th>
@@ -151,13 +150,12 @@ const UserForkshelf = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {/* @ts-ignore */}
                   {forkedshelf?.bookshelf?.books?.map(({ book }) => {
                     return (
                       <Tr key={book.id}>
                         <Td width={4}>
                           <Avatar
-                            size="sm"
+                            size='sm'
                             src={book.image_url_s}
                             name={book.title}
                           />
@@ -167,14 +165,13 @@ const UserForkshelf = () => {
                         <Td>{book.publisher}</Td>
                         <Td>{book.year_of_publication}</Td>
                         <Td>
-                          <HStack spacing="2">
-                            {/* @ts-ignore */}
+                          <HStack spacing='2'>
                             {book.genres.map((genre) => (
                               <Tag
                                 key={uuid}
-                                size="sm"
-                                variant="solid"
-                                colorScheme="teal"
+                                size='sm'
+                                variant='solid'
+                                colorScheme='teal'
                               >
                                 {genre}
                               </Tag>
