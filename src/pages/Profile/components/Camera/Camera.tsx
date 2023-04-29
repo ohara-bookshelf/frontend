@@ -15,7 +15,7 @@ export default function Camera(props: Props) {
       h='30rem'
       bg='facebook.600'
     >
-      {/* <Webcam
+      <Webcam
         ref={props.webcamRef}
         style={{
           position: 'absolute',
@@ -42,7 +42,7 @@ export default function Camera(props: Props) {
           width: '100%',
           height: '100%',
         }}
-      /> */}
+      />
     </Box>
   );
 }

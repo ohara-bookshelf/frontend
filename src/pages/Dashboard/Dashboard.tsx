@@ -1,125 +1,159 @@
-import { useId, useState } from 'react';
-import {
-  Box,
-  Card,
-  CardBody,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  HStack,
-  Image,
-  Link,
-  Stack,
-  Tag,
-  Text,
-} from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Box, Container, Stack, Text } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
 import BookshelfCard from 'src/components/Card/BookshelfCard';
 import DashboardSection from './components/DashboardSection/DashboardSection';
 import BookCard from 'src/components/Card/BookCard';
-import { IBook } from 'src/shared/interfaces';
 import { useUserStore } from 'src/flux/store';
+import { IBook, IBookshelf } from 'src/shared/interfaces';
+import * as API from 'src/api';
 
 export default function Dashboard() {
   const { user } = useUserStore();
 
+  const [popular, setPopular] = useState<IBookshelf[]>([]);
+  const [recommended, setRecommended] = useState<IBookshelf[]>([]);
+  const [books, setBooks] = useState<IBook[]>([]);
+  const [fetchingPopular, setFetchingPopular] = useState(false);
+  const [fetchingRecommended, setFetchingRecommended] = useState(false);
+  const [fetchingBooks, setFetchingBooks] = useState(false);
+
+  useEffect(() => {
+    const fetchPopularShelves = async () => {
+      setFetchingPopular(true);
+      const queryString = new URLSearchParams({
+        take: '10',
+        owner: 'true',
+        userForks: 'true',
+        _count: 'true',
+      }).toString();
+
+      try {
+        const { data } = await API.bookshelfAPI.getPopular(queryString);
+        setPopular(data);
+      } catch (error) {
+        setPopular([]);
+      } finally {
+        setFetchingPopular(false);
+      }
+    };
+
+    fetchPopularShelves();
+  }, []);
+
+  useEffect(() => {
+    const fetchRecommendedBooks = async () => {
+      setFetchingBooks(true);
+      try {
+        const { data } = await API.bookAPI.getRecommendation('The Testament');
+        setBooks(data);
+      } catch (error) {
+        console.error(error);
+        setBooks([]);
+      } finally {
+        setFetchingBooks(false);
+      }
+    };
+
+    fetchRecommendedBooks();
+  }, []);
+
+  useEffect(() => {
+    const fetchRecommendedBookshelves = async () => {
+      setFetchingRecommended(true);
+      try {
+        const { data } = await API.bookshelfAPI.getRecommendation(
+          'The Testament'
+        );
+        setRecommended(data);
+      } catch (error) {
+        console.error(error);
+        setRecommended([]);
+      } finally {
+        setFetchingRecommended(false);
+      }
+    };
+
+    fetchRecommendedBookshelves();
+  }, []);
+
   return (
-    <Container maxW='100%'>
-      <Stack spacing={10}>
+    <Container maxW='100%' py='8'>
+      <Stack spacing={10} textAlign={'center'}>
         <Text as='h2'>Popular Bookshelves</Text>
-        <DashboardSection>
-          {bookshelves.slice(0, 12).map((bookshelf) => {
-            const owner = bookshelf.owner.id === user?.id;
-            const forked = user?.forkedshelves?.some(
-              (item) => item.bookshelfId === bookshelf.id
-            );
-            const forkId = user?.forkedshelves?.find(
-              (item) => item.bookshelfId === bookshelf.id
-            )?.id;
-
-            return (
-              <BookshelfCard
-                key={bookshelf.id}
-                bookshelf={bookshelf}
-                forked={forked}
-                owner={owner}
-                user={user}
-                disabled={false}
-                onDeleteFork={() => {}}
-                onFork={() => {}}
-              />
-            );
-          })}
-        </DashboardSection>
-        <Flex justifyContent='center'>
-          <Link
-            as={ReachLink}
-            to='/bookshelves'
-            fontSize='xl'
-            color='teal'
-            textDecor='underline'
-          >
-            See all bookshelves
-          </Link>
-        </Flex>
-        <Box>
-          <Text as='h2' textAlign='center'>
-            Recomended Books
-          </Text>
+        {fetchingPopular ? (
+          <Text>Fetching Popular...</Text>
+        ) : (
           <DashboardSection>
-            {books?.map((book) => (
-              <BookCard key={book.id} book={book} />
-              // <Card w="100%" h="100%">
-              //   <CardBody>
-              //     <Image
-              //       w="100%"
-              //       src={book.image_url_l}
-              //       alt={book.title}
-              //       bgColor="teal.300"
-              //       borderRadius={4}
-              //     />
-              //     <Text mt={4}>{book.title}</Text>
-              //     {book.genres.map((genre) => (
-              //       <Tag key={uuid} size="sm" mr={2} mt={2}>
-              //         {genre}
-              //       </Tag>
-              //     ))}
-              //   </CardBody>
-              // </Card>
-            ))}
+            {popular.length ? (
+              popular.map((bookshelf) => (
+                <Box key={bookshelf.id} minW='20rem' maxW={['100%', '20rem']}>
+                  <BookshelfCard
+                    bookshelf={bookshelf}
+                    disabled={false}
+                    onDeleteFork={() => {
+                      console.log('a');
+                    }}
+                    onFork={() => {
+                      console.log('b');
+                    }}
+                  />
+                </Box>
+              ))
+            ) : (
+              <Text>No bookshelves found</Text>
+            )}
           </DashboardSection>
-        </Box>
+        )}
 
-        <Box>
-          <Text as='h2' textAlign='center'>
-            Recomended Bookshelves
-          </Text>
+        <Text as='h2'>Recommended Books</Text>
+        {fetchingBooks ? (
+          <Text>Fetching Recommended Books...</Text>
+        ) : (
           <DashboardSection>
-            {recommendBookshelves?.map((bookshelf) => {
-              const owner = bookshelf.owner.id === user?.id;
-              const forked = user?.forkedshelves?.some(
-                (item) => item.bookshelfId === bookshelf.id
-              );
-              const forkId = user?.forkedshelves?.find(
-                (item) => item.bookshelfId === bookshelf.id
-              )?.id;
-
-              return (
-                <BookshelfCard
-                  key={bookshelf.id}
-                  bookshelf={bookshelf}
-                  forked={forked}
-                  owner={owner}
-                  user={user}
-                  disabled={false}
-                  onDeleteFork={() => {}}
-                  onFork={() => {}}
-                />
-              );
-            })}
+            {books.length ? (
+              books.map((book) => (
+                <Box key={book.id} minW='20rem' maxW={['100%', '20rem']}>
+                  <BookCard
+                    id={book.id}
+                    author={book.author}
+                    genres={book.genres}
+                    image_url_l={book.image_url_l}
+                    title={book.title}
+                  />
+                </Box>
+              ))
+            ) : (
+              <Text>No bookshelves found</Text>
+            )}
           </DashboardSection>
-        </Box>
+        )}
+
+        <Text as='h2'>Recommended Bookshelves</Text>
+        {fetchingRecommended ? (
+          <Text>Fetching Recommended bookshelves...</Text>
+        ) : (
+          <DashboardSection>
+            {recommended.length ? (
+              recommended.map((bookshelf) => (
+                <Box key={bookshelf.id} minW='20rem' maxW={['100%', '20rem']}>
+                  <BookshelfCard
+                    bookshelf={bookshelf}
+                    disabled={false}
+                    onDeleteFork={() => {
+                      console.log('a');
+                    }}
+                    onFork={() => {
+                      console.log('b');
+                    }}
+                  />
+                </Box>
+              ))
+            ) : (
+              <Text>No bookshelves found</Text>
+            )}
+          </DashboardSection>
+        )}
       </Stack>
     </Container>
   );
