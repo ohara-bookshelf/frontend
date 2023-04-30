@@ -52,7 +52,7 @@ export default function BookCard(props: Props) {
           </VStack>
         </CardBody>
         <CardFooter>
-          <Box h='16' alignSelf={'start'}>
+          <Box alignSelf={'start'}>
             {genres.slice(0, 5).map((g, i) => (
               <Tag key={`${id}-tag-${i}`} size='sm' mr={2} mt={2}>
                 {g}

@@ -33,6 +33,8 @@ const Bookshelf = () => {
   const { bookshelfId } = useParams();
   const navigate = useNavigate();
   const [bookshelf, setBookshelf] = useState<IBookshelf>();
+  const [recommendtaions, setRecommendations] = useState<IBookshelf[]>([]);
+
   const {
     isOpen: loading,
     onOpen: onLoading,
@@ -46,9 +48,23 @@ const Bookshelf = () => {
       onLoading();
       try {
         const { data } = await API.bookshelfAPI.findOne(bookshelfId);
+
+        if (data.books.length > 0) {
+          const index = Math.floor(Math.random() * data.books.length);
+          const title = data.books[index].book.title;
+
+          if (title) {
+            const { data: recom } = await API.bookshelfAPI.getRecommendation(
+              title
+            );
+
+            setRecommendations(recom);
+          }
+        }
         setBookshelf(data);
       } catch (error) {
         setBookshelf({} as IBookshelf);
+        setRecommendations([]);
       } finally {
         onLoaded();
       }
@@ -76,7 +92,7 @@ const Bookshelf = () => {
         >
           by {`${bookshelf.owner.firstName} ${bookshelf.owner.lastName}`}
         </Text>
-        <Text w='90vw' as={'h4'} textAlign={'center'} fontSize={'lg'}>
+        <Text as={'h4'} textAlign={'center'} fontSize={'lg'}>
           {bookshelf.description}
         </Text>
 
@@ -86,7 +102,7 @@ const Bookshelf = () => {
           variant='solid'
           onClick={onToggle}
         >
-          {isTable ? 'show grid' : 'show table'}
+          {isTable ? 'show books as grid' : 'show books as table'}
         </Button>
 
         {isTable ? (
@@ -156,7 +172,7 @@ const Bookshelf = () => {
           </Grid>
         )}
 
-        <Stack spacing={4} direction={'row'}></Stack>
+        {recommendtaions.length > 0 && <VStack spacing={4}></VStack>}
       </VStack>
     </Container>
   );

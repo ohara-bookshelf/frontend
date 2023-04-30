@@ -13,6 +13,10 @@ export interface IUser {
     public: IBookshelf[];
   };
   forkedshelves?: IForkedshelf[];
+  _count?: {
+    bookshelves: number;
+    forkedshelves: number;
+  };
 }
 
 export interface IBook {
@@ -55,6 +59,9 @@ export interface IBookshelf {
     userForks: number;
   };
   owner: IUser;
+  userForks?: {
+    reader: IUser;
+  }[];
 }
 
 export interface IForkedshelf {
@@ -63,4 +70,11 @@ export interface IForkedshelf {
   bookshelfId: string;
   bookshelves?: IBookshelf[];
   bookshelf?: IBookshelf;
+}
+
+export interface IUserForkshelf {
+  id: string;
+  readerId: string;
+  bookshelfId: string;
+  bookshelf: IBookshelf;
 }

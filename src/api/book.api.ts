@@ -9,6 +9,10 @@ export const bookAPI = {
     const res: AxiosResponse<IBook[]> = await API.get(`${PATH}?${queryString}`);
     return res;
   },
+  findBookById: async (bookId: string) => {
+    const res: AxiosResponse<IBook> = await API.get(`${PATH}/${bookId}`);
+    return res;
+  },
   getRecommendation: async (title: string, count = 10) => {
     const queryString = new URLSearchParams({
       title,

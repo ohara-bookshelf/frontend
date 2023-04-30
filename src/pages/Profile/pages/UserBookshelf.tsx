@@ -234,7 +234,7 @@ export default function UserBookshelf() {
             gap={6}
           >
             {bookshelf.books.map(({ book }) => (
-              <GridItem key={book.id} position='relative' role='group'>
+              <GridItem key={book.id}>
                 <Box>
                   <BookCard
                     id={book.id}
