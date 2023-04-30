@@ -10,6 +10,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
+import { PAGE_PATH } from 'src/shared/constants';
 
 type Props = {
   id: string;
@@ -22,7 +23,7 @@ type Props = {
 export default function BookCard(props: Props) {
   const { id, title, image_url_l, genres, author } = props;
   return (
-    <Link as={ReachLink} to={`/books/${id}`}>
+    <Link as={ReachLink} to={PAGE_PATH.BOOK(id)}>
       <Card
         w='100%'
         h='100%'

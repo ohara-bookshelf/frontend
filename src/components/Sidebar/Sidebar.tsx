@@ -21,6 +21,7 @@ import { useUserStore } from 'src/flux/store/user.store';
 import { useAuthStore } from 'src/flux/store';
 import * as API from 'src/api';
 import Loading from '../Preloader/Loading';
+import { PAGE_PATH } from 'src/shared/constants';
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   const { user, setUser, setInitialUser } = useUserStore();
@@ -74,7 +75,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
     localStorage.removeItem('access_token');
     setInitialUser();
     setIsAuthenticated(false);
-    <Navigate to="/" />;
+    <Navigate to={PAGE_PATH.MAIN} />;
   };
 
   // // check if user is logged in previously
@@ -82,58 +83,58 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   //   refetchUser();
   // }, []);
 
-  if (isLoading) return <Loading message="loading user..." />;
+  if (isLoading) return <Loading message='loading user...' />;
 
   return (
     <VStack
-      h="100vh"
+      h='100vh'
       p={8}
       gap={8}
       display={isOpen ? 'flex' : 'none'}
       transition={'all ease 0.3s'}
     >
-      <Link as={ReachLink} to="/">
-        <Image w="16" src={logo} />
+      <Link as={ReachLink} to={PAGE_PATH.MAIN}>
+        <Image w='16' src={logo} />
       </Link>
 
       {isAuthenticated ? (
         <>
-          <Link as={ReachLink} to="/profile">
+          <Link as={ReachLink} to={PAGE_PATH.PROFILE}>
             <Card
-              p="6"
-              width="100%"
-              alignItems="center"
-              justifyContent="center"
-              bg="transparent"
-              transition="all 0.2s ease-in-out"
+              p='6'
+              width='100%'
+              alignItems='center'
+              justifyContent='center'
+              bg='transparent'
+              transition='all 0.2s ease-in-out'
               _hover={{
                 bg: 'blackAlpha.300',
               }}
             >
               <Avatar
-                size="lg"
+                size='lg'
                 name={`${user.firstName} ${user.lastName}`}
                 src={user.profileImgUrl}
-                mb="4"
+                mb='4'
               />
               <Text
-                as="h3"
-                fontSize="lg"
-                fontWeight="bold"
+                as='h3'
+                fontSize='lg'
+                fontWeight='bold'
               >{`${user.firstName} ${user.lastName}`}</Text>
               <Text
-                fontSize="sm"
-                fontWeight="semibold"
+                fontSize='sm'
+                fontWeight='semibold'
               >{`${user.totalForks} Fork`}</Text>
             </Card>
           </Link>
 
-          <Box w="100%" flexGrow={1} overflow={'auto'}>
-            <Accordion allowToggle width="100%">
+          <Box w='100%' flexGrow={1} overflow={'auto'}>
+            <Accordion allowToggle width='100%'>
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
+                    <Box as='span' flex='1' textAlign='left'>
                       Public Bookshelf
                     </Box>
                     <AccordionIcon />
@@ -141,10 +142,12 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 </h2>
                 <AccordionPanel pb={4}>
                   {user?.bookshelves?.public ? (
-                    // @ts-ignore
                     user?.bookshelves?.public?.map((bookshelf) => (
                       <Text key={bookshelf.id}>
-                        <Link as={ReachLink} to={`/profile/${bookshelf.id}`}>
+                        <Link
+                          as={ReachLink}
+                          to={PAGE_PATH.USER_BOOKSHELF(bookshelf.id)}
+                        >
                           {bookshelf.name}
                         </Link>
                       </Text>
@@ -157,7 +160,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
+                    <Box as='span' flex='1' textAlign='left'>
                       Private Bookshelf
                     </Box>
                     <AccordionIcon />
@@ -165,10 +168,12 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 </h2>
                 <AccordionPanel pb={4}>
                   {user?.bookshelves?.private ? (
-                    // @ts-ignore
                     user?.bookshelves?.private?.map((bookshelf) => (
                       <Text key={bookshelf.id}>
-                        <Link as={ReachLink} to={`/profile/${bookshelf.id}`}>
+                        <Link
+                          as={ReachLink}
+                          to={PAGE_PATH.USER_BOOKSHELF(bookshelf.id)}
+                        >
                           {bookshelf.name}
                         </Link>
                       </Text>
@@ -181,7 +186,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
+                    <Box as='span' flex='1' textAlign='left'>
                       Forked Bookshelf
                     </Box>
                     <AccordionIcon />
@@ -189,19 +194,18 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 </h2>
                 <AccordionPanel pb={4}>
                   {user?.forkedshelves?.length ? (
-                    // @ts-ignore
-                    user.forkedshelves.map((forkedShelf) => (
+                    user.forkedshelves.map((forkedshelf) => (
                       <Text
-                        key={forkedShelf.id}
+                        key={forkedshelf.id}
                         _hover={{
                           background: 'gray.900',
                         }}
                       >
                         <Link
                           as={ReachLink}
-                          to={`/bookshelves/${forkedShelf?.bookshelf?.id}`}
+                          to={PAGE_PATH.BOOKSHELF(forkedshelf.bookshelfId)}
                         >
-                          {forkedShelf?.bookshelf?.name}
+                          {forkedshelf?.bookshelf?.name}
                         </Link>
                       </Text>
                     ))
@@ -212,7 +216,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
               </AccordionItem>
             </Accordion>
           </Box>
-          <Button onClick={onLoginFailed} colorScheme="red">
+          <Button onClick={onLoginFailed} colorScheme='red'>
             logout
           </Button>
         </>

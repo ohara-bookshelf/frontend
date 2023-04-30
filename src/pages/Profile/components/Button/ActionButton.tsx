@@ -12,11 +12,11 @@ const ActionButton = (props: IProps) => {
   return (
     <HStack gap={6}>
       <Link as={ReachLink} to={`/profile/${path}`}>
-        <Button variant="solid" colorScheme="teal">
+        <Button variant='solid' colorScheme='teal'>
           Detail
         </Button>
       </Link>
-      <Button variant="solid" colorScheme="red" onClick={onDeleteClick}>
+      <Button variant='solid' colorScheme='red' onClick={onDeleteClick}>
         Delete
       </Button>
     </HStack>

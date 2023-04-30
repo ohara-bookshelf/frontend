@@ -3,6 +3,7 @@ import SidebarLayout from '../layouts/SidebarLayout';
 import * as pages from '../pages';
 import PrivateRoute from './PrivateRoute';
 import Error from 'src/components/Error/Error';
+import { PAGE, PAGE_PATH } from 'src/shared/constants';
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <pages.Dashboard /> },
       {
-        path: 'profile',
+        path: PAGE.PROFILE,
         element: (
           <PrivateRoute>
             <Outlet />
@@ -23,30 +24,39 @@ const router = createBrowserRouter([
             index: true,
             element: <pages.Profile />,
           },
-          { path: ':bookshelfId', element: <pages.UserBookshelf /> },
           {
-            path: 'forks',
-            element: <Navigate to='/profile' />,
-            caseSensitive: true,
-          },
-          {
-            path: 'forks/:forkshelfId',
-            element: <pages.UserForkshelf />,
-            caseSensitive: true,
-          },
-          {
-            path: 'mood-assistant',
+            path: PAGE.MOOD_ASSISTANT,
             element: <pages.UserAssistant />,
+            caseSensitive: true,
+          },
+          { path: PAGE.USER_BOOKSHELF, element: <pages.UserBookshelf /> },
+          {
+            path: PAGE.USER_FORKSHELF,
+            element: <pages.UserForkshelf />,
             caseSensitive: true,
           },
         ],
       },
       {
-        path: 'bookshelves',
+        path: PAGE.BOOKSHELVES,
         element: <Outlet />,
         children: [
           { index: true, element: <pages.Bookshelves /> },
           { path: ':bookshelfId', element: <pages.Bookshelf /> },
+        ],
+      },
+      {
+        path: PAGE.BOOKS,
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <pages.Books />,
+          },
+          {
+            path: ':bookId',
+            element: <pages.Book />,
+          },
         ],
       },
     ],

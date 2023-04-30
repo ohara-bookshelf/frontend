@@ -11,6 +11,10 @@ export const bookshelfAPI = {
     );
     return res;
   },
+  findOne: async (id: string) => {
+    const res: AxiosResponse<IBookshelf> = await API.get(`${PATH}/${id}`);
+    return res;
+  },
   getRecommendation: async (title: string, count = 10) => {
     const queryString = new URLSearchParams({
       title,

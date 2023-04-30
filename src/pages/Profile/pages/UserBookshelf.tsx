@@ -1,9 +1,4 @@
-import {
-  useParams,
-  Link as ReachLink,
-  useNavigate,
-  Navigate,
-} from 'react-router-dom';
+import { useParams, Link as ReachLink, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -13,8 +8,6 @@ import {
   GridItem,
   Heading,
   HStack,
-  Image,
-  Link,
   Stack,
   Text,
   useDisclosure,
@@ -30,6 +23,7 @@ import * as API from 'src/api';
 import { useEffect } from 'react';
 import Loading from 'src/components/Preloader/Loading';
 import BookCard from 'src/components/Card/BookCard';
+import { PAGE_PATH } from 'src/shared/constants';
 
 type UpdateBookshelf = {
   name?: string;
@@ -147,7 +141,7 @@ export default function UserBookshelf() {
     } catch (error) {
       console.error(error);
     } finally {
-      navigate('/profile');
+      navigate(PAGE_PATH.PROFILE);
       onCloseDelete();
       setLoaded();
     }
@@ -162,7 +156,7 @@ export default function UserBookshelf() {
         const { data } = await API.userAPI.getUserBookshelf(bookshelfId);
         setBookshelf(data);
       } catch (error) {
-        <Navigate to='/profile' />;
+        navigate(PAGE_PATH.PROFILE);
       } finally {
         setLoaded();
       }
@@ -269,21 +263,6 @@ export default function UserBookshelf() {
                 >
                   <DeleteIcon fontSize={24} />
                 </Box>
-
-                {/*<Link as={ReachLink} to={`/books/${book.id}`}>
-                  <HStack>
-                    <Image
-                      w={32}
-                      h={32}
-                      src={book.image_url_l}
-                      alt={book.title}
-                      objectFit='contain'
-                    />
-                    <Box h={32}>
-                      <Text>{book.title}</Text>
-                    </Box>
-                  </HStack>
-                </Link> */}
               </GridItem>
             ))}
           </Grid>

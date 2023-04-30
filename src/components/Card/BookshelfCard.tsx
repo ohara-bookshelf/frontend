@@ -13,6 +13,7 @@ import logo from 'src/shared/assets/images/bookshelf.png';
 import { useAuthStore, useUserStore } from 'src/flux/store';
 import { IBookshelf } from 'src/shared/interfaces';
 import { Link as ReachLink } from 'react-router-dom';
+import { PAGE_PATH } from 'src/shared/constants';
 interface IProps {
   bookshelf: IBookshelf;
   disabled: boolean;
@@ -44,7 +45,7 @@ const BookshelfCard = (props: IProps) => {
         bg: 'blackAlpha.300',
       }}
     >
-      <Link as={ReachLink} to={`bookshelves/${bookshelf.id}`}>
+      <Link as={ReachLink} to={PAGE_PATH.BOOKSHELF(bookshelf.id)}>
         <CardBody>
           <Text textAlign='center' as='h5' mb={6}>
             {`${bookshelf.name.slice(0, 50)}${
