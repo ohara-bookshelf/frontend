@@ -11,13 +11,14 @@ import FormikContainer from 'src/components/Form/FormikContainer';
 import FormikInput from 'src/components/Form/FormikInput';
 import FormikRadio from 'src/components/Form/FormikRadio';
 import FormikTextArea from 'src/components/Form/FormikTextArea';
+import { ICreateBookshelf, Visibility } from 'src/shared/interfaces';
 import * as Yup from 'yup';
 
 interface IProps {
   isOpen: boolean;
-  initialFormValues: unknown;
+  initialFormValues: ICreateBookshelf;
   onClose: () => void;
-  submitHandler: (values: unknown) => void;
+  submitHandler: (values: ICreateBookshelf) => Promise<void>;
 }
 
 const CreateBookshelfSchema = Yup.object().shape({
@@ -29,7 +30,9 @@ const CreateBookshelfSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(100, 'Too Long!')
     .required('Required'),
-  visible: Yup.mixed().oneOf(['PRIVATE', 'PUBLIC']).required('Required'),
+  visible: Yup.mixed<Visibility>()
+    .oneOf([Visibility.PRIVATE, Visibility.PUBLIC])
+    .required('Required'),
 });
 
 const CreateBookshelfModal = (props: IProps) => {

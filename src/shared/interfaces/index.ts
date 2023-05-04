@@ -78,3 +78,10 @@ export interface IUserForkshelf {
   bookshelfId: string;
   bookshelf: IBookshelf;
 }
+
+export interface ICreateBookshelf {
+  name: string;
+  description: string;
+  visible: Visibility;
+  books?: string[];
+}

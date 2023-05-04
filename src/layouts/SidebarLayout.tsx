@@ -5,7 +5,6 @@ import * as API from 'src/api';
 import { useEffect } from 'react';
 import { useUserStore } from 'src/flux/store/user.store';
 import Loading from 'src/components/Preloader/Loading';
-import { useAuthStore } from 'src/flux/store';
 
 export default function SidebarLayout() {
   const navigate = useNavigate();
@@ -17,7 +16,6 @@ export default function SidebarLayout() {
   } = useDisclosure();
 
   const { setUser, setInitialUser } = useUserStore();
-  const { setIsAuthenticated } = useAuthStore();
 
   const fetchUser = async () => {
     onLoading();
@@ -25,10 +23,8 @@ export default function SidebarLayout() {
       const { data } = await API.userAPI.getMe();
 
       setUser(data);
-      setIsAuthenticated(true);
     } catch (error) {
       setInitialUser();
-      setIsAuthenticated(false);
       navigate('/');
     } finally {
       onLoaded();
