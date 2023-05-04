@@ -59,6 +59,20 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: PAGE.USERS,
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <pages.Users />,
+          },
+          {
+            path: ':userId',
+            element: <pages.User />,
+          },
+        ],
+      },
     ],
   },
 ]);

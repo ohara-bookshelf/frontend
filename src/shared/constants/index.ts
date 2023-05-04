@@ -6,6 +6,8 @@ export const PAGE = {
   BOOKSHELVES: 'bookshelves',
   FORKSHELVES: 'forkshelves',
   BOOKS: 'books',
+  USERS: 'users',
+  USER: 'users/:userId',
 };
 export const PAGE_PATH = {
   MAIN: '/',
@@ -22,4 +24,7 @@ export const PAGE_PATH = {
 
   BOOKS: `/${PAGE.BOOKS}`,
   BOOK: (bookId: string) => `/${PAGE.BOOKS}/${bookId}`,
+
+  USERS: `/${PAGE.USERS}`,
+  USER: (userId: string) => `/${PAGE.USERS}/${userId}`,
 };

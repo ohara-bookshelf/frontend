@@ -78,11 +78,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
     <Navigate to={PAGE_PATH.MAIN} />;
   };
 
-  // // check if user is logged in previously
-  // useState(() => {
-  //   refetchUser();
-  // }, []);
-
   if (isLoading) return <Loading message='loading user...' />;
 
   return (

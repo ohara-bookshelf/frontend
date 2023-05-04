@@ -45,7 +45,14 @@ const BookshelfCard = (props: IProps) => {
         bg: 'blackAlpha.300',
       }}
     >
-      <Link as={ReachLink} to={PAGE_PATH.BOOKSHELF(bookshelf.id)}>
+      <Link
+        as={ReachLink}
+        to={
+          isOwner
+            ? PAGE_PATH.USER_BOOKSHELF(bookshelf.id)
+            : PAGE_PATH.BOOKSHELF(bookshelf.id)
+        }
+      >
         <CardBody>
           <Text textAlign='center' as='h5' mb={6}>
             {`${bookshelf.name.slice(0, 50)}${
@@ -80,9 +87,9 @@ const BookshelfCard = (props: IProps) => {
             <Button
               variant='solid'
               colorScheme='blue'
-              onClick={() => navigate(`/profile/${bookshelf.id}`)}
+              onClick={() => navigate(PAGE_PATH.USER_BOOKSHELF(bookshelf.id))}
             >
-              Detail
+              Edit
             </Button>
           ) : isForked ? (
             <Button
@@ -107,23 +114,11 @@ const BookshelfCard = (props: IProps) => {
           <Button
             variant='solid'
             colorScheme='blue'
-            onClick={() => navigate(`/bookshelves/${bookshelf.id}`)}
+            onClick={() => navigate(PAGE_PATH.BOOKSHELF(bookshelf.id))}
           >
             Detail
           </Button>
         )}
-        {/* {isAuthenticated && isOwner ? (
-         
-        ) : (
-          <Button
-            disabled={disabled}
-            variant='solid'
-            colorScheme='teal'
-            onClick={onFork}
-          >
-            Fork
-          </Button>
-        )} */}
       </CardFooter>
     </Card>
   );

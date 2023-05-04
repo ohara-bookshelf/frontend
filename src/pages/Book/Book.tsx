@@ -11,6 +11,7 @@ import {
   Tag,
   Text,
   VStack,
+  useDisclosure,
   useId,
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,15 +19,22 @@ import * as API from 'src/api';
 import { IBook } from 'src/shared/interfaces';
 import Loading from 'src/components/Preloader/Loading';
 import BookCard from 'src/components/Card/BookCard';
+import { useAuthStore, useUserStore } from 'src/flux/store';
+import AddBookModal from './components/Modal/AddBookModal';
 
 export default function Book() {
   const navigate = useNavigate();
   const { bookId } = useParams();
   const uuid = useId();
 
+  const { user } = useUserStore();
+  const { isAuthenticated } = useAuthStore();
+
   const [book, setBook] = useState<IBook>();
   const [recommendations, setRecommendations] = useState<IBook[]>([]);
   const [loadingBook, setLoadingBook] = useState(false);
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -70,7 +78,12 @@ export default function Book() {
             zIndex='sticky'
             overflow={'auto'}
           >
-            <Button>add to bookshelf</Button>
+            <Button
+              display={isAuthenticated ? 'block' : 'none'}
+              onClick={onOpen}
+            >
+              add to bookshelf
+            </Button>
             <Image src={book?.image_url_l} alt={book?.title} />
             <Flex
               gap='4'
@@ -115,6 +128,14 @@ export default function Book() {
           </Grid>
         </VStack>
       </Stack>
+
+      <AddBookModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onHandleSubmit={() => {
+          onClose();
+        }}
+      />
     </Container>
   );
 }
