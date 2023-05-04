@@ -6,6 +6,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  Spinner,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -14,7 +15,8 @@ import Webcam from 'react-webcam';
 import Camera from '../components/Camera/Camera';
 import { FaCamera } from 'react-icons/fa';
 import BookCard from 'src/components/Card/BookCard';
-
+import * as API from 'src/api';
+import { IBook } from 'src/shared/interfaces';
 interface EmotionLabels {
   [key: string]: string;
 }
@@ -33,24 +35,31 @@ export default function UserAssistant() {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const [books, setBooks] = useState<IBook[]>([]);
   const [emotion, setEmotion] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const captureHandler = () => {
-    setEmotion('happy');
-    // setIsLoading(true);
-    // try {
-    if (!webcamRef.current) return;
+  const captureHandler = async () => {
+    setIsLoading(true);
+    try {
+      if (!webcamRef.current) return;
 
-    const imageSrc = webcamRef.current.getScreenshot();
+      const imageSrc = webcamRef.current.getScreenshot();
 
-    console.log(imageSrc);
-    //   setEmotion('happy');
-    // } catch (error) {
-    //   console.error(error);
-    // } finally {
-    //   setIsLoading(false);
-    // }
+      if (!imageSrc) return;
+
+      const { data } = await API.bookAPI.getBooksByExpression({
+        imageString64: imageSrc,
+        take: 10,
+      });
+
+      setEmotion(data.expression);
+      setBooks(data.books);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -85,24 +94,47 @@ export default function UserAssistant() {
             Recommended book
           </Text>
 
-          <Grid
-            templateColumns={[
-              'repeat(2, 1fr)',
-              'repeat(3, 1fr)',
-              'repeat(3, 1fr)',
-              'repeat(2, 1fr)',
-            ]}
-            gap={6}
-          >
-            <GridItem w='100%'>
-              <BookCard
-                genres={['Fantasy', 'Adventure']}
-                title='The Lord of the Rings'
-                image_url_l='https://picsum.photos/200'
-                author='J.R.R. Tolkien'
-              />
-            </GridItem>
-          </Grid>
+          {isLoading && (
+            <Spinner
+              thickness='4px'
+              speed='0.65s'
+              emptyColor='gray.200'
+              color='blue.500'
+              size='xl'
+              alignSelf={'center'}
+            />
+          )}
+
+          {!isLoading && books.length > 0 && (
+            <Grid
+              templateColumns={[
+                'repeat(2, 1fr)',
+                'repeat(3, 1fr)',
+                'repeat(3, 1fr)',
+                'repeat(2, 1fr)',
+              ]}
+              gap={6}
+            >
+              {books.map((book) => (
+                <GridItem w='100%' key={book.id}>
+                  <BookCard
+                    id={book.id}
+                    genres={book.genres}
+                    title={book.title}
+                    image_url_l={book.image_url_l}
+                    author={book.author}
+                  />
+                </GridItem>
+              ))}
+            </Grid>
+          )}
+
+          {!isLoading && books.length === 0 && (
+            <Text as='h4' textAlign={'center'}>
+              Take a picture 📸 and see what the best books we recommended for
+              you today ✨{' '}
+            </Text>
+          )}
         </Flex>
       </Flex>
     </Container>

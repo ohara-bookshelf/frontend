@@ -24,4 +24,12 @@ export const bookAPI = {
     );
     return res;
   },
+  getBooksByExpression: async (body: {
+    imageString64: string;
+    take: number;
+  }) => {
+    const res: AxiosResponse<{ books: IBook[]; expression: string }> =
+      await API.post(`${PATH}/by-expression`, body);
+    return res;
+  },
 };
