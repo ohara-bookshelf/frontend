@@ -7,7 +7,7 @@ export default function DashboardSection({
   children: JSX.Element | JSX.Element[];
 }) {
   return (
-    <HStack width='100%' my='6' gap='4' pb='4' overflow={'auto'}>
+    <HStack width="100%" my="6" gap="4" pb="4" overflow={'auto'}>
       {children}
     </HStack>
   );

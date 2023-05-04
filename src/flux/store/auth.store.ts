@@ -1,18 +1,14 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-type AuthStore = {
+interface AuthState {
   isAuthenticated: boolean;
-  setIsAuthenticated: (payload: boolean) => void;
-};
+  setIsAuthenticated: (by: boolean) => void;
+}
 
-export const useAuthStore = create<AuthStore>(
-  // @ts-ignore
+export const useAuthStore = create<AuthState>()(
   devtools((set) => ({
     isAuthenticated: false,
-    setIsAuthenticated: (payload: boolean) =>
-      set({
-        isAuthenticated: payload,
-      }),
+    setIsAuthenticated: (payload) => set(() => ({ isAuthenticated: payload })),
   }))
 );

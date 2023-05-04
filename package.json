@@ -4,10 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "lint": "eslint \"src/**/*.ts\" \"src/**/*.tsx\" --max-warnings=0",
+    "lint:fix": "eslint --fix \"src/**/*.ts\" \"src/**/*.tsx\"",
     "dev": "vite --host",
     "build": "tsc && vite build",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",
@@ -40,5 +43,11 @@
     "prettier": "^2.8.8",
     "typescript": "^5.0.2",
     "vite": "^4.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./.husky/pre-commit",
+      "pre-push": "./.husky/pre-push $HUSKY_GIT_STDIN"
+    }
   }
 }

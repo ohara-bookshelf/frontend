@@ -1,4 +1,4 @@
-import { useParams, Link as ReachLink, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -163,6 +163,7 @@ export default function UserBookshelf() {
     };
 
     fetchBookshelf();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookshelfId, setBookshelf, setLoaded, setLoading]);
 
   if (!bookshelf) return <Error />;
@@ -170,30 +171,30 @@ export default function UserBookshelf() {
 
   return (
     <>
-      <Container minW='100%' pl={10} py={8}>
+      <Container minW="100%" pl={10} py={8}>
         <Stack gap={6}>
-          <Heading textAlign='center'>{bookshelf.name}</Heading>
-          <HStack justifyContent='center' gap={6}>
+          <Heading textAlign="center">{bookshelf.name}</Heading>
+          <HStack justifyContent="center" gap={6}>
             <Text>Total Book: {bookshelf._count?.books || 0}</Text>
             <Text>Total Fork: {bookshelf._count?.userForks || 0}</Text>
           </HStack>
 
-          <Flex flexDir='row' gap={6}>
-            <Flex w='100%' flexDir='column' gap={6}>
-              <Box maxH={60} overflow='auto'>
-                <Text as='p' textAlign='center'>
+          <Flex flexDir="row" gap={6}>
+            <Flex w="100%" flexDir="column" gap={6}>
+              <Box maxH={60} overflow="auto">
+                <Text as="p" textAlign="center">
                   {bookshelf.description}
                 </Text>
               </Box>
               <Flex
                 flexDir={['column', 'row']}
                 gap={6}
-                alignSelf='center'
-                mt='auto'
+                alignSelf="center"
+                mt="auto"
               >
                 <Button
-                  variant='solid'
-                  colorScheme='teal'
+                  variant="solid"
+                  colorScheme="teal"
                   onClick={onOpenStatus}
                 >
                   Set as{' '}
@@ -203,8 +204,8 @@ export default function UserBookshelf() {
                   Bookshelf
                 </Button>
                 <Button
-                  variant='solid'
-                  colorScheme='red'
+                  variant="solid"
+                  colorScheme="red"
                   onClick={onOpenDelete}
                 >
                   Delete Bookshelf
@@ -213,10 +214,10 @@ export default function UserBookshelf() {
             </Flex>
           </Flex>
 
-          <Flex w='100%' justifyContent='center'>
+          <Flex w="100%" justifyContent="center">
             <Button
-              variant='outline'
-              colorScheme='teal'
+              variant="outline"
+              colorScheme="teal"
               onClick={onAddBookOpen}
             >
               Add Book
@@ -224,7 +225,7 @@ export default function UserBookshelf() {
           </Flex>
 
           <Grid
-            w='100%'
+            w="100%"
             templateColumns={[
               'repeat(2, 1fr)',
               'repeat(2, 1fr)',
@@ -245,12 +246,12 @@ export default function UserBookshelf() {
                   />
                 </Box>
                 <Box
-                  right='0'
-                  top='0'
-                  display='none'
-                  position='absolute'
+                  right="0"
+                  top="0"
+                  display="none"
+                  position="absolute"
                   p={1}
-                  borderRadius='sm'
+                  borderRadius="sm"
                   _groupHover={{
                     display: 'block',
                   }}
@@ -274,7 +275,7 @@ export default function UserBookshelf() {
         onClose={onCloseStatus}
         footer={
           <Button
-            colorScheme='blue'
+            colorScheme="blue"
             mr={3}
             onClick={() =>
               updateUserBookshelfHandler({

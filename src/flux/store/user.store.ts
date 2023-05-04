@@ -26,9 +26,7 @@ export const initialUser: IUser = {
   },
 };
 
-export const useUserStore = create<UserStore>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+export const useUserStore = create<UserStore>()(
   devtools((set) => ({
     user: initialUser,
     setUser: (payload: IUser) => {

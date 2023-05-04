@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Box,
   Button,
   Container,
   Flex,
@@ -28,9 +27,8 @@ import Loading from 'src/components/Preloader/Loading';
 import Error from 'src/components/Error/Error';
 import BookCard from 'src/components/Card/BookCard';
 import { MdBackupTable, MdGridView } from 'react-icons/md';
-import { VscRepoForked } from 'react-icons/vsc';
 import ForkButton from 'src/components/Button/ForkButton';
-import { useAuthStore, useUserStore } from 'src/flux/store';
+import { useUserStore } from 'src/flux/store';
 import { PAGE_PATH } from 'src/shared/constants';
 
 const Bookshelf = () => {
@@ -69,18 +67,18 @@ const Bookshelf = () => {
       try {
         const { data } = await API.bookshelfAPI.findOne(bookshelfId);
 
-        if (data.books.length > 0) {
-          const index = Math.floor(Math.random() * data.books.length);
-          const title = data.books[index].book.title;
+        // if (data.books.length > 0) {
+        // const index = Math.floor(Math.random() * data.books.length);
+        // const title = data.books[index].book.title;
 
-          // if (title) {
-          //   const { data: recom } = await API.bookshelfAPI.getRecommendation(
-          //     title
-          //   );
+        // if (title) {
+        //   const { data: recom } = await API.bookshelfAPI.getRecommendation(
+        //     title
+        //   );
 
-          //   setRecommendations(recom);
-          // }
-        }
+        //   setRecommendations(recom);
+        // }
+        // }
         setBookshelf(data);
       } catch (error) {
         setBookshelf({} as IBookshelf);
@@ -91,13 +89,13 @@ const Bookshelf = () => {
     };
 
     fetchBookshelf();
-  }, [bookshelfId]);
+  }, [bookshelfId, onLoaded, onLoading]);
 
   if (loading) return <Loading />;
   if (!bookshelf) return <Error />;
 
   return (
-    <Container maxW='100%' px={10} py='8'>
+    <Container maxW="100%" px={10} py="8">
       <VStack spacing={4} mb={4}>
         <Heading textAlign={'center'}>
           {bookshelf.name.replace(/\b\w+/g, function (txt) {
@@ -117,8 +115,8 @@ const Bookshelf = () => {
           justifyContent={'center'}
           alignItems={'center'}
           flexDir={'column'}
-          gap='2'
-          padding='4'
+          gap="2"
+          padding="4"
           borderRadius={'md'}
           transition={'all 0.2s ease-in-out'}
           _hover={{
@@ -149,8 +147,8 @@ const Bookshelf = () => {
 
         <Button
           leftIcon={isTable ? <MdGridView /> : <MdBackupTable />}
-          colorScheme='facebook'
-          variant='solid'
+          colorScheme="facebook"
+          variant="solid"
           onClick={onToggle}
         >
           {isTable ? 'show books as grid' : 'show books as table'}
@@ -159,8 +157,8 @@ const Bookshelf = () => {
         <ForkButton bookshelf={bookshelf} isForked={isForked} />
 
         {isTable ? (
-          <TableContainer w='100%' wordBreak={'break-all'}>
-            <Table colorScheme='facebook'>
+          <TableContainer w="100%" wordBreak={'break-all'}>
+            <Table colorScheme="facebook">
               <TableCaption>{`${bookshelf.owner.firstName}'s collenction`}</TableCaption>
               <Thead>
                 <Tr>
@@ -202,7 +200,7 @@ const Bookshelf = () => {
           </TableContainer>
         ) : (
           <Grid
-            w='100%'
+            w="100%"
             templateColumns={[
               'repeat(1, 1fr)',
               'repeat(1, 1fr)',
@@ -213,7 +211,7 @@ const Bookshelf = () => {
             gap={6}
           >
             {bookshelf.books.map(({ book }) => (
-              <GridItem key={book.id} position='relative' role='group'>
+              <GridItem key={book.id} position="relative" role="group">
                 <BookCard
                   id={book.id}
                   author={book.author}

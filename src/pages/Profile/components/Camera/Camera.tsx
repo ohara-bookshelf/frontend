@@ -10,10 +10,10 @@ export default function Camera(props: Props) {
   return (
     <Box
       position={'relative'}
-      w='100%'
-      maxW='40rem'
-      h='30rem'
-      bg='gray.600'
+      w="100%"
+      maxW="40rem"
+      h="30rem"
+      bg="gray.600"
       rounded={'lg'}
     >
       <Webcam

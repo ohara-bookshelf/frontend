@@ -1,9 +1,9 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 import SidebarLayout from '../layouts/SidebarLayout';
 import * as pages from '../pages';
 import PrivateRoute from './PrivateRoute';
 import Error from 'src/components/Error/Error';
-import { PAGE, PAGE_PATH } from 'src/shared/constants';
+import { PAGE } from 'src/shared/constants';
 
 const router = createBrowserRouter([
   {

@@ -37,8 +37,8 @@ const BookshelfCard = (props: IProps) => {
 
   return (
     <Card
-      w='100%'
-      h='100%'
+      w="100%"
+      h="100%"
       transition={'all 0.2s ease-in-out'}
       _hover={{
         cursor: 'pointer',
@@ -54,18 +54,18 @@ const BookshelfCard = (props: IProps) => {
         }
       >
         <CardBody>
-          <Text textAlign='center' as='h5' mb={6}>
+          <Text textAlign="center" as="h5" mb={6}>
             {`${bookshelf.name.slice(0, 50)}${
               bookshelf.name.length > 50 ? '...' : ''
             }`}
           </Text>
 
           <Image
-            w='100%'
+            w="100%"
             h={['12rem']}
-            mb='4'
+            mb="4"
             src={logo}
-            alt='bookshelf banner'
+            alt="bookshelf banner"
             objectFit={'cover'}
             borderRadius={4}
           />
@@ -74,19 +74,19 @@ const BookshelfCard = (props: IProps) => {
             Owner: {bookshelf.owner.firstName} {bookshelf.owner.lastName}
           </Text>
 
-          <Text as='h6'>Books: {bookshelf._count?.books}</Text>
+          <Text as="h6">Books: {bookshelf._count?.books}</Text>
 
-          <Text as='h6'>Total Fork: {bookshelf._count?.userForks}</Text>
+          <Text as="h6">Total Fork: {bookshelf._count?.userForks}</Text>
 
-          <Text as='h6'>{dateParser(bookshelf.createdAt)}</Text>
+          <Text as="h6">{dateParser(bookshelf.createdAt)}</Text>
         </CardBody>
       </Link>
       <CardFooter>
         {isAuthenticated ? (
           isOwner ? (
             <Button
-              variant='solid'
-              colorScheme='blue'
+              variant="solid"
+              colorScheme="blue"
               onClick={() => navigate(PAGE_PATH.USER_BOOKSHELF(bookshelf.id))}
             >
               Edit
@@ -94,8 +94,8 @@ const BookshelfCard = (props: IProps) => {
           ) : isForked ? (
             <Button
               disabled={disabled}
-              variant='outline'
-              colorScheme='red'
+              variant="outline"
+              colorScheme="red"
               onClick={onDeleteFork}
             >
               Delete Fork
@@ -103,8 +103,8 @@ const BookshelfCard = (props: IProps) => {
           ) : (
             <Button
               disabled={disabled}
-              variant='solid'
-              colorScheme='teal'
+              variant="solid"
+              colorScheme="teal"
               onClick={onFork}
             >
               Fork
@@ -112,8 +112,8 @@ const BookshelfCard = (props: IProps) => {
           )
         ) : (
           <Button
-            variant='solid'
-            colorScheme='blue'
+            variant="solid"
+            colorScheme="blue"
             onClick={() => navigate(PAGE_PATH.BOOKSHELF(bookshelf.id))}
           >
             Detail

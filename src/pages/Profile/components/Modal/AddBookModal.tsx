@@ -20,7 +20,7 @@ interface IProps {
   isOpen: boolean;
   onClose: () => void;
   defaultState: Options[];
-  addBooksHandler: (selectedBooks: any) => void;
+  addBooksHandler: (selectedBooks: string[]) => void;
 }
 
 const AddBookModal = (props: IProps) => {
@@ -72,10 +72,10 @@ const AddBookModal = (props: IProps) => {
           <Select
             defaultValue={selectedBooks}
             isMulti
-            name='books'
+            name="books"
             options={options}
-            className='basic-multi-select'
-            classNamePrefix='select'
+            className="basic-multi-select"
+            classNamePrefix="select"
             onChange={(newValue) =>
               setSelectedBooks((prevValue) => [...prevValue, ...newValue])
             }
@@ -84,9 +84,9 @@ const AddBookModal = (props: IProps) => {
         </ModalBody>
         <ModalFooter>
           <Button
-            colorScheme='teal'
+            colorScheme="teal"
             onClick={() => {
-              addBooksHandler(selectedBooks);
+              addBooksHandler(selectedBooks.map((book) => book.value));
             }}
           >
             Add Books

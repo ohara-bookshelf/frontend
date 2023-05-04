@@ -22,7 +22,7 @@ const ForkedshelfTable = (props: IProps) => {
   return (
     <>
       <TableContainer>
-        <Table size='sm'>
+        <Table size="sm">
           <Thead>
             <Tr>
               <Th>Bookshelf Name</Th>

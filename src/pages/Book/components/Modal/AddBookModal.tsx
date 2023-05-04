@@ -50,20 +50,20 @@ export default function AddBookModal(props: Props) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay backdropFilter='blur(10px) hue-rotate(15deg)' />
+      <ModalOverlay backdropFilter="blur(10px) hue-rotate(15deg)" />
       <ModalContent>
         <ModalHeader>Add Book To Bookshelf</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {isCreate ? (
             <Input
-              placeholder='Create New Bookshelf'
+              placeholder="Create New Bookshelf"
               value={bookshelfName}
               onChange={(e) => setBookshelfName(e.target.value)}
             />
           ) : (
             <Select
-              placeholder='Select Bookshelf'
+              placeholder="Select Bookshelf"
               onChange={(e) => setBookshelfId(e.target.value)}
             >
               {options.map((el) => (
@@ -76,13 +76,13 @@ export default function AddBookModal(props: Props) {
         </ModalBody>
 
         <ModalFooter>
-          <Button variant='outline' colorScheme='red' mr={3} onClick={onClose}>
+          <Button variant="outline" colorScheme="red" mr={3} onClick={onClose}>
             cancel
           </Button>
           <Button
             isDisabled={!bookshelfId && !bookshelfName}
-            variant='solid'
-            colorScheme='twitter'
+            variant="solid"
+            colorScheme="twitter"
             onClick={onHandleSubmit}
           >
             Add To Bookshelf

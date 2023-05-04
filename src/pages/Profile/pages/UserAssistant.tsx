@@ -1,11 +1,9 @@
 import {
-  Box,
   Button,
   Container,
   Flex,
   Grid,
   GridItem,
-  HStack,
   Spinner,
   Text,
   VStack,
@@ -63,16 +61,16 @@ export default function UserAssistant() {
   };
 
   return (
-    <Container h='100vh' maxW='100%' py={8}>
+    <Container h="100vh" maxW="100%" py={8}>
       <Flex
         flexDir={['column', 'column', 'column', 'row']}
-        w='100%'
-        h='100%'
+        w="100%"
+        h="100%"
         alignItems={['center', 'center', 'center', 'flex-start']}
-        gap='8'
+        gap="8"
       >
-        <VStack gap='4' w='100%'>
-          <Text as='h3'>
+        <VStack gap="4" w="100%">
+          <Text as="h3">
             {emotion
               ? ` you look ${emotion} ${emotion_labels[emotion]} now`
               : 'Take a selfie 📸'}
@@ -81,26 +79,26 @@ export default function UserAssistant() {
           <Camera webcamRef={webcamRef} canvasRef={canvasRef} />
           <Button
             rightIcon={<FaCamera />}
-            colorScheme='facebook'
-            variant='solid'
+            colorScheme="facebook"
+            variant="solid"
             onClick={captureHandler}
           >
             Mood Assistant
           </Button>
         </VStack>
 
-        <Flex w={'100%'} gap='8' flexDir={['column']}>
-          <Text as='h3' textAlign={'center'} w='100%'>
+        <Flex w={'100%'} gap="8" flexDir={['column']}>
+          <Text as="h3" textAlign={'center'} w="100%">
             Recommended book
           </Text>
 
           {isLoading && (
             <Spinner
-              thickness='4px'
-              speed='0.65s'
-              emptyColor='gray.200'
-              color='blue.500'
-              size='xl'
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
               alignSelf={'center'}
             />
           )}
@@ -116,7 +114,7 @@ export default function UserAssistant() {
               gap={6}
             >
               {books.map((book) => (
-                <GridItem w='100%' key={book.id}>
+                <GridItem w="100%" key={book.id}>
                   <BookCard
                     id={book.id}
                     genres={book.genres}
@@ -130,7 +128,7 @@ export default function UserAssistant() {
           )}
 
           {!isLoading && books.length === 0 && (
-            <Text as='h4' textAlign={'center'}>
+            <Text as="h4" textAlign={'center'}>
               Take a picture 📸 and see what the best books we recommended for
               you today ✨{' '}
             </Text>

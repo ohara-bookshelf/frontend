@@ -4,7 +4,7 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import { Field } from 'formik';
+import { Field, FieldProps } from 'formik';
 import { HTMLInputTypeAttribute } from 'react';
 
 interface IProps {
@@ -17,12 +17,15 @@ function FormikInput(props: IProps) {
   const { name, label, type = 'text' } = props;
   return (
     <Field name={name}>
-      {/* @ts-ignore */}
-      {({ field, form }) => (
-        <FormControl isInvalid={form.errors[name] && form.touched[name]}>
+      {({ field, form }: FieldProps) => (
+        <FormControl isInvalid={form.touched[name] && !!form.errors[name]}>
           <FormLabel htmlFor={name}>{label}</FormLabel>
           <Input {...field} id={name} type={type} placeholder={name} />
-          <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
+          {form.errors[name] &&
+            form.touched[name] &&
+            typeof form.errors[name] === 'string' && (
+              <FormErrorMessage>{form.errors[name] as string}</FormErrorMessage>
+            )}
         </FormControl>
       )}
     </Field>

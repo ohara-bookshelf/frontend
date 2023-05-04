@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Box, Container, Stack, Text } from '@chakra-ui/react';
-import { Link as ReachLink } from 'react-router-dom';
 import BookshelfCard from 'src/components/Card/BookshelfCard';
 import DashboardSection from './components/DashboardSection/DashboardSection';
 import BookCard from 'src/components/Card/BookCard';
-import { useUserStore } from 'src/flux/store';
 import { IBook, IBookshelf } from 'src/shared/interfaces';
 import * as API from 'src/api';
 
 export default function Dashboard() {
-  const { user } = useUserStore();
-
   const [popular, setPopular] = useState<IBookshelf[]>([]);
   const [recommended, setRecommended] = useState<IBookshelf[]>([]);
   const [books, setBooks] = useState<IBook[]>([]);
@@ -78,16 +74,16 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <Container maxW='100%' py='8'>
+    <Container maxW="100%" py="8">
       <Stack spacing={10} textAlign={'center'}>
-        <Text as='h2'>Popular Bookshelves</Text>
+        <Text as="h2">Popular Bookshelves</Text>
         {fetchingPopular ? (
           <Text>Fetching Popular...</Text>
         ) : (
           <DashboardSection>
             {popular.length ? (
               popular.map((bookshelf) => (
-                <Box key={bookshelf.id} minW='20rem' maxW={['100%', '20rem']}>
+                <Box key={bookshelf.id} minW="20rem" maxW={['100%', '20rem']}>
                   <BookshelfCard
                     bookshelf={bookshelf}
                     disabled={false}
@@ -106,14 +102,14 @@ export default function Dashboard() {
           </DashboardSection>
         )}
 
-        <Text as='h2'>Recommended Books</Text>
+        <Text as="h2">Recommended Books</Text>
         {fetchingBooks ? (
           <Text>Fetching Recommended Books...</Text>
         ) : (
           <DashboardSection>
             {books.length ? (
               books.map((book) => (
-                <Box key={book.id} minW='20rem' maxW={['100%', '20rem']}>
+                <Box key={book.id} minW="20rem" maxW={['100%', '20rem']}>
                   <BookCard
                     id={book.id}
                     author={book.author}
@@ -129,14 +125,14 @@ export default function Dashboard() {
           </DashboardSection>
         )}
 
-        <Text as='h2'>Recommended Bookshelves</Text>
+        <Text as="h2">Recommended Bookshelves</Text>
         {fetchingRecommended ? (
           <Text>Fetching Recommended bookshelves...</Text>
         ) : (
           <DashboardSection>
             {recommended.length ? (
               recommended.map((bookshelf) => (
-                <Box key={bookshelf.id} minW='20rem' maxW={['100%', '20rem']}>
+                <Box key={bookshelf.id} minW="20rem" maxW={['100%', '20rem']}>
                   <BookshelfCard
                     bookshelf={bookshelf}
                     disabled={false}

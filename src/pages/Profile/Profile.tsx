@@ -73,68 +73,69 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (loading) return <Loading message='loading user' />;
+  if (loading) return <Loading message="loading user" />;
 
   return (
     <>
       <Box>
         <Image
-          bg='teal.500'
-          h='260px'
-          w='100%'
-          src='https://images.unsplash.com/photo-1419640303358-44f0d27f48e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1385&q=80'
-          objectFit='cover'
+          bg="teal.500"
+          h="260px"
+          w="100%"
+          src="https://images.unsplash.com/photo-1419640303358-44f0d27f48e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1385&q=80"
+          objectFit="cover"
         />
-        <Box position='relative' mb={16}>
+        <Box position="relative" mb={16}>
           <Box
-            position='absolute'
-            top='50%'
-            left='50%'
-            transform='translate(-50%, -50%)'
+            position="absolute"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
           >
             <Avatar
-              size='xl'
+              size="xl"
               name={`${user?.firstName} ${user?.lastName}`}
               src={user?.profileImgUrl}
-              border='2px solid teal'
+              border="2px solid teal"
             />
           </Box>
         </Box>
-        <Container maxW='100%'>
-          <Stack gap='10'>
+        <Container maxW="100%">
+          <Stack gap="10">
             <Text
               as={'h1'}
-              fontSize='2xl'
-              fontWeight='bold'
-              mt='4'
-              textAlign='center'
+              fontSize="2xl"
+              fontWeight="bold"
+              mt="4"
+              textAlign="center"
             >
               {`${user?.firstName} ${user?.lastName}`}
             </Text>
 
-            <Flex flexDir={['column', 'row']} justifyContent='center' gap='8'>
+            <Flex flexDir={['column', 'row']} justifyContent="center" gap="8">
               <Button
                 rightIcon={<AddIcon />}
-                colorScheme='facebook'
-                variant='outline'
+                colorScheme="facebook"
+                variant="outline"
                 onClick={onOpen}
               >
                 Create New Bookshelf
               </Button>
               <Button
                 rightIcon={<FaCamera />}
-                colorScheme='facebook'
-                variant='solid'
+                colorScheme="facebook"
+                variant="solid"
                 onClick={() => navigate('/profile/mood-assistant')}
               >
                 Mood Assistant
               </Button>
             </Flex>
 
-            <Tabs isFitted variant='enclosed'>
-              <TabList mb='1em'>
+            <Tabs isFitted variant="enclosed">
+              <TabList mb="1em">
                 <Tab>Public</Tab>
                 <Tab>Private</Tab>
                 <Tab>Forked</Tab>
@@ -142,7 +143,7 @@ const Profile = () => {
               <TabPanels>
                 <TabPanel>
                   {user?.bookshelves?.public?.length === 0 ? (
-                    <Text textAlign='center' mt={6}>
+                    <Text textAlign="center" mt={6}>
                       No bookshelf found
                     </Text>
                   ) : (

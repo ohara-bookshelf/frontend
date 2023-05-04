@@ -18,7 +18,7 @@ export default function ForkButton({
   return (
     <Button
       leftIcon={isForked ? <MdCancel /> : <VscRepoForked />}
-      colorScheme='facebook'
+      colorScheme="facebook"
       variant={variant}
       display={
         isAuthenticated && user.id !== bookshelf.owner.id ? 'block' : 'none'

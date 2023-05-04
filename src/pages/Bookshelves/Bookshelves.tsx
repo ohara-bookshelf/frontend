@@ -6,99 +6,36 @@ import {
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-
+import { useState, useEffect } from 'react';
 import BookshelfCard from 'src/components/Card/BookshelfCard';
 import Loading from 'src/components/Preloader/Loading';
-
-const bookshelves = [
-  {
-    id: 1,
-    name: 'Bookshelf 1',
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 2,
-    name: 'Bookshelf 2',
-    owner: {
-      id: 2,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 3,
-    name: 'Bookshelf 3',
-    owner: {
-      id: 3,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-  {
-    id: 4,
-    name: 'Bookshelf 4',
-    owner: {
-      id: 4,
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-];
-
-const user = {
-  id: 1,
-  firstName: 'John',
-  lastName: 'Doe',
-  forkedshelves: [
-    {
-      id: 1,
-      bookshelfId: 1,
-    },
-    {
-      id: 2,
-      bookshelfId: 2,
-    },
-    {
-      id: 3,
-      bookshelfId: 3,
-    },
-    {
-      id: 4,
-      bookshelfId: 4,
-    },
-  ],
-};
+import { IBookshelf } from 'src/shared/interfaces';
+import * as API from 'src/api';
 
 const Bookshelves = () => {
+  const [bookshelves, setBookshelves] = useState<IBookshelf[]>([]);
   const {
     isOpen: isLoading,
     onOpen: onLoading,
     onClose: onLoaded,
   } = useDisclosure();
+
+  const fetchBookshelves = async () => {
+    onLoading();
+    try {
+      const { data } = await API.bookshelfAPI.findMany();
+      setBookshelves(data);
+    } catch (error) {
+      setBookshelves([]);
+    } finally {
+      onLoaded();
+    }
+  };
+
+  useEffect(() => {
+    fetchBookshelves();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) return <Loading />;
 
@@ -108,23 +45,14 @@ const Bookshelves = () => {
         <Heading textAlign="center">What's New</Heading>
         <Grid templateColumns="repeat(4, 1fr)" gap={6}>
           {bookshelves.map((bookshelf) => {
-            const owner = bookshelf.owner.id === user?.id;
-            const forked = user?.forkedshelves.some(
-              (item) => item.bookshelfId === bookshelf.id
-            );
-            const forkId = user?.forkedshelves.find(
-              (item) => item.bookshelfId === bookshelf.id
-            )?.id;
-
             return (
               <GridItem key={bookshelf.id} w="100%">
                 <BookshelfCard
                   bookshelf={bookshelf}
-                  forked={forked}
-                  owner={owner}
-                  user={user}
                   disabled={isLoading}
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
                   onDeleteFork={() => {}}
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
                   onFork={() => {}}
                 />
               </GridItem>
