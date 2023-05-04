@@ -12,7 +12,7 @@ import {
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
-  footer: any;
+  footer: JSX.Element;
 }
 
 const ChangeVisibleModal = (props: IProps) => {

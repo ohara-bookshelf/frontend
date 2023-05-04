@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Avatar,
   Box,
@@ -14,27 +15,28 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-
-import BookshelfTable from './components/Table/BookshelfTable';
-import ForkedshelfTable from './components/Table/ForkedshelfTable';
-
-import * as API from 'src/api';
 import { AddIcon } from '@chakra-ui/icons';
-import CreateBookshelfModal from './components/Modal/CreateBookshelfModal';
+import { useNavigate } from 'react-router-dom';
+import { FaCamera } from 'react-icons/fa';
+
 import { useUserStore } from 'src/flux/store/user.store';
-import { useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import * as API from 'src/api';
 import Loading from 'src/components/Preloader/Loading';
 import { Visibility } from 'src/shared/interfaces';
 
+import BookshelfTable from './components/Table/BookshelfTable';
+import ForkedshelfTable from './components/Table/ForkedshelfTable';
+import CreateBookshelfModal from './components/Modal/CreateBookshelfModal';
+
 type CreateBookshelf = {
-  name: String;
-  description: String;
+  name: string;
+  description: string;
   visible: Visibility;
-  books: String[];
+  books: string[];
 };
 
 const Profile = () => {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: loading,
@@ -63,7 +65,7 @@ const Profile = () => {
       setUser(data);
     } catch (error) {
       setInitialUser();
-      <Navigate to="/" />;
+      navigate('/');
     } finally {
       onLoaded();
     }
@@ -71,6 +73,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) return <Loading message="loading user" />;
@@ -112,14 +115,22 @@ const Profile = () => {
               {`${user?.firstName} ${user?.lastName}`}
             </Text>
 
-            <Flex justifyContent="center">
+            <Flex flexDir={['column', 'row']} justifyContent="center" gap="8">
               <Button
                 rightIcon={<AddIcon />}
-                colorScheme="teal"
+                colorScheme="facebook"
                 variant="outline"
                 onClick={onOpen}
               >
                 Create New Bookshelf
+              </Button>
+              <Button
+                rightIcon={<FaCamera />}
+                colorScheme="facebook"
+                variant="solid"
+                onClick={() => navigate('/profile/mood-assistant')}
+              >
+                Mood Assistant
               </Button>
             </Flex>
 

@@ -2,20 +2,14 @@ import { IBookshelf } from 'src/shared/interfaces';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-type BookshelfStore = {
-  bookshelves: IBookshelf[];
+interface BookshelfStore {
   bookshelf: IBookshelf | null;
   setBookshelf: (payload: IBookshelf) => void;
-};
+}
 
-export const useBookshelfStore = create<BookshelfStore>(
-  // @ts-ignore
+export const useBookshelfStore = create<BookshelfStore>()(
   devtools((set) => ({
     bookshelf: null,
-    setBookshelf: (payload: IBookshelf) => {
-      set({
-        bookshelf: payload,
-      });
-    },
+    setBookshelf: (payload) => set(() => ({ bookshelf: payload })),
   }))
 );

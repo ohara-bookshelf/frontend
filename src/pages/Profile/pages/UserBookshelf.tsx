@@ -1,9 +1,4 @@
-import {
-  useParams,
-  Link as ReachLink,
-  useNavigate,
-  Navigate,
-} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -13,8 +8,6 @@ import {
   GridItem,
   Heading,
   HStack,
-  Image,
-  Link,
   Stack,
   Text,
   useDisclosure,
@@ -29,12 +22,14 @@ import { Visibility } from 'src/shared/interfaces';
 import * as API from 'src/api';
 import { useEffect } from 'react';
 import Loading from 'src/components/Preloader/Loading';
+import BookCard from 'src/components/Card/BookCard';
+import { PAGE_PATH } from 'src/shared/constants';
 
 type UpdateBookshelf = {
-  name?: String;
-  description?: String;
+  name?: string;
+  description?: string;
   visible?: Visibility;
-  books?: String[];
+  books?: string[];
 };
 
 export default function UserBookshelf() {
@@ -64,20 +59,6 @@ export default function UserBookshelf() {
     onOpen: setLoading,
     onClose: setLoaded,
   } = useDisclosure();
-
-  const fetchBookshelf = async () => {
-    if (!bookshelfId) return;
-
-    setLoading();
-    try {
-      const { data } = await API.userAPI.getUserBookshelf(bookshelfId);
-      setBookshelf(data);
-    } catch (error) {
-      <Navigate to="/profile" />;
-    } finally {
-      setLoaded();
-    }
-  };
 
   const addBooksHandler = async (
     selectedBooks: { value: string; label: string }[]
@@ -118,6 +99,7 @@ export default function UserBookshelf() {
       setBookshelf(data);
       updateUserBookshelves(data);
     } catch (error) {
+      console.error(error);
     } finally {
       setLoaded();
       onCloseStatus();
@@ -142,6 +124,7 @@ export default function UserBookshelf() {
       setBookshelf(newBookshelf);
       updateUserBookshelves(newBookshelf);
     } catch (error) {
+      console.error(error);
     } finally {
       setLoaded();
       onAddBookClose();
@@ -158,15 +141,30 @@ export default function UserBookshelf() {
     } catch (error) {
       console.error(error);
     } finally {
-      navigate('/profile');
+      navigate(PAGE_PATH.PROFILE);
       onCloseDelete();
       setLoaded();
     }
   };
 
   useEffect(() => {
+    const fetchBookshelf = async () => {
+      if (!bookshelfId) return;
+
+      setLoading();
+      try {
+        const { data } = await API.userAPI.getUserBookshelf(bookshelfId);
+        setBookshelf(data);
+      } catch (error) {
+        navigate(PAGE_PATH.PROFILE);
+      } finally {
+        setLoaded();
+      }
+    };
+
     fetchBookshelf();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookshelfId, setBookshelf, setLoaded, setLoading]);
 
   if (!bookshelf) return <Error />;
   if (loading) return <Loading />;
@@ -188,7 +186,12 @@ export default function UserBookshelf() {
                   {bookshelf.description}
                 </Text>
               </Box>
-              <HStack gap={6} alignSelf="center" mt="auto">
+              <Flex
+                flexDir={['column', 'row']}
+                gap={6}
+                alignSelf="center"
+                mt="auto"
+              >
                 <Button
                   variant="solid"
                   colorScheme="teal"
@@ -207,7 +210,7 @@ export default function UserBookshelf() {
                 >
                   Delete Bookshelf
                 </Button>
-              </HStack>
+              </Flex>
             </Flex>
           </Flex>
 
@@ -221,22 +224,30 @@ export default function UserBookshelf() {
             </Button>
           </Flex>
 
-          <Grid w="100%" templateColumns="repeat(4, 1fr)" gap={6}>
-            {/*  @ts-ignore */}
+          <Grid
+            w="100%"
+            templateColumns={[
+              'repeat(2, 1fr)',
+              'repeat(2, 1fr)',
+              'repeat(3, 1fr)',
+              'repeat(4, 1fr)',
+            ]}
+            gap={6}
+          >
             {bookshelf.books.map(({ book }) => (
-              <GridItem
-                key={book.id}
-                borderRadius="sm"
-                transition="all 0.3s ease-in-out"
-                position="relative"
-                _hover={{
-                  cursor: 'pointer',
-                  bg: 'blackAlpha.300',
-                }}
-                role="group"
-              >
+              <GridItem key={book.id}>
+                <Box>
+                  <BookCard
+                    id={book.id}
+                    author={book.author}
+                    title={book.title}
+                    image_url_l={book.image_url_l}
+                    genres={book.genres}
+                  />
+                </Box>
                 <Box
                   right="0"
+                  top="0"
                   display="none"
                   position="absolute"
                   p={1}
@@ -247,25 +258,12 @@ export default function UserBookshelf() {
                   _hover={{
                     color: 'red.500',
                     bg: 'red.100',
+                    cursor: 'pointer',
                   }}
                   onClick={() => removeBookHandler(book.id)}
                 >
                   <DeleteIcon fontSize={24} />
                 </Box>
-                <Link as={ReachLink} to={`/books/${book.id}`}>
-                  <HStack>
-                    <Image
-                      w={32}
-                      h={32}
-                      src={book.image_url_l}
-                      alt={book.title}
-                      objectFit="contain"
-                    />
-                    <Box h={32}>
-                      <Text>{book.title}</Text>
-                    </Box>
-                  </HStack>
-                </Link>
               </GridItem>
             ))}
           </Grid>

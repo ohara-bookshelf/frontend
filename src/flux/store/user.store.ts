@@ -26,8 +26,7 @@ export const initialUser: IUser = {
   },
 };
 
-export const useUserStore = create<UserStore>(
-  // @ts-ignore
+export const useUserStore = create<UserStore>()(
   devtools((set) => ({
     user: initialUser,
     setUser: (payload: IUser) => {
@@ -87,7 +86,7 @@ export const useUserStore = create<UserStore>(
           return bookshelf;
         })
         .reduce(
-          (group: Record<GroupKey, any[]>, bookshelf) => {
+          (group: Record<GroupKey, IBookshelf[]>, bookshelf) => {
             const { visible } = bookshelf;
 
             group[visible.toLowerCase() as GroupKey] =
@@ -124,7 +123,7 @@ export const useUserStore = create<UserStore>(
       const updatedBookshelves = mergedBookshelves
         .filter((bookshelf) => bookshelf.id !== payload)
         .reduce(
-          (group: Record<GroupKey, any[]>, bookshelf) => {
+          (group: Record<GroupKey, IBookshelf[]>, bookshelf) => {
             const { visible } = bookshelf;
 
             group[visible.toLowerCase() as GroupKey] =

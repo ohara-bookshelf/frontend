@@ -16,6 +16,7 @@ import { dateParser } from 'src/shared/utils/parser';
 import { useState } from 'react';
 import * as API from 'src/api';
 import { useUserStore } from 'src/flux/store';
+import { PAGE_PATH } from 'src/shared/constants';
 
 interface IProps {
   data: IBookshelf[];
@@ -56,7 +57,6 @@ const BookshelfTable = (props: IProps) => {
             </Tr>
           </Thead>
           <Tbody>
-            {/* @ts-ignore */}
             {data.length &&
               data.map((item) => (
                 <Tr key={item.id}>
@@ -66,7 +66,7 @@ const BookshelfTable = (props: IProps) => {
                   <Td>{dateParser(item.createdAt)}</Td>
                   <Td>
                     <ActionButton
-                      path={item.id}
+                      path={PAGE_PATH.USER_BOOKSHELF(item.id)}
                       onDeleteClick={() => {
                         setBookshelf(item);
                         onOpen();

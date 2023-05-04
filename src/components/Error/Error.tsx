@@ -1,6 +1,7 @@
 import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
 import popcorn from 'src/shared/assets/gif/working-chicken.gif';
+import { PAGE_PATH } from 'src/shared/constants';
 
 export default function Error() {
   return (
@@ -37,7 +38,12 @@ export default function Error() {
         <Text mt={6} textAlign="center" as="h5">
           Some Error Acquired~! We are trying to fix it. Please refresh the page
           or return to{' '}
-          <Link color="teal" textDecor="underline" as={ReachLink} to="/">
+          <Link
+            color="teal"
+            textDecor="underline"
+            as={ReachLink}
+            to={PAGE_PATH.MAIN}
+          >
             {' '}
             home page
           </Link>

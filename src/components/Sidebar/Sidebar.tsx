@@ -21,6 +21,7 @@ import { useUserStore } from 'src/flux/store/user.store';
 import { useAuthStore } from 'src/flux/store';
 import * as API from 'src/api';
 import Loading from '../Preloader/Loading';
+import { PAGE_PATH } from 'src/shared/constants';
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   const { user, setUser, setInitialUser } = useUserStore();
@@ -30,21 +31,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
     onOpen: onLoading,
     onClose: onLoaded,
   } = useDisclosure();
-
-  // const queryClient = useQueryClient();
-  // const navigate = useNavigate();
-
-  // const { data: user, refetch: refetchUser } = useQuery(
-  //   'user',
-  //   api.getUserDetail,
-  //   {
-  //     onError: () => {
-  //       localStorage.removeItem('access_token');
-  //       navigate('/', { replace: true });
-  //       queryClient.setQueryData('user', () => null);
-  //     },
-  //   }
-  // );
 
   const onLoginSuccess = async (credentialResponse: CredentialResponse) => {
     onLoading();
@@ -61,7 +47,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
 
       setUser(user);
       setIsAuthenticated(true);
-    } catch (error: any) {
+    } catch (error) {
       localStorage.removeItem('access_token');
       setInitialUser();
       setIsAuthenticated(false);
@@ -74,13 +60,8 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
     localStorage.removeItem('access_token');
     setInitialUser();
     setIsAuthenticated(false);
-    <Navigate to="/" />;
+    <Navigate to={PAGE_PATH.MAIN} />;
   };
-
-  // // check if user is logged in previously
-  // useState(() => {
-  //   refetchUser();
-  // }, []);
 
   if (isLoading) return <Loading message="loading user..." />;
 
@@ -92,13 +73,13 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
       display={isOpen ? 'flex' : 'none'}
       transition={'all ease 0.3s'}
     >
-      <Link as={ReachLink} to="/">
+      <Link as={ReachLink} to={PAGE_PATH.MAIN}>
         <Image w="16" src={logo} />
       </Link>
 
       {isAuthenticated ? (
         <>
-          <Link as={ReachLink} to="/profile">
+          <Link as={ReachLink} to={PAGE_PATH.PROFILE}>
             <Card
               p="6"
               width="100%"
@@ -141,10 +122,12 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 </h2>
                 <AccordionPanel pb={4}>
                   {user?.bookshelves?.public ? (
-                    // @ts-ignore
                     user?.bookshelves?.public?.map((bookshelf) => (
                       <Text key={bookshelf.id}>
-                        <Link as={ReachLink} to={`/profile/${bookshelf.id}`}>
+                        <Link
+                          as={ReachLink}
+                          to={PAGE_PATH.USER_BOOKSHELF(bookshelf.id)}
+                        >
                           {bookshelf.name}
                         </Link>
                       </Text>
@@ -165,10 +148,12 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 </h2>
                 <AccordionPanel pb={4}>
                   {user?.bookshelves?.private ? (
-                    // @ts-ignore
                     user?.bookshelves?.private?.map((bookshelf) => (
                       <Text key={bookshelf.id}>
-                        <Link as={ReachLink} to={`/profile/${bookshelf.id}`}>
+                        <Link
+                          as={ReachLink}
+                          to={PAGE_PATH.USER_BOOKSHELF(bookshelf.id)}
+                        >
                           {bookshelf.name}
                         </Link>
                       </Text>
@@ -189,19 +174,18 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 </h2>
                 <AccordionPanel pb={4}>
                   {user?.forkedshelves?.length ? (
-                    // @ts-ignore
-                    user.forkedshelves.map((forkedShelf) => (
+                    user.forkedshelves.map((forkedshelf) => (
                       <Text
-                        key={forkedShelf.id}
+                        key={forkedshelf.id}
                         _hover={{
                           background: 'gray.900',
                         }}
                       >
                         <Link
                           as={ReachLink}
-                          to={`/bookshelves/${forkedShelf?.bookshelf?.id}`}
+                          to={PAGE_PATH.BOOKSHELF(forkedshelf.bookshelfId)}
                         >
-                          {forkedShelf?.bookshelf?.name}
+                          {forkedshelf?.bookshelf?.name}
                         </Link>
                       </Text>
                     ))

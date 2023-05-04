@@ -4,79 +4,119 @@ import {
   CardBody,
   CardFooter,
   Image,
+  Link,
   Text,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { dateParser } from 'src/shared/utils/parser';
 import logo from 'src/shared/assets/images/bookshelf.png';
+import { useAuthStore, useUserStore } from 'src/flux/store';
+import { IBookshelf } from 'src/shared/interfaces';
+import { Link as ReachLink } from 'react-router-dom';
+import { PAGE_PATH } from 'src/shared/constants';
 interface IProps {
-  bookshelf: any;
-  owner: any;
-  forked: any;
-  user: any;
+  bookshelf: IBookshelf;
   disabled: boolean;
-  onDeleteFork: any;
-  onFork: any;
+  onDeleteFork: () => void;
+  onFork: () => void;
 }
 
 const BookshelfCard = (props: IProps) => {
-  const { bookshelf, owner, forked, user, disabled, onDeleteFork, onFork } =
-    props;
+  const { bookshelf, disabled, onDeleteFork, onFork } = props;
+  const { user } = useUserStore();
+  const { isAuthenticated } = useAuthStore();
 
   const navigate = useNavigate();
+
+  const isOwner = bookshelf.userId === user.id;
+  const isForked = user.forkedshelves?.some(
+    (item) => item.bookshelfId === bookshelf.id
+  )
+    ? true
+    : false;
+
   return (
-    <Card minW="20rem" maxW={['100%', '20rem']} h="100%">
-      <CardBody>
-        <Text textAlign="center" as="h5" mb={6}>
-          {bookshelf.name}
-        </Text>
+    <Card
+      w="100%"
+      h="100%"
+      transition={'all 0.2s ease-in-out'}
+      _hover={{
+        cursor: 'pointer',
+        bg: 'blackAlpha.300',
+      }}
+    >
+      <Link
+        as={ReachLink}
+        to={
+          isOwner
+            ? PAGE_PATH.USER_BOOKSHELF(bookshelf.id)
+            : PAGE_PATH.BOOKSHELF(bookshelf.id)
+        }
+      >
+        <CardBody>
+          <Text textAlign="center" as="h5" mb={6}>
+            {`${bookshelf.name.slice(0, 50)}${
+              bookshelf.name.length > 50 ? '...' : ''
+            }`}
+          </Text>
 
-        <Image
-          w="100%"
-          h={['12rem']}
-          mb="4"
-          src={bookshelf.banner ? bookshelf.banner : logo}
-          alt="bookshelf banner"
-          objectFit={'cover'}
-          borderRadius={4}
-        />
+          <Image
+            w="100%"
+            h={['12rem']}
+            mb="4"
+            src={logo}
+            alt="bookshelf banner"
+            objectFit={'cover'}
+            borderRadius={4}
+          />
 
-        <Text>
-          Owner: {bookshelf.owner.firstName} {bookshelf.owner.lastName}
-        </Text>
+          <Text>
+            Owner: {bookshelf.owner.firstName} {bookshelf.owner.lastName}
+          </Text>
 
-        <Text as="h6">Books: {bookshelf._count?.books}</Text>
+          <Text as="h6">Books: {bookshelf._count?.books}</Text>
 
-        <Text as="h6">Total Fork: {bookshelf._count?.userForks}</Text>
+          <Text as="h6">Total Fork: {bookshelf._count?.userForks}</Text>
 
-        <Text as="h6">{dateParser(bookshelf.createdAt)}</Text>
-      </CardBody>
+          <Text as="h6">{dateParser(bookshelf.createdAt)}</Text>
+        </CardBody>
+      </Link>
       <CardFooter>
-        {!user ? null : owner ? (
+        {isAuthenticated ? (
+          isOwner ? (
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={() => navigate(PAGE_PATH.USER_BOOKSHELF(bookshelf.id))}
+            >
+              Edit
+            </Button>
+          ) : isForked ? (
+            <Button
+              disabled={disabled}
+              variant="outline"
+              colorScheme="red"
+              onClick={onDeleteFork}
+            >
+              Delete Fork
+            </Button>
+          ) : (
+            <Button
+              disabled={disabled}
+              variant="solid"
+              colorScheme="teal"
+              onClick={onFork}
+            >
+              Fork
+            </Button>
+          )
+        ) : (
           <Button
             variant="solid"
             colorScheme="blue"
-            onClick={() => navigate(`/profile/${bookshelf.id}`)}
+            onClick={() => navigate(PAGE_PATH.BOOKSHELF(bookshelf.id))}
           >
             Detail
-          </Button>
-        ) : forked ? (
-          <Button
-            disabled={disabled}
-            variant="outline"
-            colorScheme="red"
-            onClick={onDeleteFork}
-          >
-            Delete Fork
-          </Button>
-        ) : (
-          <Button
-            disabled={disabled}
-            variant="solid"
-            colorScheme="teal"
-            onClick={onFork}
-          >
-            Fork
           </Button>
         )}
       </CardFooter>

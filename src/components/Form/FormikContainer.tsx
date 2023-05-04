@@ -2,7 +2,7 @@ import { Button, VStack } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
-interface IProps<T, U extends Yup.Schema<any>> {
+interface IProps<T, U extends Yup.Schema<T>> {
   children: JSX.Element[];
   initialValues: T;
   validationSchema: U;
@@ -11,7 +11,7 @@ interface IProps<T, U extends Yup.Schema<any>> {
 
 export default function FormikContainer<
   T extends object,
-  U extends Yup.Schema<any>
+  U extends Yup.Schema<T>
 >(props: IProps<T, U>) {
   const { children, initialValues, validationSchema, submitHandler } = props;
 

@@ -10,6 +10,7 @@ import {
 import ActionButton from '../Button/ActionButton';
 import { IForkedshelf } from 'src/shared/interfaces';
 import { dateParser } from 'src/shared/utils/parser';
+import { PAGE_PATH } from 'src/shared/constants';
 
 interface IProps {
   data: IForkedshelf[];
@@ -35,17 +36,21 @@ const ForkedshelfTable = (props: IProps) => {
           <Tbody>
             {data.map((item) => (
               <Tr key={item.id}>
-                <Td>{item.bookshelf.name}</Td>
-                <Td>{item.bookshelf._count?.userForks}</Td>
-                <Td>{item.bookshelf._count?.books}</Td>
-                <Td>{dateParser(item.bookshelf.createdAt)}</Td>
+                <Td>{item?.bookshelf?.name}</Td>
+                <Td>{item?.bookshelf?._count?.userForks}</Td>
+                <Td>{item?.bookshelf?._count?.books}</Td>
                 <Td>
-                  {item.bookshelf.owner.firstName}{' '}
-                  {item.bookshelf.owner.lastName}
+                  {item?.bookshelf?.createdAt
+                    ? dateParser(item?.bookshelf?.createdAt)
+                    : ''}
+                </Td>
+                <Td>
+                  {item?.bookshelf?.owner?.firstName}{' '}
+                  {item?.bookshelf?.owner?.lastName}
                 </Td>
                 <Td>
                   <ActionButton
-                    path={`forks/${item.id}`}
+                    path={PAGE_PATH.USER_FORKSHELF(item.id)}
                     onDeleteClick={() => {
                       console.log(item.id);
                     }}

@@ -12,19 +12,21 @@ import { Select } from 'chakra-react-select';
 import { useState } from 'react';
 import * as API from 'src/api';
 
+type Options = {
+  value: string;
+  label: string;
+};
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
-  defaultState: any;
-  addBooksHandler: (selectedBooks: any) => void;
+  defaultState: Options[];
+  addBooksHandler: (selectedBooks: string[]) => void;
 }
 
 const AddBookModal = (props: IProps) => {
   const { isOpen, onClose, defaultState, addBooksHandler } = props;
 
-  const [options, setOptions] = useState<{ value: string; label: string }[]>(
-    []
-  );
+  const [options, setOptions] = useState<Options[]>([]);
   const [selectedBooks, setSelectedBooks] = useState(defaultState);
 
   const fetchBooks = async (title: string) => {
@@ -35,7 +37,7 @@ const AddBookModal = (props: IProps) => {
     try {
       const { data } = await API.bookAPI.findBooks(queryString);
 
-      const options = data.map((book: any) => ({
+      const options = data.map((book) => ({
         value: book.id,
         label: book.title,
       }));
@@ -74,7 +76,9 @@ const AddBookModal = (props: IProps) => {
             options={options}
             className="basic-multi-select"
             classNamePrefix="select"
-            onChange={setSelectedBooks}
+            onChange={(newValue) =>
+              setSelectedBooks((prevValue) => [...prevValue, ...newValue])
+            }
             onInputChange={inputchangeHandler}
           />
         </ModalBody>
@@ -82,7 +86,7 @@ const AddBookModal = (props: IProps) => {
           <Button
             colorScheme="teal"
             onClick={() => {
-              addBooksHandler(selectedBooks);
+              addBooksHandler(selectedBooks.map((book) => book.value));
             }}
           >
             Add Books

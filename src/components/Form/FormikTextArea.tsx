@@ -4,7 +4,7 @@ import {
   FormLabel,
   Textarea,
 } from '@chakra-ui/react';
-import { Field, FieldProps, FormikProps } from 'formik';
+import { Field, FieldProps } from 'formik';
 
 interface FormikTextAreaProps {
   name: string;
@@ -14,12 +14,15 @@ interface FormikTextAreaProps {
 const FormikTextArea = ({ name, label }: FormikTextAreaProps) => {
   return (
     <Field name={name}>
-      {/* @ts-ignore */}
-      {({ field, form }) => (
-        <FormControl isInvalid={form.errors[name] && form.touched[name]}>
+      {({ field, form }: FieldProps) => (
+        <FormControl isInvalid={form.touched[name] && !!form.errors[name]}>
           <FormLabel htmlFor={name}>{label}</FormLabel>
           <Textarea {...field} id={name} placeholder={name} />
-          <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
+          {form.errors[name] &&
+            form.touched[name] &&
+            typeof form.errors[name] === 'string' && (
+              <FormErrorMessage>{form.errors[name] as string}</FormErrorMessage>
+            )}
         </FormControl>
       )}
     </Field>

@@ -1,21 +1,26 @@
 import { AxiosResponse } from 'axios';
 import { API } from '.';
-import { IBookshelf, IUser, Visibility } from 'src/shared/interfaces';
+import {
+  IBookshelf,
+  IUser,
+  IUserForkshelf,
+  Visibility,
+} from 'src/shared/interfaces';
 
 const PATH = '/users';
 
 type CreateBookshelf = {
-  name: String;
-  description: String;
+  name: string;
+  description: string;
   visible: Visibility;
-  books: String[];
+  books: string[];
 };
 
 type UpdateBookshelf = {
-  name?: String;
-  description?: String;
+  name?: string;
+  description?: string;
   visible?: Visibility;
-  books?: String[];
+  books?: string[];
 };
 
 export const userAPI = {
@@ -57,6 +62,13 @@ export const userAPI = {
   deleteUserBookshelf: async (bookshelfId: string) => {
     const res: AxiosResponse<{ bookshelfId: string }> = await API.delete(
       `${PATH}/bookshelves/${bookshelfId}`
+    );
+    return res;
+  },
+
+  getUserForkshelf: async (forkshelfId: string) => {
+    const res: AxiosResponse<IUserForkshelf> = await API.get(
+      `${PATH}/forkshelves/${forkshelfId}`
     );
     return res;
   },

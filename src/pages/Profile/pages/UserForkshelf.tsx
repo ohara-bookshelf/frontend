@@ -11,7 +11,6 @@ import {
   Stack,
   Table,
   TableContainer,
-  Tag,
   Tbody,
   Td,
   Text,
@@ -19,50 +18,33 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useId } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const forkedshelf = {
-  id: 1,
-  bookshelf: {
-    id: 1,
-    name: 'Bookshelf 1',
-    description: 'This is a bookshelf.',
-    visible: 'PRIVATE',
-    userForks: [
-      {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        profileImgUrl: 'https://picsum.photos/200',
-      },
-    ],
-    books: [
-      {
-        id: 1,
-        title: 'Book 1',
-        image_url_l: 'https://picsum.photos/200',
-        genres: ['Action'],
-      },
-    ],
-    owner: {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      profileImgUrl: 'https://picsum.photos/200',
-    },
-    _count: {
-      books: 10,
-      userForks: 10,
-    },
-    createdAt: '2021-10-10T00:00:00.000Z',
-  },
-};
+import * as API from 'src/api';
+import { PAGE_PATH } from 'src/shared/constants';
+import { IUserForkshelf } from 'src/shared/interfaces';
 
 const UserForkshelf = () => {
   const { forkshelfId } = useParams();
-  const uuid = useId();
   const navigate = useNavigate();
+
+  const [forkedshelf, setForkedshelf] = useState<IUserForkshelf>();
+
+  useEffect(() => {
+    const fetchForkedshelf = async () => {
+      if (!forkshelfId) return;
+      try {
+        const { data } = await API.userAPI.getUserForkshelf(forkshelfId);
+        setForkedshelf(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchForkedshelf();
+  }, [forkshelfId]);
+
+  if (!forkedshelf) return null;
 
   return (
     <Container minW="100%" pl={10} py={8}>
@@ -103,7 +85,6 @@ const UserForkshelf = () => {
             <Text as="h4">Forked By</Text>
             <Box h={80} overflow="auto">
               <Stack gap={6}>
-                {/* @ts-ignore */}
                 {forkedshelf?.bookshelf?.userForks?.map(({ reader }) => {
                   const name = `${reader.firstName} ${reader.lastName}`;
                   return (
@@ -142,45 +123,34 @@ const UserForkshelf = () => {
               <Table variant="simple">
                 <Thead>
                   <Tr>
-                    <Th>Thumbnail</Th>
+                    <Th>ISBN</Th>
                     <Th>Title</Th>
                     <Th>Author</Th>
                     <Th>Publisher</Th>
-                    <Th>Year</Th>
-                    <Th>Genres</Th>
+                    <Th isNumeric>Year</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {/* @ts-ignore */}
                   {forkedshelf?.bookshelf?.books?.map(({ book }) => {
                     return (
-                      <Tr key={book.id}>
-                        <Td width={4}>
-                          <Avatar
-                            size="sm"
-                            src={book.image_url_s}
-                            name={book.title}
-                          />
+                      <Tr
+                        key={book.id}
+                        transition={'all .2s ease-in-out'}
+                        _hover={{
+                          cursor: 'pointer',
+                          background: 'facebook.900',
+                        }}
+                        onClick={() => navigate(PAGE_PATH.BOOK(book.id))}
+                      >
+                        <Td width={4}>{book.isbn}</Td>
+                        <Td>
+                          {`${book.title.slice(0, 50)}${
+                            book.title.length > 50 ? ' ...' : ''
+                          }`}
                         </Td>
-                        <Td>{book.title}</Td>
                         <Td>{book.author}</Td>
                         <Td>{book.publisher}</Td>
-                        <Td>{book.year_of_publication}</Td>
-                        <Td>
-                          <HStack spacing="2">
-                            {/* @ts-ignore */}
-                            {book.genres.map((genre) => (
-                              <Tag
-                                key={uuid}
-                                size="sm"
-                                variant="solid"
-                                colorScheme="teal"
-                              >
-                                {genre}
-                              </Tag>
-                            ))}
-                          </HStack>
-                        </Td>
+                        <Td isNumeric>{book.year_of_publication}</Td>
                       </Tr>
                     );
                   })}

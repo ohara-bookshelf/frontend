@@ -1,5 +1,5 @@
 import { Box, Container, Flex, useDisclosure } from '@chakra-ui/react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 import Sidebar from 'src/components/Sidebar/Sidebar';
 import * as API from 'src/api';
 import { useEffect } from 'react';
@@ -8,6 +8,7 @@ import Loading from 'src/components/Preloader/Loading';
 import { useAuthStore } from 'src/flux/store';
 
 export default function SidebarLayout() {
+  const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const {
     isOpen: loading,
@@ -15,28 +16,29 @@ export default function SidebarLayout() {
     onClose: onLoaded,
   } = useDisclosure();
 
-  // const { setUser, setInitialUser } = useUserStore();
+  const { setUser, setInitialUser } = useUserStore();
   const { setIsAuthenticated } = useAuthStore();
 
-  // const fetchUser = async () => {
-  //   onLoading();
-  //   try {
-  //     const { data } = await API.userAPI.getMe();
+  const fetchUser = async () => {
+    onLoading();
+    try {
+      const { data } = await API.userAPI.getMe();
 
-  //     setUser(data);
-  //     setIsAuthenticated(true);
-  //   } catch (error) {
-  //     setInitialUser();
-  //     setIsAuthenticated(false);
-  //     <Navigate to="/" />;
-  //   } finally {
-  //     onLoaded();
-  //   }
-  // };
+      setUser(data);
+      setIsAuthenticated(true);
+    } catch (error) {
+      setInitialUser();
+      setIsAuthenticated(false);
+      navigate('/');
+    } finally {
+      onLoaded();
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchUser();
-  // }, []);
+  useEffect(() => {
+    fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) return <Loading />;
 
@@ -65,7 +67,7 @@ export default function SidebarLayout() {
           <Sidebar isOpen={isOpen} />
         </Container>
       </Box>
-      <Box w="100%" h="100vh" overflow="auto">
+      <Box w="100%" h="100vh" overflowY="auto">
         <Outlet />
       </Box>
     </Flex>

@@ -16,3 +16,4 @@ API.interceptors.request.use((req) => {
 export { authAPI } from './auth.api';
 export { userAPI } from './user.api';
 export { bookAPI } from './book.api';
+export { bookshelfAPI } from './bookshelf.api';

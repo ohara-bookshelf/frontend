@@ -15,9 +15,9 @@ import * as Yup from 'yup';
 
 interface IProps {
   isOpen: boolean;
-  initialFormValues: any;
+  initialFormValues: unknown;
   onClose: () => void;
-  submitHandler: (values: any) => void;
+  submitHandler: (values: unknown) => void;
 }
 
 const CreateBookshelfSchema = Yup.object().shape({
