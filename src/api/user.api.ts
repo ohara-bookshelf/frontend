@@ -3,19 +3,12 @@ import { API } from '.';
 import {
   IBookshelf,
   ICreateBookshelf,
+  IUpdateBookshelf,
   IUser,
   IUserForkshelf,
-  Visibility,
 } from 'src/shared/interfaces';
 
 const PATH = '/users';
-
-type UpdateBookshelf = {
-  name?: string;
-  description?: string;
-  visible?: Visibility;
-  books?: string[];
-};
 
 export const userAPI = {
   getMe: async () => {
@@ -40,7 +33,7 @@ export const userAPI = {
 
   updateUserBookshelf: async (
     bookshelfId: string,
-    bookshelf: UpdateBookshelf
+    bookshelf: IUpdateBookshelf
   ) => {
     const res: AxiosResponse<IBookshelf> = await API.patch(
       `${PATH}/bookshelves/${bookshelfId}`,

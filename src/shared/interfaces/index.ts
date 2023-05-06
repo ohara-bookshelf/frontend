@@ -83,5 +83,22 @@ export interface ICreateBookshelf {
   name: string;
   description: string;
   visible: Visibility;
-  books?: string[];
+  books?: (string | undefined)[] | null | undefined;
+}
+
+export interface IUpdateBookshelf {
+  name?: string;
+  description?: string;
+  visible?: Visibility;
+  books?: (string | undefined)[] | null | undefined;
+}
+
+export interface IFieldInputProps {
+  name: string;
+  label: string;
+}
+
+export interface IOption {
+  value: string;
+  label: string;
 }

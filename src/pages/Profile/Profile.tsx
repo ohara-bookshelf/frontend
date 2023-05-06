@@ -26,7 +26,7 @@ import { ICreateBookshelf, Visibility } from 'src/shared/interfaces';
 
 import BookshelfTable from './components/Table/BookshelfTable';
 import ForkedshelfTable from './components/Table/ForkedshelfTable';
-import CreateBookshelfModal from './components/Modal/CreateBookshelfModal';
+import BookshelfFormModal from './components/Modal/BookshelfFormModal';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -186,7 +186,7 @@ const Profile = () => {
         </Container>
       </Box>
 
-      <CreateBookshelfModal
+      <BookshelfFormModal
         initialFormValues={initialFormValues}
         isOpen={isOpen}
         onClose={onClose}

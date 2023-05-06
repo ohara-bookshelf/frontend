@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Modal,
   ModalBody,
@@ -11,15 +12,20 @@ import FormikContainer from 'src/components/Form/FormikContainer';
 import FormikInput from 'src/components/Form/FormikInput';
 import FormikRadio from 'src/components/Form/FormikRadio';
 import FormikTextArea from 'src/components/Form/FormikTextArea';
-import { ICreateBookshelf, Visibility } from 'src/shared/interfaces';
+import FrormikSelect from 'src/components/Form/FrormikSelect';
+import { ICreateBookshelf, IOption, Visibility } from 'src/shared/interfaces';
 import * as Yup from 'yup';
+import * as API from 'src/api';
 
 interface IProps {
   isOpen: boolean;
   initialFormValues: ICreateBookshelf;
+  initialSelectedBooks?: IOption[];
   onClose: () => void;
   submitHandler: (values: ICreateBookshelf) => Promise<void>;
 }
+
+let timeoutId: NodeJS.Timeout;
 
 const CreateBookshelfSchema = Yup.object().shape({
   name: Yup.string()
@@ -33,10 +39,53 @@ const CreateBookshelfSchema = Yup.object().shape({
   visible: Yup.mixed<Visibility>()
     .oneOf([Visibility.PRIVATE, Visibility.PUBLIC])
     .required('Required'),
+  books: Yup.array().of(Yup.string<string>()).nullable('a'),
 });
 
-const CreateBookshelfModal = (props: IProps) => {
-  const { isOpen, onClose, initialFormValues, submitHandler } = props;
+export default function BookshelfFormModal(props: IProps) {
+  const {
+    isOpen,
+    initialFormValues,
+    initialSelectedBooks,
+    onClose,
+    submitHandler,
+  } = props;
+
+  const [options, setOptions] = useState<IOption[]>([]);
+  const [selectedBooks, setSelectedBooks] = useState<IOption[]>(
+    initialSelectedBooks ?? []
+  );
+
+  const fetchBooks = async (title: string) => {
+    const queryString = new URLSearchParams({
+      title,
+    }).toString();
+
+    try {
+      const { data } = await API.bookAPI.findBooks(queryString);
+
+      const options = data.map((book) => ({
+        value: book.id,
+        label: book.title,
+      }));
+
+      setOptions(options);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const inputchangeHandler = (newValue: string) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      if (newValue.length < 3) return;
+
+      fetchBooks(newValue);
+    }, 1000);
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -59,12 +108,22 @@ const CreateBookshelfModal = (props: IProps) => {
               options={['Public', 'Private']}
               defaultValue="PUBLIC"
             />
+            <FrormikSelect
+              value={selectedBooks}
+              defaultValue={selectedBooks}
+              label="Books"
+              name="books"
+              isMulti={true}
+              options={options}
+              onInputChange={inputchangeHandler}
+              onChange={(values) => {
+                setSelectedBooks(values as IOption[]);
+              }}
+            />
           </FormikContainer>
         </ModalBody>
         <ModalFooter />
       </ModalContent>
     </Modal>
   );
-};
-
-export default CreateBookshelfModal;
+}

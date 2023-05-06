@@ -15,22 +15,19 @@ import {
 import { DeleteIcon } from '@chakra-ui/icons';
 import DeleteBookshelfModal from '../components/Modal/DeleteBookshelfModal';
 import ChangeVisibleModal from '../components/Modal/ChangeVisibleModal';
-import AddBookModal from '../components/Modal/AddBookModal';
 import { useBookshelfStore, useUserStore } from 'src/flux/store';
 import Error from 'src/components/Error/Error';
-import { Visibility } from 'src/shared/interfaces';
+import {
+  ICreateBookshelf,
+  IUpdateBookshelf,
+  Visibility,
+} from 'src/shared/interfaces';
 import * as API from 'src/api';
 import { useEffect } from 'react';
 import Loading from 'src/components/Preloader/Loading';
 import BookCard from 'src/components/Card/BookCard';
 import { PAGE_PATH } from 'src/shared/constants';
-
-type UpdateBookshelf = {
-  name?: string;
-  description?: string;
-  visible?: Visibility;
-  books?: string[];
-};
+import BookshelfFormModal from '../components/Modal/BookshelfFormModal';
 
 export default function UserBookshelf() {
   const { bookshelfId } = useParams();
@@ -50,9 +47,9 @@ export default function UserBookshelf() {
     onClose: onCloseDelete,
   } = useDisclosure();
   const {
-    isOpen: isAddBookOpen,
-    onOpen: onAddBookOpen,
-    onClose: onAddBookClose,
+    isOpen: isUpdateFormOpen,
+    onOpen: onUpdateFormOpen,
+    onClose: onUpdateFormClose,
   } = useDisclosure();
   const {
     isOpen: loading,
@@ -60,18 +57,11 @@ export default function UserBookshelf() {
     onClose: setLoaded,
   } = useDisclosure();
 
-  const addBooksHandler = async (
-    selectedBooks: { value: string; label: string }[]
-  ) => {
+  const updateBooksHandler = async (newBookshelf: ICreateBookshelf) => {
     if (!bookshelfId) return;
     if (!bookshelf) return;
     setLoading();
     try {
-      const newBookshelf = {
-        ...bookshelf,
-        books: selectedBooks.map((x) => x.value),
-      };
-
       const { data } = await API.userAPI.updateUserBookshelf(
         bookshelfId,
         newBookshelf
@@ -83,11 +73,13 @@ export default function UserBookshelf() {
       console.error(error);
     } finally {
       setLoaded();
-      onAddBookClose();
+      onUpdateFormClose();
     }
   };
 
-  const updateUserBookshelfHandler = async (bookshelfData: UpdateBookshelf) => {
+  const updateUserBookshelfHandler = async (
+    bookshelfData: IUpdateBookshelf
+  ) => {
     if (!bookshelfId) return;
     if (!bookshelf) return;
     setLoading();
@@ -127,7 +119,7 @@ export default function UserBookshelf() {
       console.error(error);
     } finally {
       setLoaded();
-      onAddBookClose();
+      onUpdateFormClose();
     }
   };
 
@@ -218,9 +210,9 @@ export default function UserBookshelf() {
             <Button
               variant="outline"
               colorScheme="teal"
-              onClick={onAddBookOpen}
+              onClick={onUpdateFormOpen}
             >
-              Add Book
+              Update Bookshelf
             </Button>
           </Flex>
 
@@ -279,6 +271,9 @@ export default function UserBookshelf() {
             mr={3}
             onClick={() =>
               updateUserBookshelfHandler({
+                description: bookshelf.description,
+                name: bookshelf.name,
+
                 visible:
                   bookshelf.visible === Visibility.PUBLIC
                     ? Visibility.PRIVATE
@@ -292,14 +287,20 @@ export default function UserBookshelf() {
         }
       />
 
-      <AddBookModal
-        isOpen={isAddBookOpen}
-        onClose={onAddBookClose}
-        defaultState={bookshelf.books.map(({ book }) => ({
+      <BookshelfFormModal
+        initialFormValues={{
+          name: bookshelf.name,
+          description: bookshelf.description,
+          visible: bookshelf.visible,
+          books: bookshelf.books.map(({ book }) => book.id),
+        }}
+        initialSelectedBooks={bookshelf.books.map(({ book }) => ({
           value: book.id,
           label: book.title,
         }))}
-        addBooksHandler={addBooksHandler}
+        isOpen={isUpdateFormOpen}
+        onClose={onUpdateFormClose}
+        submitHandler={updateBooksHandler}
       />
 
       <DeleteBookshelfModal
