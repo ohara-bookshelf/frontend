@@ -91,7 +91,7 @@ export default function BookshelfFormModal(props: IProps) {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent pt="8">
-        <ModalHeader textAlign="center">Create Bookshelf</ModalHeader>
+        <ModalHeader textAlign="center">Bookshelf Form</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormikContainer

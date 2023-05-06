@@ -28,6 +28,9 @@ import Loading from 'src/components/Preloader/Loading';
 import BookCard from 'src/components/Card/BookCard';
 import { PAGE_PATH } from 'src/shared/constants';
 import BookshelfFormModal from '../components/Modal/BookshelfFormModal';
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+import { MdDelete } from 'react-icons/md';
+import { IoPencilOutline } from 'react-icons/io5';
 
 export default function UserBookshelf() {
   const { bookshelfId } = useParams();
@@ -139,6 +142,8 @@ export default function UserBookshelf() {
     }
   };
 
+  const isPublic = bookshelf?.visible || Visibility.PUBLIC;
+
   useEffect(() => {
     const fetchBookshelf = async () => {
       if (!bookshelfId) return;
@@ -186,21 +191,19 @@ export default function UserBookshelf() {
               >
                 <Button
                   variant="solid"
-                  colorScheme="teal"
-                  onClick={onOpenStatus}
+                  colorScheme="linkedin"
+                  onClick={onUpdateFormOpen}
+                  leftIcon={<IoPencilOutline />}
                 >
-                  Set as{' '}
-                  {bookshelf.visible === Visibility.PUBLIC
-                    ? 'Private'
-                    : 'Public'}{' '}
-                  Bookshelf
+                  Update Bookshelf
                 </Button>
                 <Button
-                  variant="solid"
-                  colorScheme="red"
-                  onClick={onOpenDelete}
+                  variant="outline"
+                  colorScheme="linkedin"
+                  onClick={onOpenStatus}
+                  leftIcon={isPublic ? <IoMdEyeOff /> : <IoMdEye />}
                 >
-                  Delete Bookshelf
+                  Set as {isPublic ? 'Private' : 'Public'} Bookshelf
                 </Button>
               </Flex>
             </Flex>
@@ -208,11 +211,13 @@ export default function UserBookshelf() {
 
           <Flex w="100%" justifyContent="center">
             <Button
-              variant="outline"
-              colorScheme="teal"
-              onClick={onUpdateFormOpen}
+              size={'sm'}
+              variant="solid"
+              colorScheme="red"
+              onClick={onOpenDelete}
+              leftIcon={<MdDelete />}
             >
-              Update Bookshelf
+              Delete Bookshelf
             </Button>
           </Flex>
 
@@ -274,15 +279,11 @@ export default function UserBookshelf() {
                 description: bookshelf.description,
                 name: bookshelf.name,
 
-                visible:
-                  bookshelf.visible === Visibility.PUBLIC
-                    ? Visibility.PRIVATE
-                    : Visibility.PUBLIC,
+                visible: isPublic ? Visibility.PRIVATE : Visibility.PUBLIC,
               })
             }
           >
-            Change To{' '}
-            {bookshelf.visible === Visibility.PUBLIC ? 'Private' : 'Public'}
+            Change To {isPublic ? 'Private' : 'Public'}
           </Button>
         }
       />
