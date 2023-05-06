@@ -6,13 +6,21 @@ import {
   Radio,
   RadioGroup,
 } from '@chakra-ui/react';
-import { Field } from 'formik';
-import React from 'react';
+import { Field, FieldProps } from 'formik';
 
-function FormikRadio({ name, label, values, options, ...props }) {
+interface IProps {
+  name: string;
+  label: string;
+  defaultValue?: string;
+  values: string[];
+  options: string[];
+}
+
+function FormikRadio(props: IProps) {
+  const { name, label, values, options } = props;
   return (
     <Field name={name}>
-      {({ field, form }) => (
+      {({ field, form }: FieldProps) => (
         <FormControl
           id={name}
           isInvalid={!!form.errors[name] && !!form.touched[name]}
@@ -27,7 +35,11 @@ function FormikRadio({ name, label, values, options, ...props }) {
               ))}
             </HStack>
           </RadioGroup>
-          <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
+          {form.errors[name] &&
+            form.touched[name] &&
+            typeof form.errors[name] === 'string' && (
+              <FormErrorMessage>{form.errors[name] as string}</FormErrorMessage>
+            )}
         </FormControl>
       )}
     </Field>
