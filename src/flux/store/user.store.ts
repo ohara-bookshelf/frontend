@@ -1,4 +1,9 @@
-import { IBookshelf, IUser, Visibility } from 'src/shared/interfaces';
+import {
+  IBookshelf,
+  IUser,
+  IUserForkshelf,
+  Visibility,
+} from 'src/shared/interfaces';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -9,6 +14,8 @@ type UserStore = {
   addUserBookshelf(payload: IBookshelf): void;
   updateUserBookshelves(payload: IBookshelf): void;
   deleteUserBookshelf(payload: string): void;
+  onUserForkshelf(payload: IUserForkshelf): void;
+  deleteUserForkshelf(forkshelfId: string): void;
 };
 
 type GroupKey = 'public' | 'private';
@@ -140,6 +147,37 @@ export const useUserStore = create<UserStore>()(
       const updatedUser = {
         ...useUserStore.getState().user,
         bookshelves: updatedBookshelves,
+      };
+      set({
+        user: updatedUser,
+      });
+    },
+    onUserForkshelf: (forkshelf: IUserForkshelf) => {
+      const { forkedshelves } = useUserStore.getState().user;
+      const updatedForkedshelves = forkedshelves
+        ? [...forkedshelves, forkshelf]
+        : [forkshelf];
+
+      const updatedUser = {
+        ...useUserStore.getState().user,
+        forkedshelves: updatedForkedshelves,
+      };
+      set({
+        user: updatedUser,
+      });
+    },
+    deleteUserForkshelf: (forkshelfId: string) => {
+      const { forkedshelves } = useUserStore.getState().user;
+
+      if (!forkedshelves) return;
+
+      const updatedForkedshelves = forkedshelves.filter(
+        (forkshelf) => forkshelf.id !== forkshelfId
+      );
+
+      const updatedUser = {
+        ...useUserStore.getState().user,
+        forkedshelves: updatedForkedshelves,
       };
       set({
         user: updatedUser,

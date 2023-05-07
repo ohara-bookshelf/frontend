@@ -79,6 +79,7 @@ export default function Book() {
             <Button
               display={isAuthenticated ? 'block' : 'none'}
               onClick={onOpen}
+              colorScheme="facebook"
             >
               add to bookshelf
             </Button>
@@ -114,14 +115,7 @@ export default function Book() {
             gap={6}
           >
             {recommendations?.map((book) => (
-              <BookCard
-                key={book.id}
-                id={book.id}
-                author={book.author}
-                title={book.title}
-                genres={book.genres}
-                image_url_l={book.image_url_l}
-              />
+              <BookCard key={book.id} book={book} />
             ))}
           </Grid>
         </VStack>

@@ -26,6 +26,7 @@ const BookshelfTable = (props: IProps) => {
   const { data } = props;
 
   const [bookshelf, setBookshelf] = useState<IBookshelf>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,12 +34,14 @@ const BookshelfTable = (props: IProps) => {
 
   const deleteBookshelfHandler = async () => {
     if (!bookshelf) return;
+    setIsLoading(true);
     try {
       const { data } = await API.userAPI.deleteUserBookshelf(bookshelf.id);
       deleteUserBookshelf(data.bookshelfId);
     } catch (error) {
       console.error(error);
     } finally {
+      setIsLoading(false);
       onClose();
     }
   };
@@ -66,6 +69,7 @@ const BookshelfTable = (props: IProps) => {
                   <Td>{dateParser(item.createdAt)}</Td>
                   <Td>
                     <ActionButton
+                      isLoading={isLoading}
                       path={PAGE_PATH.USER_BOOKSHELF(item.id)}
                       onDeleteClick={() => {
                         setBookshelf(item);

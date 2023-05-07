@@ -6,11 +6,14 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from '@chakra-ui/react';
 import ActionButton from '../Button/ActionButton';
 import { IForkedshelf } from 'src/shared/interfaces';
 import { dateParser } from 'src/shared/utils/parser';
 import { PAGE_PATH } from 'src/shared/constants';
+import * as API from 'src/api';
+import { useUserStore } from 'src/flux/store';
 
 interface IProps {
   data: IForkedshelf[];
@@ -18,6 +21,21 @@ interface IProps {
 
 const ForkedshelfTable = (props: IProps) => {
   const { data } = props;
+  const { deleteUserForkshelf } = useUserStore();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const deleteForkshelfHandler = async (id: string) => {
+    onOpen();
+    try {
+      const { data } = await API.userAPI.deleteForkshelf(id);
+      deleteUserForkshelf(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onClose();
+    }
+  };
 
   return (
     <>
@@ -50,10 +68,9 @@ const ForkedshelfTable = (props: IProps) => {
                 </Td>
                 <Td>
                   <ActionButton
+                    isLoading={isOpen}
                     path={PAGE_PATH.USER_FORKSHELF(item.id)}
-                    onDeleteClick={() => {
-                      console.log(item.id);
-                    }}
+                    onDeleteClick={() => deleteForkshelfHandler(item.id)}
                   />
                 </Td>
               </Tr>

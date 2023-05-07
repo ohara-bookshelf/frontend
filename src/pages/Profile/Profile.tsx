@@ -22,18 +22,11 @@ import { FaCamera } from 'react-icons/fa';
 import { useUserStore } from 'src/flux/store/user.store';
 import * as API from 'src/api';
 import Loading from 'src/components/Preloader/Loading';
-import { Visibility } from 'src/shared/interfaces';
+import { ICreateBookshelf, Visibility } from 'src/shared/interfaces';
 
 import BookshelfTable from './components/Table/BookshelfTable';
 import ForkedshelfTable from './components/Table/ForkedshelfTable';
-import CreateBookshelfModal from './components/Modal/CreateBookshelfModal';
-
-type CreateBookshelf = {
-  name: string;
-  description: string;
-  visible: Visibility;
-  books: string[];
-};
+import BookshelfFormModal from './components/Modal/BookshelfFormModal';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -46,7 +39,14 @@ const Profile = () => {
 
   const { user, setInitialUser, setUser, addUserBookshelf } = useUserStore();
 
-  const submitHandler = async (formValues: CreateBookshelf) => {
+  const initialFormValues: ICreateBookshelf = {
+    name: '',
+    description: '',
+    visible: Visibility.PUBLIC,
+    books: [],
+  };
+
+  const submitHandler = async (formValues: ICreateBookshelf) => {
     try {
       const { data } = await API.userAPI.createBookshelf(formValues);
       addUserBookshelf(data);
@@ -157,16 +157,28 @@ const Profile = () => {
                   )}
                 </TabPanel>
                 <TabPanel>
-                  <BookshelfTable
-                    data={
-                      user?.bookshelves?.private?.length
-                        ? user?.bookshelves?.private
-                        : []
-                    }
-                  />
+                  {user?.bookshelves?.private?.length === 0 ? (
+                    <Text textAlign="center" mt={6}>
+                      No bookshelf found
+                    </Text>
+                  ) : (
+                    <BookshelfTable
+                      data={
+                        user?.bookshelves?.private?.length
+                          ? user?.bookshelves?.private
+                          : []
+                      }
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <ForkedshelfTable data={user?.forkedshelves || []} />
+                  {user?.forkedshelves?.length === 0 ? (
+                    <Text textAlign="center" mt={6}>
+                      No bookshelf found
+                    </Text>
+                  ) : (
+                    <ForkedshelfTable data={user?.forkedshelves || []} />
+                  )}
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -174,10 +186,8 @@ const Profile = () => {
         </Container>
       </Box>
 
-      <CreateBookshelfModal
-        initialFormValues={{
-          visible: 'PRIVATE',
-        }}
+      <BookshelfFormModal
+        initialFormValues={initialFormValues}
         isOpen={isOpen}
         onClose={onClose}
         submitHandler={submitHandler}

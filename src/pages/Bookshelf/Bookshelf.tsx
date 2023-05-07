@@ -212,13 +212,7 @@ const Bookshelf = () => {
           >
             {bookshelf.books.map(({ book }) => (
               <GridItem key={book.id} position="relative" role="group">
-                <BookCard
-                  id={book.id}
-                  author={book.author}
-                  title={book.title}
-                  image_url_l={book.image_url_l}
-                  genres={book.genres}
-                />
+                <BookCard book={book} />
               </GridItem>
             ))}
           </Grid>

@@ -115,13 +115,7 @@ export default function UserAssistant() {
             >
               {books.map((book) => (
                 <GridItem w="100%" key={book.id}>
-                  <BookCard
-                    id={book.id}
-                    genres={book.genres}
-                    title={book.title}
-                    image_url_l={book.image_url_l}
-                    author={book.author}
-                  />
+                  <BookCard book={book} />
                 </GridItem>
               ))}
             </Grid>

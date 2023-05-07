@@ -15,22 +15,22 @@ import {
 import { DeleteIcon } from '@chakra-ui/icons';
 import DeleteBookshelfModal from '../components/Modal/DeleteBookshelfModal';
 import ChangeVisibleModal from '../components/Modal/ChangeVisibleModal';
-import AddBookModal from '../components/Modal/AddBookModal';
 import { useBookshelfStore, useUserStore } from 'src/flux/store';
 import Error from 'src/components/Error/Error';
-import { Visibility } from 'src/shared/interfaces';
+import {
+  ICreateBookshelf,
+  IUpdateBookshelf,
+  Visibility,
+} from 'src/shared/interfaces';
 import * as API from 'src/api';
 import { useEffect } from 'react';
 import Loading from 'src/components/Preloader/Loading';
 import BookCard from 'src/components/Card/BookCard';
 import { PAGE_PATH } from 'src/shared/constants';
-
-type UpdateBookshelf = {
-  name?: string;
-  description?: string;
-  visible?: Visibility;
-  books?: string[];
-};
+import BookshelfFormModal from '../components/Modal/BookshelfFormModal';
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+import { MdDelete } from 'react-icons/md';
+import { IoPencilOutline } from 'react-icons/io5';
 
 export default function UserBookshelf() {
   const { bookshelfId } = useParams();
@@ -50,9 +50,9 @@ export default function UserBookshelf() {
     onClose: onCloseDelete,
   } = useDisclosure();
   const {
-    isOpen: isAddBookOpen,
-    onOpen: onAddBookOpen,
-    onClose: onAddBookClose,
+    isOpen: isUpdateFormOpen,
+    onOpen: onUpdateFormOpen,
+    onClose: onUpdateFormClose,
   } = useDisclosure();
   const {
     isOpen: loading,
@@ -60,18 +60,11 @@ export default function UserBookshelf() {
     onClose: setLoaded,
   } = useDisclosure();
 
-  const addBooksHandler = async (
-    selectedBooks: { value: string; label: string }[]
-  ) => {
+  const updateBooksHandler = async (newBookshelf: ICreateBookshelf) => {
     if (!bookshelfId) return;
     if (!bookshelf) return;
     setLoading();
     try {
-      const newBookshelf = {
-        ...bookshelf,
-        books: selectedBooks.map((x) => x.value),
-      };
-
       const { data } = await API.userAPI.updateUserBookshelf(
         bookshelfId,
         newBookshelf
@@ -83,11 +76,13 @@ export default function UserBookshelf() {
       console.error(error);
     } finally {
       setLoaded();
-      onAddBookClose();
+      onUpdateFormClose();
     }
   };
 
-  const updateUserBookshelfHandler = async (bookshelfData: UpdateBookshelf) => {
+  const updateUserBookshelfHandler = async (
+    bookshelfData: IUpdateBookshelf
+  ) => {
     if (!bookshelfId) return;
     if (!bookshelf) return;
     setLoading();
@@ -127,7 +122,7 @@ export default function UserBookshelf() {
       console.error(error);
     } finally {
       setLoaded();
-      onAddBookClose();
+      onUpdateFormClose();
     }
   };
 
@@ -146,6 +141,8 @@ export default function UserBookshelf() {
       setLoaded();
     }
   };
+
+  const isPublic = bookshelf?.visible || Visibility.PUBLIC;
 
   useEffect(() => {
     const fetchBookshelf = async () => {
@@ -194,21 +191,19 @@ export default function UserBookshelf() {
               >
                 <Button
                   variant="solid"
-                  colorScheme="teal"
-                  onClick={onOpenStatus}
+                  colorScheme="facebook"
+                  onClick={onUpdateFormOpen}
+                  leftIcon={<IoPencilOutline />}
                 >
-                  Set as{' '}
-                  {bookshelf.visible === Visibility.PUBLIC
-                    ? 'Private'
-                    : 'Public'}{' '}
-                  Bookshelf
+                  Update Bookshelf
                 </Button>
                 <Button
-                  variant="solid"
-                  colorScheme="red"
-                  onClick={onOpenDelete}
+                  variant="outline"
+                  colorScheme="facebook"
+                  onClick={onOpenStatus}
+                  leftIcon={isPublic ? <IoMdEyeOff /> : <IoMdEye />}
                 >
-                  Delete Bookshelf
+                  Set as {isPublic ? 'Private' : 'Public'} Bookshelf
                 </Button>
               </Flex>
             </Flex>
@@ -216,11 +211,13 @@ export default function UserBookshelf() {
 
           <Flex w="100%" justifyContent="center">
             <Button
-              variant="outline"
-              colorScheme="teal"
-              onClick={onAddBookOpen}
+              size={'sm'}
+              variant="solid"
+              colorScheme="red"
+              onClick={onOpenDelete}
+              leftIcon={<MdDelete />}
             >
-              Add Book
+              Delete Bookshelf
             </Button>
           </Flex>
 
@@ -237,13 +234,7 @@ export default function UserBookshelf() {
             {bookshelf.books.map(({ book }) => (
               <GridItem key={book.id}>
                 <Box>
-                  <BookCard
-                    id={book.id}
-                    author={book.author}
-                    title={book.title}
-                    image_url_l={book.image_url_l}
-                    genres={book.genres}
-                  />
+                  <BookCard book={book} />
                 </Box>
                 <Box
                   right="0"
@@ -279,27 +270,32 @@ export default function UserBookshelf() {
             mr={3}
             onClick={() =>
               updateUserBookshelfHandler({
-                visible:
-                  bookshelf.visible === Visibility.PUBLIC
-                    ? Visibility.PRIVATE
-                    : Visibility.PUBLIC,
+                description: bookshelf.description,
+                name: bookshelf.name,
+
+                visible: isPublic ? Visibility.PRIVATE : Visibility.PUBLIC,
               })
             }
           >
-            Change To{' '}
-            {bookshelf.visible === Visibility.PUBLIC ? 'Private' : 'Public'}
+            Change To {isPublic ? 'Private' : 'Public'}
           </Button>
         }
       />
 
-      <AddBookModal
-        isOpen={isAddBookOpen}
-        onClose={onAddBookClose}
-        defaultState={bookshelf.books.map(({ book }) => ({
+      <BookshelfFormModal
+        initialFormValues={{
+          name: bookshelf.name,
+          description: bookshelf.description,
+          visible: bookshelf.visible,
+          books: bookshelf.books.map(({ book }) => book.id),
+        }}
+        initialSelectedBooks={bookshelf.books.map(({ book }) => ({
           value: book.id,
           label: book.title,
         }))}
-        addBooksHandler={addBooksHandler}
+        isOpen={isUpdateFormOpen}
+        onClose={onUpdateFormClose}
+        submitHandler={updateBooksHandler}
       />
 
       <DeleteBookshelfModal

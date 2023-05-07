@@ -14,15 +14,14 @@ import { useAuthStore, useUserStore } from 'src/flux/store';
 import { IBookshelf } from 'src/shared/interfaces';
 import { Link as ReachLink } from 'react-router-dom';
 import { PAGE_PATH } from 'src/shared/constants';
+
+import ForkButton from '../Button/ForkButton';
 interface IProps {
   bookshelf: IBookshelf;
-  disabled: boolean;
-  onDeleteFork: () => void;
-  onFork: () => void;
 }
 
 const BookshelfCard = (props: IProps) => {
-  const { bookshelf, disabled, onDeleteFork, onFork } = props;
+  const { bookshelf } = props;
   const { user } = useUserStore();
   const { isAuthenticated } = useAuthStore();
 
@@ -85,30 +84,14 @@ const BookshelfCard = (props: IProps) => {
         {isAuthenticated ? (
           isOwner ? (
             <Button
-              variant="solid"
-              colorScheme="blue"
+              variant="outline"
+              colorScheme="facebook"
               onClick={() => navigate(PAGE_PATH.USER_BOOKSHELF(bookshelf.id))}
             >
               Edit
             </Button>
-          ) : isForked ? (
-            <Button
-              disabled={disabled}
-              variant="outline"
-              colorScheme="red"
-              onClick={onDeleteFork}
-            >
-              Delete Fork
-            </Button>
           ) : (
-            <Button
-              disabled={disabled}
-              variant="solid"
-              colorScheme="teal"
-              onClick={onFork}
-            >
-              Fork
-            </Button>
+            <ForkButton bookshelf={bookshelf} isForked={isForked} />
           )
         ) : (
           <Button
