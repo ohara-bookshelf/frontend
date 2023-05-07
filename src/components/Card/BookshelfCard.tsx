@@ -14,21 +14,18 @@ import { useAuthStore, useUserStore } from 'src/flux/store';
 import { IBookshelf } from 'src/shared/interfaces';
 import { Link as ReachLink } from 'react-router-dom';
 import { PAGE_PATH } from 'src/shared/constants';
-import { useState } from 'react';
-import * as API from 'src/api';
+
+import ForkButton from '../Button/ForkButton';
 interface IProps {
   bookshelf: IBookshelf;
 }
 
 const BookshelfCard = (props: IProps) => {
   const { bookshelf } = props;
-  const { user, deleteUserForkshelf, onUserForkshelf } = useUserStore();
+  const { user } = useUserStore();
   const { isAuthenticated } = useAuthStore();
 
   const navigate = useNavigate();
-
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isForking, setIsForking] = useState(false);
 
   const isOwner = bookshelf.userId === user.id;
   const isForked = user.forkedshelves?.some(
@@ -36,37 +33,6 @@ const BookshelfCard = (props: IProps) => {
   )
     ? true
     : false;
-
-  const forkHandler = async () => {
-    setIsForking(true);
-    try {
-      const { data } = await API.userAPI.forkBookshelf(bookshelf.id);
-      onUserForkshelf(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsForking(false);
-    }
-  };
-
-  const deleteForkHandler = async () => {
-    setIsDeleting(true);
-    try {
-      const forkshelfId = user.forkedshelves?.find(
-        (x) => x.bookshelfId === bookshelf.id
-      )?.id;
-
-      if (!forkshelfId) return;
-
-      const { data } = await API.userAPI.deleteForkshelf(forkshelfId);
-
-      deleteUserForkshelf(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   return (
     <Card
@@ -118,30 +84,14 @@ const BookshelfCard = (props: IProps) => {
         {isAuthenticated ? (
           isOwner ? (
             <Button
-              variant="solid"
-              colorScheme="blue"
+              variant="outline"
+              colorScheme="facebook"
               onClick={() => navigate(PAGE_PATH.USER_BOOKSHELF(bookshelf.id))}
             >
               Edit
             </Button>
-          ) : isForked ? (
-            <Button
-              isLoading={isDeleting}
-              variant="outline"
-              colorScheme="red"
-              onClick={deleteForkHandler}
-            >
-              Delete Fork
-            </Button>
           ) : (
-            <Button
-              isLoading={isForking}
-              variant="solid"
-              colorScheme="teal"
-              onClick={forkHandler}
-            >
-              Fork
-            </Button>
+            <ForkButton bookshelf={bookshelf} isForked={isForked} />
           )
         ) : (
           <Button

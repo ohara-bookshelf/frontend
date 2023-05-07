@@ -64,7 +64,7 @@ export default function BookshelfFormModal(props: IProps) {
     try {
       const { data } = await API.bookAPI.findBooks(queryString);
 
-      const options = data.map((book) => ({
+      const options = data.data.map((book) => ({
         value: book.id,
         label: book.title,
       }));

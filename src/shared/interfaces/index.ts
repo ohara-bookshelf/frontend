@@ -102,3 +102,10 @@ export interface IOption {
   value: string;
   label: string;
 }
+
+export interface IMeta {
+  totalItems: number;
+  currentPage: number;
+  take: number;
+  totalPages: number;
+}

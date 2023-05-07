@@ -191,7 +191,7 @@ export default function UserBookshelf() {
               >
                 <Button
                   variant="solid"
-                  colorScheme="linkedin"
+                  colorScheme="facebook"
                   onClick={onUpdateFormOpen}
                   leftIcon={<IoPencilOutline />}
                 >
@@ -199,7 +199,7 @@ export default function UserBookshelf() {
                 </Button>
                 <Button
                   variant="outline"
-                  colorScheme="linkedin"
+                  colorScheme="facebook"
                   onClick={onOpenStatus}
                   leftIcon={isPublic ? <IoMdEyeOff /> : <IoMdEye />}
                 >
@@ -234,13 +234,7 @@ export default function UserBookshelf() {
             {bookshelf.books.map(({ book }) => (
               <GridItem key={book.id}>
                 <Box>
-                  <BookCard
-                    id={book.id}
-                    author={book.author}
-                    title={book.title}
-                    image_url_l={book.image_url_l}
-                    genres={book.genres}
-                  />
+                  <BookCard book={book} />
                 </Box>
                 <Box
                   right="0"

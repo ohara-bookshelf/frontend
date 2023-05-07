@@ -1,66 +1,86 @@
-import {
-  Container,
-  Grid,
-  GridItem,
-  Heading,
-  Stack,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { Grid, GridItem, useDisclosure } from '@chakra-ui/react';
+import { useState, useEffect, useCallback } from 'react';
 import BookshelfCard from 'src/components/Card/BookshelfCard';
 import Loading from 'src/components/Preloader/Loading';
 import { IBookshelf } from 'src/shared/interfaces';
 import * as API from 'src/api';
+import { usePaginationStore } from 'src/flux/store';
 
 const Bookshelves = () => {
-  const [bookshelves, setBookshelves] = useState<IBookshelf[]>([]);
   const {
     isOpen: isLoading,
     onOpen: onLoading,
     onClose: onLoaded,
   } = useDisclosure();
 
-  const fetchBookshelves = async () => {
-    onLoading();
-    try {
-      const { data } = await API.bookshelfAPI.findMany();
-      setBookshelves(data);
-    } catch (error) {
-      setBookshelves([]);
-    } finally {
-      onLoaded();
-    }
-  };
+  const {
+    take,
+    currentPage,
+    setCurrentPage,
+    setTotalItems,
+    setTotalPages,
+    setTake,
+  } = usePaginationStore();
+
+  const [bookshelves, setBookshelves] = useState<IBookshelf[]>([]);
+
+  const fetchBookshelves = useCallback(
+    async (take: string, page: string) => {
+      onLoading();
+      try {
+        const queryString = new URLSearchParams({
+          take: take,
+          page: page,
+          owner: 'true',
+          userForks: 'true',
+          _count: 'true',
+        }).toString();
+
+        const { data } = await API.bookshelfAPI.findMany(queryString);
+
+        setBookshelves(data.data);
+        setTotalItems(data.meta.totalItems);
+        setTotalPages(data.meta.totalPages);
+        setCurrentPage(data.meta.currentPage);
+        setTake(data.meta.take);
+      } catch (error) {
+        setBookshelves([]);
+        setCurrentPage(1);
+        setTotalItems(0);
+        setTotalPages(0);
+        setTake(25);
+      } finally {
+        onLoaded();
+      }
+    },
+    [onLoaded, onLoading, setCurrentPage, setTake, setTotalItems, setTotalPages]
+  );
 
   useEffect(() => {
-    fetchBookshelves();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    fetchBookshelves(take.toString(), currentPage.toString());
+  }, [take, currentPage, fetchBookshelves]);
 
   if (isLoading) return <Loading />;
 
   return (
-    <Container maxW="100%" pl={10}>
-      <Stack spacing={10}>
-        <Heading textAlign="center">What's New</Heading>
-        <Grid templateColumns="repeat(4, 1fr)" gap={6}>
-          {bookshelves.map((bookshelf) => {
-            return (
-              <GridItem key={bookshelf.id} w="100%">
-                <BookshelfCard
-                  bookshelf={bookshelf}
-                  disabled={isLoading}
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                  onDeleteFork={() => {}}
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                  onFork={() => {}}
-                />
-              </GridItem>
-            );
-          })}
-        </Grid>
-      </Stack>
-    </Container>
+    <Grid
+      templateColumns={[
+        'repeat(1, 1fr)',
+        'repeat(1, 1fr)',
+        'repeat(2, 1fr)',
+        'repeat(3, 1fr)',
+        'repeat(4, 1fr)',
+      ]}
+      gap={6}
+    >
+      {bookshelves.map((bookshelf) => {
+        return (
+          <GridItem key={bookshelf.id} w="100%">
+            <BookshelfCard bookshelf={bookshelf} />
+          </GridItem>
+        );
+      })}
+    </Grid>
   );
 };
 

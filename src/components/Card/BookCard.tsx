@@ -11,17 +11,14 @@ import {
 } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
 import { PAGE_PATH } from 'src/shared/constants';
+import { IBook } from 'src/shared/interfaces';
 
 type Props = {
-  id: string;
-  title: string;
-  image_url_l: string;
-  author: string;
-  genres: string[];
+  book: IBook;
 };
 
 export default function BookCard(props: Props) {
-  const { id, title, image_url_l, genres, author } = props;
+  const { id, title, image_url_l, genres, author } = props.book;
   return (
     <Link as={ReachLink} to={PAGE_PATH.BOOK(id)}>
       <Card
@@ -36,7 +33,7 @@ export default function BookCard(props: Props) {
         <CardBody>
           <VStack gap="4">
             <Text as="h3" textAlign="center">
-              {`${title.slice(0, 50)} ${title.length > 50 ? '...' : ''}`}
+              {`${title?.slice(0, 50)} ${title?.length > 50 ? '...' : ''}`}
             </Text>
             <Image
               w="100%"
@@ -53,12 +50,12 @@ export default function BookCard(props: Props) {
         </CardBody>
         <CardFooter>
           <Box alignSelf={'start'}>
-            {genres.slice(0, 5).map((g, i) => (
+            {genres?.slice(0, 5)?.map((g, i) => (
               <Tag key={`${id}-tag-${i}`} size="sm" mr={2} mt={2}>
                 {g}
               </Tag>
             ))}
-            {genres.length > 5 ? (
+            {genres?.length > 5 ? (
               <Tag size="sm" mr={2} mt={2}>
                 + {genres.length - 5}
               </Tag>

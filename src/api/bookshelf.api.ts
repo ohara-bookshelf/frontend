@@ -1,14 +1,13 @@
 import { AxiosResponse } from 'axios';
 import { API } from '.';
-import { IBookshelf } from 'src/shared/interfaces';
+import { IBookshelf, IMeta } from 'src/shared/interfaces';
 
 const PATH = '/bookshelves';
 
 export const bookshelfAPI = {
   findMany: async (queryString?: string) => {
-    const res: AxiosResponse<IBookshelf[]> = await API.get(
-      `${PATH}?${queryString}`
-    );
+    const res: AxiosResponse<{ data: IBookshelf[]; meta: IMeta }> =
+      await API.get(`${PATH}?${queryString}`);
     return res;
   },
   findOne: async (id: string) => {

@@ -8,11 +8,9 @@ import * as API from 'src/api';
 export default function ForkButton({
   isForked,
   bookshelf,
-  variant = 'solid',
 }: {
   isForked: boolean;
   bookshelf: IBookshelf;
-  variant?: string;
 }) {
   const { isAuthenticated } = useAuthStore();
   const { user, onUserForkshelf, deleteUserForkshelf } = useUserStore();
@@ -53,8 +51,8 @@ export default function ForkButton({
     <Button
       isLoading={isOpen}
       leftIcon={isForked ? <MdCancel /> : <VscRepoForked />}
-      colorScheme="facebook"
-      variant={variant}
+      colorScheme={isForked ? 'red' : 'facebook'}
+      variant={isForked ? 'outline' : 'solid'}
       display={
         isAuthenticated && user.id !== bookshelf.owner.id ? 'block' : 'none'
       }

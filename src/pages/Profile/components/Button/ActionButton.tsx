@@ -13,7 +13,7 @@ const ActionButton = (props: IProps) => {
   return (
     <HStack gap={6}>
       <Link as={ReachLink} to={path}>
-        <Button disabled={isLoading} variant="solid" colorScheme="teal">
+        <Button disabled={isLoading} variant="solid" colorScheme="facebook">
           Detail
         </Button>
       </Link>

@@ -4,6 +4,7 @@ import * as pages from '../pages';
 import PrivateRoute from './PrivateRoute';
 import Error from 'src/components/Error/Error';
 import { PAGE } from 'src/shared/constants';
+import ExploreLayout from 'src/layouts/ExploreLayout';
 
 const router = createBrowserRouter([
   {
@@ -39,25 +40,26 @@ const router = createBrowserRouter([
       },
       {
         path: PAGE.BOOKSHELVES,
-        element: <Outlet />,
-        children: [
-          { index: true, element: <pages.Bookshelves /> },
-          { path: ':bookshelfId', element: <pages.Bookshelf /> },
-        ],
+        element: <ExploreLayout />,
+        children: [{ index: true, element: <pages.Bookshelves /> }],
+      },
+      {
+        path: PAGE.BOOKSHELVES + '/:bookshelfId',
+        element: <pages.Bookshelf />,
       },
       {
         path: PAGE.BOOKS,
-        element: <Outlet />,
+        element: <ExploreLayout />,
         children: [
           {
             index: true,
             element: <pages.Books />,
           },
-          {
-            path: ':bookId',
-            element: <pages.Book />,
-          },
         ],
+      },
+      {
+        path: PAGE.BOOKS + '/:bookId',
+        element: <pages.Book />,
       },
       {
         path: PAGE.USERS,

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Box, Container, Stack, Text } from '@chakra-ui/react';
+import { Box, Container, Link, Stack, Text } from '@chakra-ui/react';
+import { Link as ReachLink } from 'react-router-dom';
 import BookshelfCard from 'src/components/Card/BookshelfCard';
 import DashboardSection from './components/DashboardSection/DashboardSection';
 import BookCard from 'src/components/Card/BookCard';
@@ -77,6 +78,9 @@ export default function Dashboard() {
     <Container maxW="100%" py="8">
       <Stack spacing={10} textAlign={'center'}>
         <Text as="h2">Popular Bookshelves</Text>
+        <Link as={ReachLink} to="/bookshelves">
+          See all
+        </Link>
         {fetchingPopular ? (
           <Text>Fetching Popular...</Text>
         ) : (
@@ -84,16 +88,7 @@ export default function Dashboard() {
             {popular.length ? (
               popular.map((bookshelf) => (
                 <Box key={bookshelf.id} minW="20rem" maxW={['100%', '20rem']}>
-                  <BookshelfCard
-                    bookshelf={bookshelf}
-                    disabled={false}
-                    onDeleteFork={() => {
-                      console.log('a');
-                    }}
-                    onFork={() => {
-                      console.log('b');
-                    }}
-                  />
+                  <BookshelfCard bookshelf={bookshelf} />
                 </Box>
               ))
             ) : (
@@ -103,6 +98,9 @@ export default function Dashboard() {
         )}
 
         <Text as="h2">Recommended Books</Text>
+        <Link as={ReachLink} to="/books">
+          See All
+        </Link>
         {fetchingBooks ? (
           <Text>Fetching Recommended Books...</Text>
         ) : (
@@ -110,13 +108,7 @@ export default function Dashboard() {
             {books.length ? (
               books.map((book) => (
                 <Box key={book.id} minW="20rem" maxW={['100%', '20rem']}>
-                  <BookCard
-                    id={book.id}
-                    author={book.author}
-                    genres={book.genres}
-                    image_url_l={book.image_url_l}
-                    title={book.title}
-                  />
+                  <BookCard book={book} />
                 </Box>
               ))
             ) : (
@@ -126,6 +118,10 @@ export default function Dashboard() {
         )}
 
         <Text as="h2">Recommended Bookshelves</Text>
+        <Link as={ReachLink} to="/bookshelves">
+          See All
+        </Link>
+
         {fetchingRecommended ? (
           <Text>Fetching Recommended bookshelves...</Text>
         ) : (
@@ -133,16 +129,7 @@ export default function Dashboard() {
             {recommended.length ? (
               recommended.map((bookshelf) => (
                 <Box key={bookshelf.id} minW="20rem" maxW={['100%', '20rem']}>
-                  <BookshelfCard
-                    bookshelf={bookshelf}
-                    disabled={false}
-                    onDeleteFork={() => {
-                      console.log('a');
-                    }}
-                    onFork={() => {
-                      console.log('b');
-                    }}
-                  />
+                  <BookshelfCard bookshelf={bookshelf} />
                 </Box>
               ))
             ) : (
@@ -154,74 +141,3 @@ export default function Dashboard() {
     </Container>
   );
 }
-
-// const { data: user } = useQuery('user', api.getUserDetail, {
-//   onSuccess: ({ bookshelves, forkedshelves }) => {
-//     let books = [];
-
-//     forkedshelves.forEach(({ bookshelf }) => {
-//       bookshelf.books.forEach(({ book }) => {
-//         books.push(book.title);
-//       });
-//     });
-
-//     Object.keys(bookshelves).forEach((key) => {
-//       bookshelves[key].forEach(({ books }) => {
-//         books.forEach(({ book }) => {
-//           books.push(book.title);
-//         });
-//       });
-//     });
-
-//     setBookTitles(books);
-//   },
-// });
-
-// const {
-//   data: books,
-//   error: recommendBookError,
-//   isLoading: isRecomBookFetching,
-//   refetch: refetchBooks,
-// } = useQuery(
-//   'books',
-//   () =>
-//     api.getRecommededBooks(bookTitles[randomIndex(bookTitles.length)], 20),
-//   {
-//     initialData: [],
-//   }
-// );
-
-// const {
-//   data: recommendBookshelves,
-//   error: recommendBookshelfError,
-//   isLoading: isRecomBookshelfFetching,
-//   refetch: refetchBookshelves,
-// } = useQuery(
-//   'bookshelves/recommend',
-//   () =>
-//     api.getRecommededBookshelves(
-//       bookTitles[randomIndex(bookTitles.length)],
-//       20
-//     ),
-//   {
-//     initialData: [],
-//   }
-// );
-
-// const { mutate: deleteForkedBookshelf, isLoading: isDeleting } = useMutation(
-//   api.deleteForkedBookshelf,
-//   {
-//     onSuccess: () => {
-//       queryClient.invalidateQueries('user');
-//     },
-//   }
-// );
-
-// const { mutate: forkBookshelf, isLoading: isForking } = useMutation(
-//   api.forkBookshelf,
-//   {
-//     onSuccess: () => {
-//       queryClient.invalidateQueries('user');
-//     },
-//   }
-// );
