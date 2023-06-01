@@ -42,7 +42,7 @@ export default function Dashboard() {
     const fetchRecommendedBooks = async () => {
       setFetchingBooks(true);
       try {
-        const { data } = await API.bookAPI.getRecommendation('The Testament');
+        const { data } = await API.bookAPI.getRecommendation('0399135782');
         setBooks(data);
       } catch (error) {
         console.error(error);
@@ -59,9 +59,7 @@ export default function Dashboard() {
     const fetchRecommendedBookshelves = async () => {
       setFetchingRecommended(true);
       try {
-        const { data } = await API.bookshelfAPI.getRecommendation(
-          'The Testament'
-        );
+        const { data } = await API.bookshelfAPI.getRecommendation('0399135782');
         setRecommended(data);
       } catch (error) {
         console.error(error);

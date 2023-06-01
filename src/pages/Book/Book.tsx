@@ -41,7 +41,7 @@ export default function Book() {
       try {
         const { data } = await API.bookAPI.findBookById(bookId);
         const { data: recommendations } = await API.bookAPI.getRecommendation(
-          data.title
+          data.isbn
         );
 
         setBook(data);

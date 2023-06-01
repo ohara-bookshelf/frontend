@@ -67,18 +67,18 @@ const Bookshelf = () => {
       try {
         const { data } = await API.bookshelfAPI.findOne(bookshelfId);
 
-        // if (data.books.length > 0) {
-        // const index = Math.floor(Math.random() * data.books.length);
-        // const title = data.books[index].book.title;
+        if (data.books.length > 0) {
+          const index = Math.floor(Math.random() * data.books.length);
+          const { isbn } = data.books[index].book;
 
-        // if (title) {
-        //   const { data: recom } = await API.bookshelfAPI.getRecommendation(
-        //     title
-        //   );
+          if (isbn) {
+            const { data: recom } = await API.bookshelfAPI.getRecommendation(
+              isbn
+            );
 
-        //   setRecommendations(recom);
-        // }
-        // }
+            setRecommendations(recom);
+          }
+        }
         setBookshelf(data);
       } catch (error) {
         setBookshelf({} as IBookshelf);

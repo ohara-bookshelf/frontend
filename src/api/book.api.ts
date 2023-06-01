@@ -15,9 +15,9 @@ export const bookAPI = {
     const res: AxiosResponse<IBook> = await API.get(`${PATH}/${bookId}`);
     return res;
   },
-  getRecommendation: async (title: string, count = 10) => {
+  getRecommendation: async (isbn: string, count = 10) => {
     const queryString = new URLSearchParams({
-      title,
+      isbn,
       count: count.toString(),
     }).toString();
 
