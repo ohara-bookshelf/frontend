@@ -6,6 +6,7 @@ import DashboardSection from './components/DashboardSection/DashboardSection';
 import BookCard from 'src/components/Card/BookCard';
 import { IBook, IBookshelf } from 'src/shared/interfaces';
 import * as API from 'src/api';
+import { useIsbn } from 'src/shared/hooks';
 
 export default function Dashboard() {
   const [popular, setPopular] = useState<IBookshelf[]>([]);
@@ -14,6 +15,12 @@ export default function Dashboard() {
   const [fetchingPopular, setFetchingPopular] = useState(false);
   const [fetchingRecommended, setFetchingRecommended] = useState(false);
   const [fetchingBooks, setFetchingBooks] = useState(false);
+
+  const [randIsbn, setRandIsbn] = useIsbn();
+
+  useEffect(() => {
+    setRandIsbn();
+  }, [setRandIsbn]);
 
   useEffect(() => {
     const fetchPopularShelves = async () => {
@@ -42,7 +49,7 @@ export default function Dashboard() {
     const fetchRecommendedBooks = async () => {
       setFetchingBooks(true);
       try {
-        const { data } = await API.bookAPI.getRecommendation('0399135782');
+        const { data } = await API.bookAPI.getRecommendation(randIsbn);
         setBooks(data);
       } catch (error) {
         console.error(error);
@@ -53,13 +60,13 @@ export default function Dashboard() {
     };
 
     fetchRecommendedBooks();
-  }, []);
+  }, [randIsbn]);
 
   useEffect(() => {
     const fetchRecommendedBookshelves = async () => {
       setFetchingRecommended(true);
       try {
-        const { data } = await API.bookshelfAPI.getRecommendation('0399135782');
+        const { data } = await API.bookshelfAPI.getRecommendation(randIsbn);
         setRecommended(data);
       } catch (error) {
         console.error(error);
@@ -70,7 +77,7 @@ export default function Dashboard() {
     };
 
     fetchRecommendedBookshelves();
-  }, []);
+  }, [randIsbn]);
 
   return (
     <Container maxW="100%" py="8">

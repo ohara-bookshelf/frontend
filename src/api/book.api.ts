@@ -15,11 +15,16 @@ export const bookAPI = {
     const res: AxiosResponse<IBook> = await API.get(`${PATH}/${bookId}`);
     return res;
   },
-  getRecommendation: async (isbn: string, count = 10) => {
-    const queryString = new URLSearchParams({
-      isbn,
-      count: count.toString(),
-    }).toString();
+  getRecommendation: async (isbn?: string | null, count = 10) => {
+    const params = new URLSearchParams();
+
+    params.append('count', count.toString());
+
+    if (isbn) {
+      params.append('isbn', isbn);
+    }
+
+    const queryString = params.toString();
 
     const res: AxiosResponse<IBook[]> = await API.get(
       `${PATH}/recommended?${queryString}`
