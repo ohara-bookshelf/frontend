@@ -35,8 +35,11 @@ export const bookAPI = {
     imageString64: string;
     take: number;
   }) => {
-    const res: AxiosResponse<{ books: IBook[]; expression: string }> =
-      await API.post(`${PATH}/by-expression`, body);
+    const res: AxiosResponse<{
+      books: IBook[];
+      expression: string;
+      genres: string[];
+    }> = await API.post(`${PATH}/by-expression`, body);
     return res;
   },
   getBookReviews: async (bookId: string) => {

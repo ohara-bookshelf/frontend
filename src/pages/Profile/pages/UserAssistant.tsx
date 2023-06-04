@@ -5,6 +5,7 @@ import {
   Grid,
   GridItem,
   Spinner,
+  Tag,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -36,6 +37,7 @@ export default function UserAssistant() {
   const [books, setBooks] = useState<IBook[]>([]);
   const [emotion, setEmotion] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [genres, setGenres] = useState<string[]>([]);
 
   const captureHandler = async () => {
     setIsLoading(true);
@@ -53,23 +55,34 @@ export default function UserAssistant() {
 
       setEmotion(data.expression);
       setBooks(data.books);
+      setGenres(data.genres);
     } catch (error) {
       console.error(error);
+      setEmotion('');
+      setBooks([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Container h="100vh" maxW="100%" py={8}>
+    <Container maxW="100%" py={8}>
       <Flex
         flexDir={['column', 'column', 'column', 'row']}
         w="100%"
         h="100%"
         alignItems={['center', 'center', 'center', 'flex-start']}
         gap="8"
+        position="relative"
       >
-        <VStack gap="4" w="100%">
+        <VStack
+          position={{
+            lg: 'sticky',
+          }}
+          top="16"
+          left="0"
+          w="100%"
+        >
           <Text as="h3">
             {emotion
               ? ` you look ${emotion} ${emotion_labels[emotion]} now`
@@ -85,9 +98,31 @@ export default function UserAssistant() {
           >
             Mood Assistant
           </Button>
+
+          <Text as="h3" textAlign={'center'} w="100%">
+            Reccomended book genres
+          </Text>
+
+          <Flex
+            gap="4"
+            flexWrap={'wrap'}
+            justifyContent={'center'}
+            alignItems={'center'}
+          >
+            {genres.map((g, i) => (
+              <Tag
+                key={`tag-${i}-${new Date().getDate()}`}
+                size="sm"
+                mr={2}
+                mt={2}
+              >
+                {g}
+              </Tag>
+            ))}
+          </Flex>
         </VStack>
 
-        <Flex w={'100%'} gap="8" flexDir={['column']}>
+        <Flex w={'100%'} gap="8" flexDir={['column']} position={'relative'}>
           <Text as="h3" textAlign={'center'} w="100%">
             Recommended book
           </Text>
@@ -106,8 +141,8 @@ export default function UserAssistant() {
           {!isLoading && books.length > 0 && (
             <Grid
               templateColumns={[
+                'repeat(1, 1fr)',
                 'repeat(2, 1fr)',
-                'repeat(3, 1fr)',
                 'repeat(3, 1fr)',
                 'repeat(2, 1fr)',
               ]}
@@ -124,7 +159,7 @@ export default function UserAssistant() {
           {!isLoading && books.length === 0 && (
             <Text as="h4" textAlign={'center'}>
               Take a picture 📸 and see what the best books we recommended for
-              you today ✨{' '}
+              you today ✨
             </Text>
           )}
         </Flex>

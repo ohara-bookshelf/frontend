@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { Navigate, Link as ReachLink } from 'react-router-dom';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import logo from 'src/shared/assets/images/bookshelf.png';
+import logo from 'src/shared/assets/images/ohara_l.png';
 import { useUserStore } from 'src/flux/store/user.store';
 import { useAuthStore } from 'src/flux/store';
 import * as API from 'src/api';
@@ -74,7 +74,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
       transition={'all ease 0.3s'}
     >
       <Link as={ReachLink} to={PAGE_PATH.MAIN}>
-        <Image w="16" src={logo} />
+        <Image w="48" src={logo} />
       </Link>
 
       {isAuthenticated ? (

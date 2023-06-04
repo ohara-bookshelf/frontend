@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { dateParser } from 'src/shared/utils/parser';
-import logo from 'src/shared/assets/images/bookshelf.png';
+import logo from 'src/shared/assets/images/ohara.png';
 import { useAuthStore, useUserStore } from 'src/flux/store';
 import { IBookshelf } from 'src/shared/interfaces';
 import { Link as ReachLink } from 'react-router-dom';
