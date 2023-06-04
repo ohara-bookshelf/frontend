@@ -32,12 +32,12 @@ export default function BookCard(props: Props) {
       >
         <CardBody>
           <VStack gap="4">
-            <Text as="h3" textAlign="center">
+            <Text as="h5" textAlign="center" height="4rem">
               {`${title?.slice(0, 50)} ${title?.length > 50 ? '...' : ''}`}
             </Text>
             <Image
               w="100%"
-              h="8rem"
+              h="12rem"
               src={image_url_l}
               alt={title}
               borderRadius={4}
@@ -48,7 +48,7 @@ export default function BookCard(props: Props) {
             </Text>
           </VStack>
         </CardBody>
-        <CardFooter>
+        <CardFooter height="8rem">
           <Box alignSelf={'start'}>
             {genres?.slice(0, 5)?.map((g, i) => (
               <Tag key={`${id}-tag-${i}`} size="sm" mr={2} mt={2}>
