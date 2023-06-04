@@ -6,21 +6,22 @@ import DashboardSection from './components/DashboardSection/DashboardSection';
 import BookCard from 'src/components/Card/BookCard';
 import { IBook, IBookshelf } from 'src/shared/interfaces';
 import * as API from 'src/api';
-import { useIsbn } from 'src/shared/hooks';
+import { useUserStore } from 'src/flux/store';
+import { randomIsbn } from 'src/shared/utils/random';
 
 export default function Dashboard() {
+  const { user } = useUserStore();
   const [popular, setPopular] = useState<IBookshelf[]>([]);
   const [recommended, setRecommended] = useState<IBookshelf[]>([]);
   const [books, setBooks] = useState<IBook[]>([]);
   const [fetchingPopular, setFetchingPopular] = useState(false);
   const [fetchingRecommended, setFetchingRecommended] = useState(false);
   const [fetchingBooks, setFetchingBooks] = useState(false);
-
-  const [randIsbn, setRandIsbn] = useIsbn();
+  const [randIsbn, setRandIsbn] = useState<string | null>(null);
 
   useEffect(() => {
-    setRandIsbn();
-  }, [setRandIsbn]);
+    setRandIsbn(randomIsbn(user));
+  }, [user]);
 
   useEffect(() => {
     const fetchPopularShelves = async () => {

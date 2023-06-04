@@ -30,6 +30,8 @@ import { MdBackupTable, MdGridView } from 'react-icons/md';
 import ForkButton from 'src/components/Button/ForkButton';
 import { useUserStore } from 'src/flux/store';
 import { PAGE_PATH } from 'src/shared/constants';
+import { randomIndex } from 'src/shared/utils/random';
+import BookshelfCard from 'src/components/Card/BookshelfCard';
 
 const Bookshelf = () => {
   const { bookshelfId } = useParams();
@@ -49,6 +51,12 @@ const Bookshelf = () => {
     onClose: onLoaded,
   } = useDisclosure();
   const { isOpen: isTable, onToggle } = useDisclosure();
+
+  const {
+    isOpen: loadRecom,
+    onOpen: onLoadingRecom,
+    onClose: onLoadedRecom,
+  } = useDisclosure();
 
   useEffect(() => {
     if (!bookshelfId) return;
@@ -90,6 +98,25 @@ const Bookshelf = () => {
 
     fetchBookshelf();
   }, [bookshelfId, onLoaded, onLoading]);
+
+  useEffect(() => {
+    async function fetchRecommendations() {
+      const isbnList = bookshelf?.books.map(({ book }) => book.isbn);
+      const isbn = isbnList ? isbnList[randomIndex(isbnList.length)] : null;
+
+      onLoadingRecom();
+      try {
+        const { data } = await API.bookshelfAPI.getRecommendation(isbn);
+        setRecommendations(data);
+      } catch (error) {
+        setRecommendations([]);
+      } finally {
+        onLoadedRecom();
+      }
+    }
+
+    fetchRecommendations();
+  }, [onLoadedRecom, onLoadingRecom, user, bookshelf]);
 
   if (loading) return <Loading />;
   if (!bookshelf) return <Error />;
@@ -178,7 +205,7 @@ const Bookshelf = () => {
                       backgroundColor: 'gray.900',
                       transition: 'all 0.2s ease-in-out',
                     }}
-                    onClick={() => navigate(`/book/${book.id}`)}
+                    onClick={() => navigate(`/books/${book.id}`)}
                   >
                     <Td w={'18'}> {book.isbn}</Td>
                     <Td maxW={80}>
@@ -218,7 +245,28 @@ const Bookshelf = () => {
           </Grid>
         )}
 
-        {recommendtaions.length > 0 && <VStack spacing={4}></VStack>}
+        <Text>Recommended Bookshelf</Text>
+        {loadRecom ? (
+          <Text>Loading...</Text>
+        ) : (
+          <Grid
+            w="100%"
+            templateColumns={[
+              'repeat(1, 1fr)',
+              'repeat(1, 1fr)',
+              'repeat(2, 1fr)',
+              'repeat(3, 1fr)',
+              'repeat(4, 1fr)',
+            ]}
+            gap={6}
+          >
+            {recommendtaions.map((bookshelf) => (
+              <GridItem key={bookshelf.id} w="100%">
+                <BookshelfCard bookshelf={bookshelf} />
+              </GridItem>
+            ))}
+          </Grid>
+        )}
       </VStack>
     </Container>
   );

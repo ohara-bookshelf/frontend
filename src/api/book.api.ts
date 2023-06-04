@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { API } from '.';
-import { IBook, IMeta } from 'src/shared/interfaces';
+import { IBook, IBookReview, IMeta } from 'src/shared/interfaces';
 
 const PATH = '/books';
 
@@ -37,6 +37,11 @@ export const bookAPI = {
   }) => {
     const res: AxiosResponse<{ books: IBook[]; expression: string }> =
       await API.post(`${PATH}/by-expression`, body);
+    return res;
+  },
+  getBookReviews: async (bookId: string) => {
+    const res: AxiosResponse<{ reviews: IBookReview[]; rating: number }> =
+      await API.get(`${PATH}/${bookId}/reviews`);
     return res;
   },
 };

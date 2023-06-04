@@ -30,6 +30,7 @@ export interface IBook {
   image_url_m: string;
   image_url_l: string;
   description: string;
+  book_path: string;
   genres: string[];
 }
 
@@ -108,4 +109,15 @@ export interface IMeta {
   currentPage: number;
   take: number;
   totalPages: number;
+}
+
+export interface IBookReview {
+  user: string;
+  text: string;
+  rating: string;
+  positivity: number;
+  negativity: number;
+  neutrality: number;
+  compound: number;
+  label: 'POSITIVE' | 'NEGATIVE';
 }
