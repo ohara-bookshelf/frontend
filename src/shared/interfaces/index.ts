@@ -19,6 +19,19 @@ export interface IUser {
   };
 }
 
+export interface IUserProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  sub: string;
+  profileImgUrl: string;
+  bookshelves: IBookshelf[];
+  _count: {
+    bookshelves: number;
+    forkedshelves: number;
+  };
+}
+
 export interface IBook {
   id: string;
   isbn: string;

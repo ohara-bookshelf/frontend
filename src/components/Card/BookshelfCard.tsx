@@ -29,11 +29,6 @@ const BookshelfCard = (props: IProps) => {
   const navigate = useNavigate();
 
   const isOwner = bookshelf.userId === user.id;
-  const isForked = user.forkedshelves?.some(
-    (item) => item.bookshelfId === bookshelf.id
-  )
-    ? true
-    : false;
 
   return (
     <Card
@@ -93,7 +88,7 @@ const BookshelfCard = (props: IProps) => {
               Edit
             </Button>
           ) : (
-            <ForkButton bookshelf={bookshelf} isForked={isForked} />
+            <ForkButton bookshelf={bookshelf} />
           )
         ) : (
           <Button

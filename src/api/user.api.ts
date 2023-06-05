@@ -6,6 +6,7 @@ import {
   IUpdateBookshelf,
   IUser,
   IUserForkshelf,
+  IUserProfile,
 } from 'src/shared/interfaces';
 
 const PATH = '/users';
@@ -13,6 +14,11 @@ const PATH = '/users';
 export const userAPI = {
   getMe: async () => {
     const res: AxiosResponse<IUser> = await API.get(`${PATH}/me`);
+    return res;
+  },
+
+  getUserById: async (userId: string) => {
+    const res: AxiosResponse<IUserProfile> = await API.get(`${PATH}/${userId}`);
     return res;
   },
 
