@@ -475,7 +475,9 @@ export default function Book() {
                 alignItems="center"
               >
                 {book?.genres?.map((tag, i) => (
-                  <Tag key={uuid + book.id + i}>{tag}</Tag>
+                  <Tag key={uuid + book.id + i} colorScheme="teal">
+                    {tag}
+                  </Tag>
                 ))}
               </Flex>
               <Text as="p" textAlign={'center'}>

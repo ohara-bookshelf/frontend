@@ -79,7 +79,7 @@ export default function UserAssistant() {
           position={{
             lg: 'sticky',
           }}
-          top="16"
+          top="8"
           left="0"
           w="100%"
         >
@@ -115,6 +115,7 @@ export default function UserAssistant() {
                 size="sm"
                 mr={2}
                 mt={2}
+                colorScheme="teal"
               >
                 {g}
               </Tag>

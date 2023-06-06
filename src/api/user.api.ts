@@ -17,6 +17,11 @@ export const userAPI = {
     return res;
   },
 
+  findUsers: async (query: string) => {
+    const res: AxiosResponse<IUser[]> = await API.get(`${PATH}?${query}`);
+    return res;
+  },
+
   getUserById: async (userId: string) => {
     const res: AxiosResponse<IUserProfile> = await API.get(`${PATH}/${userId}`);
     return res;
@@ -26,6 +31,11 @@ export const userAPI = {
     const res: AxiosResponse<IBookshelf> = await API.get(
       `${PATH}/bookshelves/${bookshelfId}`
     );
+    return res;
+  },
+
+  getPopularUser: async () => {
+    const res: AxiosResponse<IUserProfile[]> = await API.get(`${PATH}/popular`);
     return res;
   },
 

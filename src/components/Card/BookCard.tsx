@@ -51,12 +51,18 @@ export default function BookCard(props: Props) {
         <CardFooter height="8rem">
           <Box alignSelf={'start'}>
             {genres?.slice(0, 5)?.map((g, i) => (
-              <Tag key={`${id}-tag-${i}`} size="sm" mr={2} mt={2}>
+              <Tag
+                key={`${id}-tag-${i}`}
+                size="sm"
+                mr={2}
+                mt={2}
+                colorScheme="teal"
+              >
                 {g}
               </Tag>
             ))}
             {genres?.length > 5 ? (
-              <Tag size="sm" mr={2} mt={2}>
+              <Tag size="sm" mr={2} mt={2} colorScheme="teal">
                 + {genres.length - 5}
               </Tag>
             ) : null}
