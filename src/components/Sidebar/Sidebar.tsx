@@ -109,7 +109,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
               >{`${user.totalForks} Fork`}</Text>
             </Card>
           </Link>
-          mb="4"
           <Box w="100%" flexGrow={1} overflow={'auto'}>
             <Accordion allowToggle width="100%">
               <AccordionItem>
