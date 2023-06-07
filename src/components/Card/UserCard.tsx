@@ -24,7 +24,6 @@ export default function BookCard(props: Props) {
         w="100%"
         h="100%"
         transition={'all 0.2s ease-in-out'}
-        m
         _hover={{
           cursor: 'pointer',
           bg: 'blackAlpha.300',
@@ -40,7 +39,9 @@ export default function BookCard(props: Props) {
               size="xl"
               name={`${firstName} ${lastName}`}
               src={profileImgUrl}
-              border="3px solid teal"
+              borderWidth="3px"
+              borderStyle="solid"
+              borderColor="primary.500"
             />
 
             <Flex w="100%" justifyContent="space-around">

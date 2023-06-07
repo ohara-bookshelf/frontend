@@ -9,33 +9,21 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { CSSProperties, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import Camera from '../components/Camera/Camera';
 import { FaCamera } from 'react-icons/fa';
 import BookCard from 'src/components/Card/BookCard';
 import * as API from 'src/api';
 import { IBook } from 'src/shared/interfaces';
-interface EmotionLabels {
-  [key: string]: string;
-}
-
-const emotion_labels: EmotionLabels = {
-  angry: '😠',
-  disgust: '🤢',
-  fear: '😨',
-  happy: '😃',
-  neutral: '😐',
-  sad: '😢',
-  surprised: '😮',
-};
+import { EMOTION_COLOR, EMOTION_LABELS } from 'src/shared/constants';
 
 export default function UserAssistant() {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [books, setBooks] = useState<IBook[]>([]);
-  const [emotion, setEmotion] = useState<string>('');
+  const [emotion, setEmotion] = useState<string>('neutral');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [genres, setGenres] = useState<string[]>([]);
 
@@ -66,7 +54,15 @@ export default function UserAssistant() {
   };
 
   return (
-    <Container maxW="100%" py={8}>
+    <Container
+      maxW="100%"
+      py={8}
+      style={
+        {
+          '--chakra-colors-primary-500': EMOTION_COLOR[emotion] || '#5C8984',
+        } as CSSProperties
+      }
+    >
       <Flex
         flexDir={['column', 'column', 'column', 'row']}
         w="100%"
@@ -85,7 +81,7 @@ export default function UserAssistant() {
         >
           <Text as="h3">
             {emotion
-              ? ` you look ${emotion} ${emotion_labels[emotion]} now`
+              ? ` you look ${emotion} ${EMOTION_LABELS[emotion]} now`
               : 'Take a selfie 📸'}
           </Text>
 

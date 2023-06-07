@@ -13,7 +13,7 @@ export default function Camera(props: Props) {
       w="100%"
       maxW="40rem"
       h="30rem"
-      bg="gray.600"
+      bgColor="primary.500"
       rounded={'lg'}
     >
       <Webcam

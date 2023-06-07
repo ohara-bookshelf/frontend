@@ -1,5 +1,4 @@
 import { Avatar, Box, Image } from '@chakra-ui/react';
-import React from 'react';
 import { useUserStore } from 'src/flux/store';
 
 export default function ProfileLayout() {

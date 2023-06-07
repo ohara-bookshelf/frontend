@@ -1,5 +1,6 @@
 import { extendTheme } from '@chakra-ui/react';
 import { typography } from './typography';
+import { colors } from './color.ts';
 
 const config = {
   initialColorMode: 'dark',
@@ -28,6 +29,7 @@ const styles = {
 const theme = extendTheme({
   styles,
   config,
+  colors,
 });
 
 export default theme;
