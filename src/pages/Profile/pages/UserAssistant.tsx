@@ -59,7 +59,8 @@ export default function UserAssistant() {
       py={8}
       style={
         {
-          '--chakra-colors-primary-500': EMOTION_COLOR[emotion] || '#5C8984',
+          '--chakra-colors-primary-500':
+            EMOTION_COLOR[emotion] || EMOTION_COLOR['neutral'],
         } as CSSProperties
       }
     >
@@ -108,10 +109,10 @@ export default function UserAssistant() {
             {genres.map((g, i) => (
               <Tag
                 key={`tag-${i}-${new Date().getDate()}`}
+                colorScheme="facebook"
                 size="sm"
                 mr={2}
                 mt={2}
-                colorScheme="teal"
               >
                 {g}
               </Tag>

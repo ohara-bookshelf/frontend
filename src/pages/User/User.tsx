@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  Avatar,
   Box,
   Container,
   HStack,
@@ -15,6 +14,7 @@ import * as API from 'src/api';
 import { IUserProfile } from 'src/shared/interfaces';
 import Loading from 'src/components/Preloader/Loading';
 import BookshelfTable from '../Profile/components/Table/BookshelfTable';
+import ProfileAvatar from 'src/components/Avatar/ProfileAvatar';
 
 export default function User() {
   const { user: currentUser } = useUserStore();
@@ -73,11 +73,11 @@ export default function User() {
             left="50%"
             transform="translate(-50%, -50%)"
           >
-            <Avatar
+            <ProfileAvatar
               size="xl"
               name={`${user?.firstName} ${user?.lastName}`}
               src={user?.profileImgUrl}
-              border="2px solid teal"
+              expression={user?.expression}
             />
           </Box>
         </Box>

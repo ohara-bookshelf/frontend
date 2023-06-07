@@ -1,14 +1,7 @@
-import {
-  Card,
-  CardBody,
-  Avatar,
-  Link,
-  Flex,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Card, CardBody, Link, Flex, Text, VStack } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
 import { PAGE_PATH } from 'src/shared/constants';
+import ProfileAvatar from '../Avatar/ProfileAvatar';
 import { IUserProfile } from 'src/shared/interfaces';
 
 type Props = {
@@ -16,7 +9,8 @@ type Props = {
 };
 
 export default function BookCard(props: Props) {
-  const { id, firstName, lastName, profileImgUrl, _count } = props.user;
+  const { id, firstName, lastName, profileImgUrl, _count, expression } =
+    props.user;
 
   return (
     <Link as={ReachLink} to={PAGE_PATH.USER(id)}>
@@ -35,13 +29,11 @@ export default function BookCard(props: Props) {
               {firstName} {lastName}
             </Text>
 
-            <Avatar
+            <ProfileAvatar
               size="xl"
               name={`${firstName} ${lastName}`}
               src={profileImgUrl}
-              borderWidth="3px"
-              borderStyle="solid"
-              borderColor="primary.500"
+              expression={expression}
             />
 
             <Flex w="100%" justifyContent="space-around">

@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Container,
   Flex,
@@ -32,6 +31,7 @@ import { useUserStore } from 'src/flux/store';
 import { PAGE_PATH } from 'src/shared/constants';
 import { randomIndex } from 'src/shared/utils/random';
 import BookshelfCard from 'src/components/Card/BookshelfCard';
+import ProfileAvatar from 'src/components/Avatar/ProfileAvatar';
 
 const Bookshelf = () => {
   const { bookshelfId } = useParams();
@@ -41,9 +41,6 @@ const Bookshelf = () => {
 
   const [bookshelf, setBookshelf] = useState<IBookshelf>();
   const [recommendtaions, setRecommendations] = useState<IBookshelf[]>([]);
-
-  const isForked =
-    user?.forkedshelves?.some((el) => el.bookshelfId === bookshelfId) || false;
 
   const {
     isOpen: loading,
@@ -146,17 +143,18 @@ const Bookshelf = () => {
           padding="4"
           borderRadius={'md'}
           transition={'all 0.2s ease-in-out'}
+          bgColor={'gray.700'}
           _hover={{
             cursor: 'pointer',
-            backgroundColor: 'gray.700',
+            backgroundColor: 'gray.800',
           }}
           onClick={() => navigate(PAGE_PATH.USER(bookshelf.owner.id))}
         >
-          <Avatar
+          <ProfileAvatar
             src={bookshelf.owner.profileImgUrl}
-            size={'lg'}
-            border={'3px solid'}
-            borderColor={'facebook.300 !important'}
+            size={'xl'}
+            name={`${bookshelf.owner.firstName} ${bookshelf.owner.lastName}`}
+            expression={bookshelf.owner.expression}
           />
           <Text
             as={'p'}
@@ -181,7 +179,7 @@ const Bookshelf = () => {
           {isTable ? 'show books as grid' : 'show books as table'}
         </Button>
 
-        <ForkButton bookshelf={bookshelf} isForked={isForked} />
+        <ForkButton bookshelf={bookshelf} />
 
         {isTable ? (
           <TableContainer w="100%" wordBreak={'break-all'}>

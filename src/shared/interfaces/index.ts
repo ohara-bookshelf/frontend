@@ -17,6 +17,7 @@ export interface IUser {
     bookshelves: number;
     forkedshelves: number;
   };
+  expression: Expression;
 }
 
 export interface IUserProfile {
@@ -30,6 +31,7 @@ export interface IUserProfile {
     bookshelves: number;
     forkedshelves: number;
   };
+  expression: Expression;
 }
 
 export interface IBook {
@@ -50,6 +52,16 @@ export interface IBook {
 export enum Visibility {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE',
+}
+
+export enum Expression {
+  neutral = 'neutral',
+  happy = 'happy',
+  sad = 'sad',
+  angry = 'angry',
+  disgust = 'disgust',
+  fear = 'fear',
+  surprised = 'surprised',
 }
 
 export interface IBookshelfBook {
