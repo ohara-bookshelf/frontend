@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { API } from '.';
-import { IBook, IBookReview, IMeta } from 'src/shared/interfaces';
+import { Expression, IBook, IBookReview, IMeta } from 'src/shared/interfaces';
 
 const PATH = '/books';
 
@@ -37,7 +37,7 @@ export const bookAPI = {
   }) => {
     const res: AxiosResponse<{
       books: IBook[];
-      expression: string;
+      expression: Expression;
       genres: string[];
     }> = await API.post(`${PATH}/by-expression`, body);
     return res;

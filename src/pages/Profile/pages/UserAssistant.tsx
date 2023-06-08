@@ -15,12 +15,15 @@ import Camera from '../components/Camera/Camera';
 import { FaCamera } from 'react-icons/fa';
 import BookCard from 'src/components/Card/BookCard';
 import * as API from 'src/api';
-import { IBook } from 'src/shared/interfaces';
+import { Expression, IBook } from 'src/shared/interfaces';
 import { EMOTION_COLOR, EMOTION_LABELS } from 'src/shared/constants';
+import { useUserStore } from 'src/flux/store';
 
 export default function UserAssistant() {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const { setUserExpression } = useUserStore();
 
   const [books, setBooks] = useState<IBook[]>([]);
   const [emotion, setEmotion] = useState<string>('neutral');
@@ -44,10 +47,12 @@ export default function UserAssistant() {
       setEmotion(data.expression);
       setBooks(data.books);
       setGenres(data.genres);
+      setUserExpression(data.expression);
     } catch (error) {
       console.error(error);
       setEmotion('');
       setBooks([]);
+      setUserExpression(Expression.neutral);
     } finally {
       setIsLoading(false);
     }

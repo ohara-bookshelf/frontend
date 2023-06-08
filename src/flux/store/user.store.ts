@@ -1,4 +1,5 @@
 import {
+  Expression,
   IBookshelf,
   IUser,
   IUserForkshelf,
@@ -10,6 +11,7 @@ import { devtools } from 'zustand/middleware';
 type UserStore = {
   user: IUser;
   setUser: (payload: IUser) => void;
+  setUserExpression: (payload: Expression) => void;
   setInitialUser: () => void;
   addUserBookshelf(payload: IBookshelf): void;
   updateUserBookshelves(payload: IBookshelf): void;
@@ -31,6 +33,7 @@ export const initialUser: IUser = {
     private: [],
     public: [],
   },
+  expression: Expression.neutral,
 };
 
 export const useUserStore = create<UserStore>()(
@@ -44,6 +47,15 @@ export const useUserStore = create<UserStore>()(
     setInitialUser: () => {
       set({
         user: initialUser,
+      });
+    },
+    setUserExpression: (payload: Expression) => {
+      const updatedUser = {
+        ...useUserStore.getState().user,
+        expression: payload,
+      };
+      set({
+        user: updatedUser,
       });
     },
     addUserBookshelf: (payload: IBookshelf) => {
