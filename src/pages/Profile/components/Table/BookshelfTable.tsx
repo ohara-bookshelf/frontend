@@ -17,6 +17,7 @@ import { useState } from 'react';
 import * as API from 'src/api';
 import { useUserStore } from 'src/flux/store';
 import { PAGE_PATH } from 'src/shared/constants';
+import ForkButton from 'src/components/Button/ForkButton';
 
 interface IProps {
   data: IBookshelf[];
@@ -30,13 +31,16 @@ const BookshelfTable = (props: IProps) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { deleteUserBookshelf } = useUserStore();
+  const { user, deleteUserBookshelf } = useUserStore();
+
+  const isOwner = data.some((item) => item.userId === user?.id);
 
   const deleteBookshelfHandler = async () => {
     if (!bookshelf) return;
     setIsLoading(true);
     try {
       const { data } = await API.userAPI.deleteUserBookshelf(bookshelf.id);
+      console.log(data);
       deleteUserBookshelf(data.bookshelfId);
     } catch (error) {
       console.error(error);
@@ -56,29 +60,36 @@ const BookshelfTable = (props: IProps) => {
               <Th>Total Fork</Th>
               <Th>Total Book</Th>
               <Th>Created At</Th>
-              <Th>Action</Th>
+              {user && <Th>Action</Th>}
             </Tr>
           </Thead>
           <Tbody>
-            {data.length &&
-              data.map((item) => (
-                <Tr key={item.id}>
-                  <Td>{item.name}</Td>
-                  <Td>{item._count?.userForks || 0}</Td>
-                  <Td>{item._count?.books || 0}</Td>
-                  <Td>{dateParser(item.createdAt)}</Td>
-                  <Td>
-                    <ActionButton
-                      isLoading={isLoading}
-                      path={PAGE_PATH.USER_BOOKSHELF(item.id)}
-                      onDeleteClick={() => {
-                        setBookshelf(item);
-                        onOpen();
-                      }}
-                    />
-                  </Td>
-                </Tr>
-              ))}
+            {data.length
+              ? data.map((item) => (
+                  <Tr key={item.id}>
+                    <Td>{item.name}</Td>
+                    <Td>{item._count?.userForks || 0}</Td>
+                    <Td>{item._count?.books || 0}</Td>
+                    <Td>{dateParser(item.createdAt)}</Td>
+                    {user && isOwner ? (
+                      <Td>
+                        <ActionButton
+                          isLoading={isLoading}
+                          path={PAGE_PATH.USER_BOOKSHELF(item.id)}
+                          onDeleteClick={() => {
+                            setBookshelf(item);
+                            onOpen();
+                          }}
+                        />
+                      </Td>
+                    ) : (
+                      <Td width={'10rem'}>
+                        <ForkButton bookshelf={item} />
+                      </Td>
+                    )}
+                  </Tr>
+                ))
+              : null}
           </Tbody>
         </Table>
       </TableContainer>

@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Avatar,
   Box,
   Button,
   Card,
@@ -16,12 +15,13 @@ import {
 } from '@chakra-ui/react';
 import { Navigate, Link as ReachLink } from 'react-router-dom';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import logo from 'src/shared/assets/images/bookshelf.png';
+import logo from 'src/shared/assets/images/ohara_l.png';
 import { useUserStore } from 'src/flux/store/user.store';
 import { useAuthStore } from 'src/flux/store';
 import * as API from 'src/api';
 import Loading from '../Preloader/Loading';
 import { PAGE_PATH } from 'src/shared/constants';
+import ProfileAvatar from '../Avatar/ProfileAvatar';
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   const { user, setUser, setInitialUser } = useUserStore();
@@ -74,7 +74,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
       transition={'all ease 0.3s'}
     >
       <Link as={ReachLink} to={PAGE_PATH.MAIN}>
-        <Image w="16" src={logo} />
+        <Image w="48" src={logo} />
       </Link>
 
       {isAuthenticated ? (
@@ -85,19 +85,20 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
               width="100%"
               alignItems="center"
               justifyContent="center"
-              bg="transparent"
+              bg="blackAlpha.300"
               transition="all 0.2s ease-in-out"
               _hover={{
-                bg: 'blackAlpha.300',
+                bg: 'blackAlpha.500',
               }}
             >
-              <Avatar
-                size="lg"
+              <ProfileAvatar
+                size="xl"
                 name={`${user.firstName} ${user.lastName}`}
                 src={user.profileImgUrl}
-                mb="4"
+                expression={user.expression}
               />
               <Text
+                mt="4"
                 as="h3"
                 fontSize="lg"
                 fontWeight="bold"
@@ -108,7 +109,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
               >{`${user.totalForks} Fork`}</Text>
             </Card>
           </Link>
-
           <Box w="100%" flexGrow={1} overflow={'auto'}>
             <Accordion allowToggle width="100%">
               <AccordionItem>

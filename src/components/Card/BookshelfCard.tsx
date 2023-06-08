@@ -6,10 +6,11 @@ import {
   Image,
   Link,
   Text,
+  VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { dateParser } from 'src/shared/utils/parser';
-import logo from 'src/shared/assets/images/bookshelf.png';
+import logo from 'src/shared/assets/images/ohara.png';
 import { useAuthStore, useUserStore } from 'src/flux/store';
 import { IBookshelf } from 'src/shared/interfaces';
 import { Link as ReachLink } from 'react-router-dom';
@@ -28,11 +29,6 @@ const BookshelfCard = (props: IProps) => {
   const navigate = useNavigate();
 
   const isOwner = bookshelf.userId === user.id;
-  const isForked = user.forkedshelves?.some(
-    (item) => item.bookshelfId === bookshelf.id
-  )
-    ? true
-    : false;
 
   return (
     <Card
@@ -53,31 +49,32 @@ const BookshelfCard = (props: IProps) => {
         }
       >
         <CardBody>
-          <Text textAlign="center" as="h5" mb={6}>
-            {`${bookshelf.name.slice(0, 50)}${
-              bookshelf.name.length > 50 ? '...' : ''
-            }`}
-          </Text>
+          <VStack mb="6">
+            <Text textAlign="center" as="h5" h="4rem">
+              {`${bookshelf.name.slice(0, 50)}${
+                bookshelf.name.length > 50 ? '...' : ''
+              }`}
+            </Text>
 
-          <Image
-            w="100%"
-            h={['12rem']}
-            mb="4"
-            src={logo}
-            alt="bookshelf banner"
-            objectFit={'cover'}
-            borderRadius={4}
-          />
+            <Image
+              w="75%"
+              // h={['18rem']}
+              mb="4"
+              src={logo}
+              alt="bookshelf banner"
+              objectFit={'cover'}
+              borderRadius={4}
+            />
+          </VStack>
 
-          <Text>
-            Owner: {bookshelf.owner.firstName} {bookshelf.owner.lastName}
-          </Text>
-
-          <Text as="h6">Books: {bookshelf._count?.books}</Text>
-
-          <Text as="h6">Total Fork: {bookshelf._count?.userForks}</Text>
-
-          <Text as="h6">{dateParser(bookshelf.createdAt)}</Text>
+          <VStack mb="4" alignItems={'start'}>
+            <Text>
+              Owner: {bookshelf.owner.firstName} {bookshelf.owner.lastName}
+            </Text>
+            <Text>Books: {bookshelf._count?.books}</Text>
+            <Text>Total Fork: {bookshelf._count?.userForks}</Text>
+            <Text>{dateParser(bookshelf.createdAt)}</Text>
+          </VStack>
         </CardBody>
       </Link>
       <CardFooter>
@@ -91,7 +88,7 @@ const BookshelfCard = (props: IProps) => {
               Edit
             </Button>
           ) : (
-            <ForkButton bookshelf={bookshelf} isForked={isForked} />
+            <ForkButton bookshelf={bookshelf} />
           )
         ) : (
           <Button

@@ -17,6 +17,21 @@ export interface IUser {
     bookshelves: number;
     forkedshelves: number;
   };
+  expression: Expression;
+}
+
+export interface IUserProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  sub: string;
+  profileImgUrl: string;
+  bookshelves: IBookshelf[];
+  _count: {
+    bookshelves: number;
+    forkedshelves: number;
+  };
+  expression: Expression;
 }
 
 export interface IBook {
@@ -30,12 +45,23 @@ export interface IBook {
   image_url_m: string;
   image_url_l: string;
   description: string;
+  book_path: string;
   genres: string[];
 }
 
 export enum Visibility {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE',
+}
+
+export enum Expression {
+  neutral = 'neutral',
+  happy = 'happy',
+  sad = 'sad',
+  angry = 'angry',
+  disgust = 'disgust',
+  fear = 'fear',
+  surprised = 'surprised',
 }
 
 export interface IBookshelfBook {
@@ -108,4 +134,15 @@ export interface IMeta {
   currentPage: number;
   take: number;
   totalPages: number;
+}
+
+export interface IBookReview {
+  user: string;
+  text: string;
+  rating: string;
+  positivity: number;
+  negativity: number;
+  neutrality: number;
+  compound: number;
+  label: 'POSITIVE' | 'NEGATIVE';
 }

@@ -6,6 +6,7 @@ import App from './App.tsx';
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import theme from './shared/themes';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

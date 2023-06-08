@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
-PROTECTED_BRANCHES="^(main|master|develop)"
+PROTECTED_BRANCHES="^(main|staging)"
 
 echo -e "\n🚀 Pushing to remote $BRANCH branch..."
 

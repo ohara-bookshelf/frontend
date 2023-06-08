@@ -14,11 +14,16 @@ export const bookshelfAPI = {
     const res: AxiosResponse<IBookshelf> = await API.get(`${PATH}/${id}`);
     return res;
   },
-  getRecommendation: async (title: string, count = 10) => {
-    const queryString = new URLSearchParams({
-      title,
-      count: count.toString(),
-    }).toString();
+  getRecommendation: async (isbn?: string | null, count = 10) => {
+    const params = new URLSearchParams();
+
+    params.append('count', count.toString());
+
+    if (isbn) {
+      params.append('isbn', isbn);
+    }
+
+    const queryString = params.toString();
 
     const res: AxiosResponse<IBookshelf[]> = await API.get(
       `${PATH}/recommended?${queryString}`

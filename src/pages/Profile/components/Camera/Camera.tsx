@@ -13,7 +13,7 @@ export default function Camera(props: Props) {
       w="100%"
       maxW="40rem"
       h="30rem"
-      bg="gray.600"
+      bgColor="primary.500"
       rounded={'lg'}
     >
       <Webcam
@@ -26,7 +26,7 @@ export default function Camera(props: Props) {
           right: 0,
           textAlign: 'center',
           zIndex: 9,
-          width: 'calc(100% - 2rem)',
+          width: 'calc(100% - 1rem)',
           height: '100%',
         }}
       />
@@ -40,7 +40,7 @@ export default function Camera(props: Props) {
           right: 0,
           textAlign: 'center',
           zIndex: 9,
-          width: 'calc(100% - 2rem)',
+          width: 'calc(100% - 1rem)',
           height: '100%',
         }}
       />

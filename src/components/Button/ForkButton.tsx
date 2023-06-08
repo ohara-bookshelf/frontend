@@ -1,17 +1,11 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { VscRepoForked } from 'react-icons/vsc';
 import { MdCancel } from 'react-icons/md';
 import { useAuthStore, useUserStore } from 'src/flux/store';
 import { IBookshelf } from 'src/shared/interfaces';
 import * as API from 'src/api';
 
-export default function ForkButton({
-  isForked,
-  bookshelf,
-}: {
-  isForked: boolean;
-  bookshelf: IBookshelf;
-}) {
+export default function ForkButton({ bookshelf }: { bookshelf: IBookshelf }) {
   const { isAuthenticated } = useAuthStore();
   const { user, onUserForkshelf, deleteUserForkshelf } = useUserStore();
 
@@ -47,18 +41,24 @@ export default function ForkButton({
     }
   };
 
+  const isForked =
+    user?.forkedshelves?.some((item) => item.bookshelfId === bookshelf?.id) ||
+    false;
+
   return (
     <Button
       isLoading={isOpen}
-      leftIcon={isForked ? <MdCancel /> : <VscRepoForked />}
       colorScheme={isForked ? 'red' : 'facebook'}
       variant={isForked ? 'outline' : 'solid'}
       display={
-        isAuthenticated && user.id !== bookshelf.owner.id ? 'block' : 'none'
+        isAuthenticated && user.id !== bookshelf.owner?.id ? 'block' : 'none'
       }
       onClick={isForked ? handleUnfork : handleFork}
     >
-      {isForked ? 'Unfork' : 'Fork'}
+      <Flex align="center">
+        {isForked ? <MdCancel /> : <VscRepoForked />}
+        <Text ml={2}>{isForked ? 'Unfork' : 'Fork'}</Text>
+      </Flex>
     </Button>
   );
 }

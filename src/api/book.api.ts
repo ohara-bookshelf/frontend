@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { API } from '.';
-import { IBook, IMeta } from 'src/shared/interfaces';
+import { IBook, IBookReview, IMeta } from 'src/shared/interfaces';
 
 const PATH = '/books';
 
@@ -15,11 +15,16 @@ export const bookAPI = {
     const res: AxiosResponse<IBook> = await API.get(`${PATH}/${bookId}`);
     return res;
   },
-  getRecommendation: async (title: string, count = 10) => {
-    const queryString = new URLSearchParams({
-      title,
-      count: count.toString(),
-    }).toString();
+  getRecommendation: async (isbn?: string | null, count = 10) => {
+    const params = new URLSearchParams();
+
+    params.append('count', count.toString());
+
+    if (isbn) {
+      params.append('isbn', isbn);
+    }
+
+    const queryString = params.toString();
 
     const res: AxiosResponse<IBook[]> = await API.get(
       `${PATH}/recommended?${queryString}`
@@ -30,8 +35,16 @@ export const bookAPI = {
     imageString64: string;
     take: number;
   }) => {
-    const res: AxiosResponse<{ books: IBook[]; expression: string }> =
-      await API.post(`${PATH}/by-expression`, body);
+    const res: AxiosResponse<{
+      books: IBook[];
+      expression: string;
+      genres: string[];
+    }> = await API.post(`${PATH}/by-expression`, body);
+    return res;
+  },
+  getBookReviews: async (bookId: string) => {
+    const res: AxiosResponse<{ reviews: IBookReview[]; rating: number }> =
+      await API.get(`${PATH}/${bookId}/reviews`);
     return res;
   },
 };

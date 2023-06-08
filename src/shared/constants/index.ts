@@ -9,6 +9,7 @@ export const PAGE = {
   USERS: 'users',
   USER: 'users/:userId',
 };
+
 export const PAGE_PATH = {
   MAIN: '/',
 
@@ -27,4 +28,24 @@ export const PAGE_PATH = {
 
   USERS: `/${PAGE.USERS}`,
   USER: (userId: string) => `/${PAGE.USERS}/${userId}`,
+};
+
+export const EMOTION_COLOR: { [key: string]: string } = {
+  neutral: '#3e8e7e',
+  happy: '#FFBF00',
+  sad: '#4B5D67',
+  angry: '#EB1D36',
+  disgust: '#606C5D',
+  fear: '#905E96',
+  surprised: '#F07DEA',
+};
+
+export const EMOTION_LABELS: { [key: string]: string } = {
+  neutral: '🙂',
+  happy: '😁',
+  sad: '😢',
+  angry: '😠',
+  disgust: '🤢',
+  fear: '😨',
+  surprised: '😮',
 };
