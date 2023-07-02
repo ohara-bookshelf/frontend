@@ -3,6 +3,7 @@ import { API } from '.';
 import {
   IBookshelf,
   ICreateBookshelf,
+  IMeta,
   IUpdateBookshelf,
   IUser,
   IUserForkshelf,
@@ -18,7 +19,8 @@ export const userAPI = {
   },
 
   findUsers: async (query: string) => {
-    const res: AxiosResponse<IUser[]> = await API.get(`${PATH}?${query}`);
+    const res: AxiosResponse<{ data: IUserProfile[]; meta: IMeta }> =
+      await API.get(`${PATH}?${query}`);
     return res;
   },
 

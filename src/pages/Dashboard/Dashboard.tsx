@@ -57,7 +57,9 @@ export default function Dashboard() {
 
       try {
         const { data } = await API.userAPI.getPopularUser();
-        setPopularUser(data);
+        setPopularUser(
+          data.sort((a, b) => b._count.forkedshelves - a._count.forkedshelves)
+        );
       } catch (error) {
         setPopularUser([]);
       } finally {

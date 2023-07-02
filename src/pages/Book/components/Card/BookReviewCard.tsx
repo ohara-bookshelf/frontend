@@ -1,4 +1,4 @@
-import { Card, CardBody, Flex, Text, VStack } from '@chakra-ui/react';
+import { Card, CardBody, Text, VStack } from '@chakra-ui/react';
 import { IBookReview } from 'src/shared/interfaces';
 import Rating from '../Rating/Rating';
 
@@ -20,6 +20,14 @@ export default function BookReviewCard(props: IProps) {
         bg: 'blackAlpha.300',
       }}
       onClick={() => onReview(review)}
+      borderColor={
+        review.label === 'POSITIVE'
+          ? 'green.500'
+          : review.label === 'NEGATIVE'
+          ? 'red.500'
+          : 'gray.500'
+      }
+      borderWidth="1px"
     >
       <CardBody textAlign="center">
         <VStack gap="6">
@@ -28,10 +36,10 @@ export default function BookReviewCard(props: IProps) {
           </Text>
           <Rating code="card" length={+review.rating} />
 
-          <Flex w="100%" justifyContent={'space-around'}>
+          {/* <Flex w="100%" justifyContent={'space-around'}>
             <Text>review point: {Math.floor(review.compound * 10)}</Text>
             <Text>overall review: {review.label}</Text>
-          </Flex>
+          </Flex> */}
         </VStack>
       </CardBody>
     </Card>

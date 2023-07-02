@@ -12,7 +12,11 @@ export const bookAPI = {
     return res;
   },
   findBookById: async (bookId: string) => {
-    const res: AxiosResponse<IBook> = await API.get(`${PATH}/${bookId}`);
+    type BookResponse = {
+      book: IBook;
+      sentiment: Expression;
+    };
+    const res: AxiosResponse<BookResponse> = await API.get(`${PATH}/${bookId}`);
     return res;
   },
   getRecommendation: async (isbn?: string | null, count = 10) => {
@@ -42,9 +46,21 @@ export const bookAPI = {
     }> = await API.post(`${PATH}/by-expression`, body);
     return res;
   },
+  getBooksBySentiment: async (queryString: string) => {
+    const res: AxiosResponse<IBook[]> = await API.get(
+      `${PATH}/by-sentiment?${queryString}`
+    );
+    return res;
+  },
   getBookReviews: async (bookId: string) => {
     const res: AxiosResponse<{ reviews: IBookReview[]; rating: number }> =
       await API.get(`${PATH}/${bookId}/reviews`);
+    return res;
+  },
+  getBookSentiment: async (bookId: string) => {
+    const res: AxiosResponse<{ sentiment: Expression }> = await API.get(
+      `${PATH}/${bookId}/sentiment`
+    );
     return res;
   },
 };

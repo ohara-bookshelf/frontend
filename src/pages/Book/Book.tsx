@@ -7,6 +7,7 @@ import {
   Grid,
   Heading,
   Image,
+  Spinner,
   Stack,
   Tag,
   Text,
@@ -17,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import * as API from 'src/api';
-import { IBook, IBookReview } from 'src/shared/interfaces';
+import { Expression, IBook, IBookReview } from 'src/shared/interfaces';
 import Loading from 'src/components/Preloader/Loading';
 import BookCard from 'src/components/Card/BookCard';
 import { useAuthStore } from 'src/flux/store';
@@ -26,6 +27,7 @@ import BookReviewCard from './components/Card/BookReviewCard';
 import BookReviewModal from './components/Modal/BookReviewModal';
 import Rating from './components/Rating/Rating';
 import axios, { AxiosError } from 'axios';
+import { EMOTION_COLOR } from 'src/shared/constants';
 
 export default function Book() {
   const { bookId } = useParams();
@@ -39,6 +41,7 @@ export default function Book() {
   const [reviews, setReviews] = useState<IBookReview[]>([]);
   const [review, setReview] = useState<IBookReview>();
   const [rating, setRating] = useState(0);
+  const [sentiment, setSentiment] = useState<Expression>(Expression.neutral);
 
   const [reviewError, setReviewError] = useState<string>();
   const [fetchingReview, setFetchingReview] = useState(false);
@@ -73,14 +76,23 @@ export default function Book() {
       try {
         const { data } = await API.bookAPI.findBookById(bookId);
         const { data: recommendations } = await API.bookAPI.getRecommendation(
-          data.isbn
+          data.book.isbn,
+          5
+        );
+        const { data: sentiment } = await API.bookAPI.getBooksBySentiment(
+          new URLSearchParams({
+            sentiment: data.sentiment,
+            take: '5',
+          }).toString()
         );
 
-        setBook(data);
-        setRecommendations(recommendations);
+        setBook(data.book);
+        setSentiment(data.sentiment);
+        setRecommendations([...recommendations, ...sentiment]);
       } catch (error) {
         setBook({} as IBook);
         setRecommendations([]);
+        setSentiment(Expression.neutral);
       } finally {
         setLoadingBook(false);
       }
@@ -93,6 +105,7 @@ export default function Book() {
     const fetchReview = async () => {
       setFetchingReview(true);
       setReviewError(undefined);
+      setReviews([]);
 
       try {
         if (!bookId) {
@@ -128,17 +141,31 @@ export default function Book() {
     fetchReview();
   }, [bookId]);
 
-  if (loadingBook && fetchingReview) return <Loading />;
+  if (loadingBook) return <Loading />;
 
   return (
     <Container maxW="100%" px={10} py={8}>
-      <VStack spacing={8} w="100%">
+      <VStack spacing={4} w="100%">
         <Heading textAlign={'center'} mb="4">
           {book?.title}
         </Heading>
         <Text as="p" textAlign={'center'}>
           {book?.author}, {book?.year_of_publication}
         </Text>
+        {sentiment && (
+          <Flex
+            paddingX={'2'}
+            paddingY={'1'}
+            background={EMOTION_COLOR[sentiment]}
+            borderRadius={'md'}
+            alignItems={'center'}
+            justifyContent={'center'}
+          >
+            <Text as="p" textAlign={'center'}>
+              {sentiment}
+            </Text>
+          </Flex>
+        )}
 
         {!reviewError && rating && (
           <Flex w="100%" justifyContent="center" alignItems={'center'}>
@@ -206,7 +233,9 @@ export default function Book() {
           Book Reviews
         </Text>
 
-        {reviewError ? (
+        {fetchingReview ? (
+          <Spinner />
+        ) : reviewError ? (
           <Text color="red.500">{reviewError}</Text>
         ) : reviews.length ? (
           <Grid templateColumns={`repeat(${columnCount}, 1fr)`} gap={4}>
